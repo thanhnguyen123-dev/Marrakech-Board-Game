@@ -4,16 +4,12 @@ For each task or sub-task, record who is responsible, the deadline, and any depe
 Use the entries below as an example.
 
 ## Week 4
+Weekly meeting time: Wednesday 4.30pm 
 
-Everyone: create application skeleton - meeting 14:00 19 Mar
+
 
 ## Week 5
 
-Zhang San: Task 3 isPlayerStateWellFormed - 23 Mar
-
-Jane Bloggs: Task 5 drawTileFromBag - 23 Mar
-
-Erika Mustermann: Task 6 refillFactories - 25 Mar (depends on Task 5)
 
 ## Week 6
 
