@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Player {
     private int dirham = 30;
-    private int availableRugs = 15 ;
+    private int numOfUnplacedRugs = 15;
     private List placedRugs = new ArrayList<Rug>();
     private Colour colour;
 
@@ -17,14 +17,12 @@ public class Player {
         return dirham;
     }
 
-    public int getRug() {
-        return availableRugs;
+    public int getNumOfUnplacedRugs() {
+        return this.numOfUnplacedRugs;
     }
 
-    public void adjustDirham(int offsetDirham) {
-        dirham += offsetDirham;
+    public void makePayment(Player p, int amount) {
+        this.dirham -= amount;
+        p.dirham += amount;
     }
-
-
-
 }
