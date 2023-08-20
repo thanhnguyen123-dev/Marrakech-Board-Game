@@ -1,15 +1,16 @@
 package comp1110.ass2.player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player {
+    private int dirham = 30;
+    private int availableRugs = 15 ;
+    private List placedRugs = new ArrayList<Rug>();
+    private Colour colour;
 
-    private static final int MIN_PLAYERS = 2;
-    private static final int MAX_PLAYERS = 4;
-    private int dirham;
-    private int rug;
-
-    public Player(int dirham, int rug) {
-        this.dirham = dirham;
-        this.rug = rug;
+    public Player(Colour colour) {
+        this.colour = colour;
     }
 
     public int getDirham() {
@@ -17,14 +18,12 @@ public class Player {
     }
 
     public int getRug() {
-        return rug;
+        return availableRugs;
     }
 
     public void adjustDirham(int offsetDirham) {
         dirham += offsetDirham;
     }
-
-
 
 
 
