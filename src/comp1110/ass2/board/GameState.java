@@ -4,7 +4,6 @@ import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Direction;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 
