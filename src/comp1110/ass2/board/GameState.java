@@ -7,11 +7,16 @@ import comp1110.ass2.player.Direction;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * GameState class determines the state of each player
+ * Make sure the game is played according to the rules
+ */
 public class GameState {
     private static final int NUM_OF_ROWS = 7;
     private static final int NUM_OF_COLS = 7;
-
+    // All players
     private Player[] players;
+    // Players are still in game
     private List availablePlayers;
     private Tile[][] tiles;
     private Coordinate assamPosition;

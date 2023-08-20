@@ -2,6 +2,9 @@ package comp1110.ass2.player;
 
 import java.util.Random;
 
+/**
+ * Random die rolls
+ */
 public class Die {
     private static final int[] SIDES = {1, 2, 2 , 3, 3, 4};
 

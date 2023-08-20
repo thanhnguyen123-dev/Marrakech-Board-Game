@@ -1,5 +1,8 @@
 package comp1110.ass2.player;
 
+/**
+ * Colour of players' representative
+ */
 public enum Colour {
     YELLOW('y'),
     RED('r'),

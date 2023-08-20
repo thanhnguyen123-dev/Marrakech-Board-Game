@@ -1,5 +1,8 @@
 package comp1110.ass2.player;
 
+/**
+ * Translation direction of Assam
+ */
 public enum Direction {
     NORTH(0, 'N'),
     EAST(90, 'E'),
