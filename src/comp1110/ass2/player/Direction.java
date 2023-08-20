@@ -6,7 +6,7 @@ public enum Direction {
     SOUTH(180, 'S'),
     WEST(270,'W');
 
-    public final int angleValue;
+    public int angleValue;
     public final char direction;
 
     Direction(int angle, char direction) {
@@ -15,7 +15,7 @@ public enum Direction {
     }
 
     public void applyRotation(int rotation) {
-        int newAngle = (this.angleValue + rotation) % 360;
+        angleValue = (angleValue + rotation) % 360;
     }
 
 
