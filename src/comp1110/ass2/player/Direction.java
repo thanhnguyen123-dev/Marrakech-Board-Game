@@ -14,7 +14,7 @@ public enum Direction {
         this.direction = direction;
     }
 
-    public void applyTurn(int rotation) {
+    public void applyRotation(int rotation) {
         int newAngle = (this.angleValue + rotation) % 360;
     }
 
