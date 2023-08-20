@@ -12,4 +12,16 @@ public class Rug {
         this.id = id;
         this.rugTiles = rugTiles;
     }
+
+    public Player getOwner() {
+        return this.owner;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public Coordinate[] getRugTiles() {
+        return this.rugTiles;
+    }
 }
