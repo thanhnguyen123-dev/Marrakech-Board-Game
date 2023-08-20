@@ -1,15 +1,11 @@
 package comp1110.ass2.player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Player class defines the state and property of each player
  */
 public class Player {
     private int dirham = 30;
     private int numOfUnplacedRugs = 15;
-    private List placedRugs = new ArrayList<Rug>();
     private Colour colour;
 
     public Player(Colour colour) {

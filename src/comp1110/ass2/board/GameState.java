@@ -3,7 +3,9 @@ package comp1110.ass2.board;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Direction;
+import comp1110.ass2.player.Rug;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class GameState {
     // Players are still in game
     private List availablePlayers;
     private Tile[][] tiles;
+    private List placedRugs = new ArrayList<Rug>();
     private Coordinate assamPosition;
     private Direction assamDirection;
     private Scoreboard scoreboard;
