@@ -1,8 +1,8 @@
 package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
-import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;
+import comp1110.ass2.player.Rug;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,10 +18,17 @@ public class GameState {
     // Players are still in game
     private List availablePlayers;
 
-    public GameState(int numOfPlayers, Colour[] colours) {
-        for (int i = 0; i < numOfPlayers; i++) {
-            this.players[i] = new Player(colours[i]);
-        }
+    public GameState(Player[] players) {
+        this.players = players;
         this.availablePlayers = Arrays.asList(this.players);
+    }
+
+    public boolean isPlacementValid(Rug rug) {
+        return board.isRugValid(rug);
+    }
+
+    public void makePlacement(Rug rug) {
+        rug.getOwner().placeRug();
+        board.placeRug(rug);
     }
 }

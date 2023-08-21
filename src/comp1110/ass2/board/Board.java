@@ -36,11 +36,9 @@ public class Board {
     }
 
     public void placeRug(Rug rug) {
-        if (isRugValid(rug)) {
-            placedRugs.add(rug);
-            for (Coordinate position : rug.getRugTiles()) {
-                tiles[position.getX()][position.getY()].setTopRug(rug);
-            }
+        placedRugs.add(rug);
+        for (Coordinate position : rug.getRugTiles()) {
+            tiles[position.getX()][position.getY()].setTopRug(rug);
         }
     }
 
