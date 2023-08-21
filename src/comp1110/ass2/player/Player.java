@@ -28,6 +28,14 @@ public class Player {
         return numOfUnplacedRugs;
     }
 
+    public Colour getColour() {
+        return this.colour;
+    }
+
+    public void placeRug() {
+        this.numOfUnplacedRugs--;
+    }
+
     /**
      * If Assam is on other player's rug after movement, player need to pay dirhams
      * @param otherPlayer

@@ -22,6 +22,11 @@ public class Tile {
     public Rug getTopRug() {
         return this.topRug;
     }
+
+    public void setTopRug(Rug rug) {
+        this.topRug = rug;
+    }
+
     public boolean isEmpty(){
         return tileState==TileState.EMPTY;
     }
