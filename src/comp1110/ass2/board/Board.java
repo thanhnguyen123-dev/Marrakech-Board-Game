@@ -3,6 +3,7 @@ package comp1110.ass2.board;
 import comp1110.ass2.player.Rug;
 
 import comp1110.ass2.Marrakech;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,10 @@ public class Board {
 
     public void rotateAssam(int rotation) {
         assamDirection.applyRotation(rotation);
+    }
+
+    public Rug getAssamRug() {
+        return this.tiles[this.assamPosition.getX()][this.assamPosition.getY()].getTopRug();
     }
 
     public void placeRug(Rug rug) {
