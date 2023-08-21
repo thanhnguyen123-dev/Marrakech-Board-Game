@@ -1,11 +1,10 @@
-package comp1110.ass2.board;
+package comp1110.ass2;
 
+import comp1110.ass2.board.Board;
+import comp1110.ass2.board.Scoreboard;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;
-import comp1110.ass2.player.Direction;
-import comp1110.ass2.player.Rug;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,16 +13,11 @@ import java.util.List;
  * Make sure the game is played according to the rules
  */
 public class GameState {
-    private static final int NUM_OF_ROWS = 7;
-    private static final int NUM_OF_COLS = 7;
+    private Board board = new Board();
     // All players
     private Player[] players;
     // Players are still in game
     private List availablePlayers;
-    private Tile[][] tiles;
-    private List placedRugs = new ArrayList<Rug>();
-    private Coordinate assamPosition;
-    private Direction assamDirection;
     private Scoreboard scoreboard;
 
     public GameState(int numOfPlayers, Colour[] colours) {
@@ -31,9 +25,6 @@ public class GameState {
             this.players[i] = new Player(colours[i]);
         }
         this.availablePlayers = Arrays.asList(this.players);
-        this.tiles = new Tile[NUM_OF_ROWS][NUM_OF_COLS];
-        this.assamPosition = new Coordinate(3, 3);
-        this.assamDirection = Direction.NORTH;
         this.scoreboard = new Scoreboard();
     }
 }
