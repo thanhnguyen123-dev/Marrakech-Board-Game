@@ -1,5 +1,7 @@
 package comp1110.ass2;
 
+import comp1110.ass2.player.Die;
+
 public class Marrakech {
 
     /**
@@ -43,7 +45,7 @@ public class Marrakech {
      */
     public static int rollDie() {
         // FIXME: Task 6
-        return -1;
+        return Die.getSide();
     }
 
     /**
