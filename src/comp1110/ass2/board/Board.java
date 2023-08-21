@@ -5,6 +5,10 @@ import comp1110.ass2.player.Rug;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Board class represents the dimensions of the board and relevant objects on
+ * the board
+ */
 public class Board {
     static final int NUM_OF_ROWS = 7;
     static final int NUM_OF_COLS = 7;

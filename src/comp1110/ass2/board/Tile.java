@@ -8,17 +8,17 @@ import comp1110.ass2.player.Rug;
 public class Tile {
     // Position of each tile on the board
     private Coordinate position;
+
     /**
-     * Used to judge whether a tile is empty or not
-     * If there is a rug, it's occupied
+     * Enum determines whether a Tile is empty or not
+     * If there is a rug or Assam on the Tile, it's occupied
      */
     private enum TileState{
         EMPTY, OCCUPIED;
     }
-    // Store the state of tile
+
     private TileState tileState;
     private Rug topRug;
-
     public Rug getTopRug() {
         return this.topRug;
     }

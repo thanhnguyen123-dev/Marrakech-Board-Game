@@ -1,7 +1,7 @@
 package comp1110.ass2.player;
 
 /**
- * Player class defines the state and property of each player
+ * Player class contains properties of each Player
  */
 public class Player {
     private int dirham = 30;
@@ -13,28 +13,28 @@ public class Player {
     }
 
     /**
-     * Get current number of dirhams of the player
-     * @return
+     * getter method for the current dirhams value of a player
+     * @return dirham
      */
     public int getDirham() {
         return dirham;
     }
 
     /**
-     * Get the number of unplaced rugs of player
-     * @return
+     * getter method for the number of unplaced rugs of a player
+     * @return numOfUnplacedRugs
      */
     public int getNumOfUnplacedRugs() {
-        return this.numOfUnplacedRugs;
+        return numOfUnplacedRugs;
     }
 
     /**
      * If Assam is on other player's rug after movement, player need to pay dirhams
-     * @param p
+     * @param otherPlayer
      * @param amount
      */
-    public void makePayment(Player p, int amount) {
+    public void makePayment(Player otherPlayer, int amount) {
         this.dirham -= amount;
-        p.dirham += amount;
+        otherPlayer.dirham += amount;
     }
 }

@@ -3,7 +3,7 @@ package comp1110.ass2.player;
 import comp1110.ass2.board.Coordinate;
 
 /**
- * Rug class defines the state of each rug
+ * Rug class contains properties of each Rug
  */
 public class Rug {
     // Rug's owner
@@ -14,7 +14,7 @@ public class Rug {
     private Coordinate[] rugTiles;
 
     /**
-     * Constructor, get rug's state
+     * Constructor: creates a new instance of the Rug class
      * @param owner
      * @param id
      * @param rugTiles
@@ -25,17 +25,25 @@ public class Rug {
         this.rugTiles = rugTiles;
     }
 
+    /**
+     * getter method for the owner of the Rug
+     * @return owner
+     */
     public Player getOwner() {
         return this.owner;
     }
 
-    public int getId() {
+    /**
+     * getter method for the ID of the Rug
+     * @return ID
+     */
+    public int getID() {
         return this.id;
     }
 
     /**
-     * Get positions of each rug
-     * @return
+     * getter method for the positions occupied by the Rug
+     * @return rugTiles
      */
     public Coordinate[] getRugTiles() {
         return this.rugTiles;

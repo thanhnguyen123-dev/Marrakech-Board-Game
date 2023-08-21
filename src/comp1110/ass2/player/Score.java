@@ -1,7 +1,12 @@
 package comp1110.ass2.player;
 
-/**
- * Score class calculates each player's score after game's over
- */
 public class Score {
+    /**
+     * getter method to calculate the score of a Player
+     * @param player
+     * @return score
+     */
+    public static int getPlayerScore(Player player) {
+        return 0;
+    }
 }
