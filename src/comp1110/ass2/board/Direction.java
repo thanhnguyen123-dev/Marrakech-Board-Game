@@ -1,4 +1,4 @@
-package comp1110.ass2.player;
+package comp1110.ass2.board;
 
 /**
  * Translation direction of Assam
@@ -7,7 +7,7 @@ public enum Direction {
     NORTH(0, 'N'),
     EAST(90, 'E'),
     SOUTH(180, 'S'),
-    WEST(270,'W');
+    WEST(270, 'W');
 
     public int angleValue;
     public final char direction;
