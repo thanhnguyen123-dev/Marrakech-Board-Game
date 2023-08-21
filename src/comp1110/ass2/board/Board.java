@@ -15,7 +15,7 @@ public class Board {
     private static final int NUM_OF_COLS = 7;
 
     private Tile[][] tiles = new Tile[Board.NUM_OF_ROWS][Board.NUM_OF_COLS];
-    private List placedRugs = new ArrayList<Rug>();
+    private List<Rug> placedRugs = new ArrayList<Rug>();
     private Coordinate assamPosition = new Coordinate(3, 3);
     private Direction assamDirection = Direction.NORTH;
 
