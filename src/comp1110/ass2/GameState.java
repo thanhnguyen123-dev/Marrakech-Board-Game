@@ -47,26 +47,41 @@ public class GameState {
         this.board.moveAssam(steps);
     }
 
-    public boolean isPaymentRequired() {
-        // FIXME
-        return true;
+    private Player getAssamRugOwner() {
+        Rug rug = this.board.getAssamTile().getTopRug();
+        return rug == null ? null : rug.getOwner();
     }
 
-    public int calculatePayment() {
+    public boolean isPaymentRequired() {
+        Player owner = getAssamRugOwner();
+        if (this.availablePlayers.contains(owner) && this.currentPlayer != owner) {
+            return true;
+        }
+        return false;
+    }
+
+    public int getPaymentAmount() {
         // FIXME
         return 0;
     }
 
+    public boolean isPaymentAffordable(int amount) {
+        if (currentPlayer.getDirham() >= amount) {
+            return true;
+        }
+        return false;
+    }
+
     public void makePayment(int amount) {
-        this.currentPlayer.makePayment(this.board.getAssamRug().getOwner(), amount);
+        this.currentPlayer.makePayment(getAssamRugOwner(), amount);
     }
 
     public boolean isPlacementValid(Rug rug) {
-        return board.isRugValid(rug);
+        return this.board.isRugValid(rug);
     }
 
     public void makePlacement(Rug rug) {
         this.currentPlayer.placeRug();
-        board.placeRug(rug);
+        this.board.placeRug(rug);
     }
 }
