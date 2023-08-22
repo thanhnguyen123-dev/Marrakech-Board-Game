@@ -66,10 +66,7 @@ public class GameState {
     }
 
     public boolean isPaymentAffordable(int amount) {
-        if (currentPlayer.getDirham() >= amount) {
-            return true;
-        }
-        return false;
+        return currentPlayer.getDirham() >= amount;
     }
 
     public void makePayment(int amount) {
