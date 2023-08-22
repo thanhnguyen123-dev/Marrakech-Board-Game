@@ -108,16 +108,14 @@ public class Board {
 
     public boolean isPlacementValid(Rug rug) {
         Tile[] rugTiles = rug.getRugTiles();
-        if (rugTiles[0].getTopRug() != null && rugTiles[1].getTopRug() != null && rugTiles[0].getTopRug().getID() == rugTiles[1].getTopRug().getID()) {
+        if (!rugTiles[0].isAdjacent(this.assamTile) && !rugTiles[1].isAdjacent(this.assamTile)) {
             return false;
         }
-        for (Tile rugTile : rugTiles) {
-            if (this.assamTile == rugTile) {
-                return false;
-            }
-            if (!this.assamTile.isAdjacent(rugTile)) {
-                return false;
-            }
+        if (rugTiles[0] == this.assamTile || rugTiles[1] == this.assamTile) {
+            return false;
+        }
+        if (rugTiles[0].getTopRug() != null && rugTiles[1].getTopRug() != null && rugTiles[0].getTopRug().getID() == rugTiles[1].getTopRug().getID()) {
+            return false;
         }
         return true;
     }
