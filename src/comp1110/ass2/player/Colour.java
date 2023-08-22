@@ -9,14 +9,14 @@ public enum Colour {
     CYAN('c'),
     PURPLE('p');
 
-    public final char colorChar;
+    public final char colourChar;
 
     /**
      * Constructor: creates an instance of the Colour enum
-     * @param color
+     * @param colourChar
      */
-    Colour(char color) {
-        this.colorChar = color;
+    Colour(char colourChar) {
+        this.colourChar = colourChar;
     }
 
 
@@ -25,14 +25,13 @@ public enum Colour {
      * @param colourChar
      * @return Colour
      */
-    public Colour charToColor(char colourChar) {
-        switch (colourChar) {
-            case 'y': return Colour.YELLOW;
-            case 'r': return Colour.RED;
-            case 'c': return Colour.CYAN;
-            case 'p': return Colour.PURPLE;
-            default: return null;
+    public Colour charToColour(char colourChar) {
+        for (Colour colour : Colour.values()) {
+            if (colour.colourChar == colourChar) {
+                return colour;
+            }
         }
+        return null;
     }
 
 }

@@ -10,16 +10,16 @@ public enum Direction {
     WEST(270, 'W');
 
     public int angleValue;
-    public final char direction;
+    public final char directionChar;
 
     /**
      * Constructor: creates a new instance for the Direction enum
      * @param angle
-     * @param direction
+     * @param directionChar
      */
-    Direction(int angle, char direction) {
+    Direction(int angle, char directionChar) {
         this.angleValue = angle;
-        this.direction = direction;
+        this.directionChar = directionChar;
     }
 
     /**
