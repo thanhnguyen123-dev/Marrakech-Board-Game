@@ -106,10 +106,6 @@ public class Board {
         this.assamDirection = this.assamDirection.rotate(rotation);
     }
 
-    public Rug getAssamRug() {
-        return this.assamTile.getTopRug();
-    }
-
     public void placeRug(Rug rug) {
         placedRugs.add(rug);
         for (Tile tile : rug.getRugTiles()) {
