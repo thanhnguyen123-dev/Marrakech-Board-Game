@@ -7,7 +7,8 @@ import comp1110.ass2.player.Rug;
  */
 public class Tile {
     // Position of each tile on the board
-    private Coordinate position;
+    private final int row, col;
+    private Rug topRug;
 
     /**
      * Enum determines whether a Tile is empty or not
@@ -18,7 +19,20 @@ public class Tile {
     }
 
     private TileState tileState;
-    private Rug topRug;
+
+    public Tile(int row, int col) {
+        this.row = row;
+        this.col = col;
+    }
+
+    public int getRow() {
+        return this.row;
+    }
+
+    public int getCol() {
+        return this.col;
+    }
+
     public Rug getTopRug() {
         return this.topRug;
     }
