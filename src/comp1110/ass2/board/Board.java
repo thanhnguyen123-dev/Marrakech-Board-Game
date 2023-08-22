@@ -106,15 +106,26 @@ public class Board {
         this.assamDirection = this.assamDirection.rotate(rotation);
     }
 
+    public boolean isPlacementValid(Rug rug) {
+        Tile[] rugTiles = rug.getRugTiles();
+        if (rugTiles[0].getTopRug() != null && rugTiles[1].getTopRug() != null && rugTiles[0].getTopRug().getID() == rugTiles[1].getTopRug().getID()) {
+            return false;
+        }
+        for (Tile rugTile : rugTiles) {
+            if (this.assamTile == rugTile) {
+                return false;
+            }
+            if (!this.assamTile.isAdjacent(rugTile)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void placeRug(Rug rug) {
         placedRugs.add(rug);
         for (Tile tile : rug.getRugTiles()) {
             tile.setTopRug(rug);
         }
-    }
-
-    public boolean isRugValid(Rug rug) {
-        // FIXME
-        return false;
     }
 }

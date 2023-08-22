@@ -41,6 +41,16 @@ public class Tile {
         this.topRug = rug;
     }
 
+    public boolean isAdjacent(Tile otherTile) {
+        if (this.row == otherTile.row && Math.abs(this.col - otherTile.col) == 1) {
+            return true;
+        }
+        if (this.col == otherTile.col && Math.abs(this.row - otherTile.row) == 1) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean isEmpty(){
         return tileState==TileState.EMPTY;
     }

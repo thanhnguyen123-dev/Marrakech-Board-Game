@@ -77,11 +77,16 @@ public class GameState {
     }
 
     public boolean isPlacementValid(Rug rug) {
-        return this.board.isRugValid(rug);
+        return this.board.isPlacementValid(rug);
     }
 
     public void makePlacement(Rug rug) {
         this.currentPlayer.placeRug();
         this.board.placeRug(rug);
+    }
+
+    public static boolean isRugValid(String gameString, String rug) {
+        // FIXME
+        return false;
     }
 }
