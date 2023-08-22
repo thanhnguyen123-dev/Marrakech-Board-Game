@@ -30,5 +30,17 @@ public enum Direction {
         angleValue = (angleValue + rotation) % 360;
     }
 
+    public Direction rotate(int rotation) {
+        return getDirectionFromValue(this.angleValue + rotation);
+    }
 
+    public static Direction getDirectionFromValue(int angleValue) {
+        angleValue = (angleValue + 360) % 360;
+        for (Direction direction : Direction.values()) {
+            if (angleValue == direction.angleValue) {
+                return direction;
+            }
+        }
+        return null;
+    }
 }
