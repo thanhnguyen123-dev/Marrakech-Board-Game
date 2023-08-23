@@ -6,8 +6,8 @@ import comp1110.ass2.board.Tile;
  * Rug class contains properties of each Rug
  */
 public class Rug {
-    // Rug's owner
-    private Player owner;
+    // Rug's colour
+    private Colour colour;
     // Rug's unique id
     private int id;
     // Rug's positions
@@ -15,22 +15,22 @@ public class Rug {
 
     /**
      * Constructor: creates a new instance of the Rug class
-     * @param owner
+     * @param colour
      * @param id
      * @param rugTiles
      */
-    public Rug(Player owner, int id, Tile[] rugTiles) {
-        this.owner = owner;
+    public Rug(Colour colour, int id, Tile[] rugTiles) {
+        this.colour = colour;
         this.id = id;
         this.rugTiles = rugTiles;
     }
 
     /**
-     * getter method for the owner of the Rug
-     * @return owner
+     * getter method for the colour of the Rug
+     * @return colour
      */
-    public Player getOwner() {
-        return this.owner;
+    public Colour getColour() {
+        return this.colour;
     }
 
     /**
