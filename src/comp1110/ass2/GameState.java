@@ -1,6 +1,7 @@
 package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
+import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 
@@ -50,7 +51,13 @@ public class GameState {
 
     private Player getAssamRugOwner() {
         Rug rug = this.board.getAssamTile().getTopRug();
-        return rug == null ? null : rug.getOwner();
+        Colour rugColour = rug == null ? null : rug.getColour();
+        for (Player player : this.players) {
+            if (player.getColour() == rugColour) {
+                return player;
+            }
+        }
+        return null;
     }
 
     public boolean isPaymentRequired() {
