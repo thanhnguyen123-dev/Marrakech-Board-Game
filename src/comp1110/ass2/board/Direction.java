@@ -31,13 +31,22 @@ public enum Direction {
     }
 
     public Direction rotate(int rotation) {
-        return getDirectionFromValue(this.angleValue + rotation);
+        return angleToDirection(this.angleValue + rotation);
     }
 
-    public static Direction getDirectionFromValue(int angleValue) {
+    public static Direction angleToDirection(int angleValue) {
         angleValue = (angleValue + 360) % 360;
         for (Direction direction : Direction.values()) {
             if (angleValue == direction.angleValue) {
+                return direction;
+            }
+        }
+        return null;
+    }
+
+    public static Direction charToDirection(char directionChar) {
+        for (Direction direction : Direction.values()) {
+            if (direction.directionChar == directionChar) {
                 return direction;
             }
         }
