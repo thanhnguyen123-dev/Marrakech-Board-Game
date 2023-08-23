@@ -25,7 +25,7 @@ public enum Colour {
      * @param colourChar
      * @return Colour
      */
-    public Colour charToColour(char colourChar) {
+    public static Colour charToColour(char colourChar) {
         for (Colour colour : Colour.values()) {
             if (colour.colourChar == colourChar) {
                 return colour;
