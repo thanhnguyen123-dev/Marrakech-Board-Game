@@ -4,11 +4,13 @@ package comp1110.ass2.player;
  * Player class contains properties of each Player
  */
 public class Player {
-    private int dirham = 30;
-    private int numOfUnplacedRugs = 15;
+    private int dirham;
+    private int numOfUnplacedRugs;
     private Colour colour;
 
     public Player(Colour colour) {
+        this.dirham = 30;
+        this.numOfUnplacedRugs = 15;
         this.colour = colour;
     }
 
@@ -44,5 +46,11 @@ public class Player {
     public void makePayment(Player otherPlayer, int amount) {
         this.dirham -= amount;
         otherPlayer.dirham += amount;
+    }
+
+    public Player(String playerString) {
+        this.dirham = Integer.parseInt(playerString.substring(1, 4), 10);
+        this.numOfUnplacedRugs = Integer.parseInt(playerString.substring(4, 6), 10);
+        this.colour = Colour.charToColour(playerString.charAt(0));
     }
 }
