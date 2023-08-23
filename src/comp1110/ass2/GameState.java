@@ -13,7 +13,7 @@ import java.util.List;
  * Make sure the game is played according to the rules
  */
 public class GameState {
-    private Board board = new Board();
+    private Board board;
     // All players
     private Player[] players;
     // Players are still in game
@@ -21,6 +21,7 @@ public class GameState {
     private Player currentPlayer;
 
     public GameState(Player[] players) {
+        this.board = new Board();
         this.players = players;
         this.availablePlayers = new ArrayList<Player>(Arrays.asList(this.players));
         this.currentPlayer = this.availablePlayers.get(0);
@@ -80,6 +81,26 @@ public class GameState {
     public void makePlacement(Rug rug) {
         this.currentPlayer.placeRug();
         this.board.placeRug(rug);
+    }
+
+    public GameState(String gameString) {
+        List<String> playerStrings = new ArrayList<String>(Arrays.asList(gameString.split("P")));
+        playerStrings.remove(0);
+        String[] tmp = playerStrings.remove(playerStrings.size() - 1).split("A");
+        playerStrings.add(tmp[0]);
+        String[] assamBoardString = tmp[1].split("B");
+        String assamString = assamBoardString[0];
+        String boardString = assamBoardString[1];
+        this.board = new Board(assamString, boardString);
+        this.players = new Player[playerStrings.size()];
+        this.availablePlayers = new ArrayList<Player>();
+        for (int i = 0; i < this.players.length; i++) {
+            String playerString = playerStrings.get(i);
+            this.players[i] = new Player(playerString);
+            if (playerString.contains("i")) {
+                this.availablePlayers.add(this.players[i]);
+            }
+        }
     }
 
     public static boolean isRugValid(String gameString, String rug) {
