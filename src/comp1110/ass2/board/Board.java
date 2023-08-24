@@ -120,7 +120,7 @@ public class Board {
         if (rugTiles[0] == this.assamTile || rugTiles[1] == this.assamTile) {
             return false;
         }
-        if (rugTiles[0].getTopRug() != null && rugTiles[1].getTopRug() != null && rugTiles[0].getTopRug().getID() == rugTiles[1].getTopRug().getID()) {
+        if (rugTiles[0].getTopRug() != null && rugTiles[1].getTopRug() != null && rugTiles[0].getTopRug().getColour() == rugTiles[1].getTopRug().getColour() && rugTiles[0].getTopRug().getID() == rugTiles[1].getTopRug().getID()) {
             return false;
         }
         return true;
