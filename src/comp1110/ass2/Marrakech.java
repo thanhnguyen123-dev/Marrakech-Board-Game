@@ -56,8 +56,7 @@ public class Marrakech {
      * @return true if the game is over, or false otherwise.
      */
     public static boolean isGameOver(String currentGame) {
-        // FIXME: Task 8
-        return false;
+        return GameState.isGameOver(currentGame);
     }
 
     /**

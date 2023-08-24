@@ -133,4 +133,9 @@ public class GameState {
         // FIXME
         return false;
     }
+
+    public static boolean isGameOver(String currentGame) {
+        GameState gameState = new GameState(currentGame);
+        return gameState.availablePlayers.get(0).getNumOfUnplacedRugs() == 0;
+    }
 }
