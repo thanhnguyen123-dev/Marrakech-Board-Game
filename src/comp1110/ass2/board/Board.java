@@ -12,11 +12,12 @@ import java.util.List;
 public class Board {
     private static final int NUM_OF_ROWS = 7;
     private static final int NUM_OF_COLS = 7;
+    private static final int LENGTH_OF_SHORT_RUG_STRING = 3;
 
     private Tile[][] tiles = new Tile[NUM_OF_ROWS][NUM_OF_COLS];
     private List<Rug> placedRugs = new ArrayList<Rug>();
     private Tile assamTile;
-    private Direction assamDirection = Direction.NORTH;
+    private Direction assamDirection;
 
     public Board() {
         for (int row = 0; row < NUM_OF_ROWS; row++) {
@@ -24,7 +25,8 @@ public class Board {
                 this.tiles[row][col] = new Tile(row, col);
             }
         }
-        assamTile = this.tiles[3][3];
+        this.assamTile = this.tiles[3][3];
+        this.assamDirection = Direction.NORTH;
     }
 
     public Tile getAssamTile() {
@@ -125,5 +127,28 @@ public class Board {
         for (Tile tile : rug.getRugTiles()) {
             tile.setTopRug(rug);
         }
+    }
+
+    public Board(String assamString, String boardString) {
+        for (int col = 0; col < NUM_OF_ROWS; col++) {
+            for (int row = 0; row < NUM_OF_COLS; row++) {
+                this.tiles[row][col] = new Tile(row, col);
+                int beginIndex = (col * NUM_OF_ROWS + row) * LENGTH_OF_SHORT_RUG_STRING;
+                String shortRugString = boardString.substring(beginIndex, beginIndex + LENGTH_OF_SHORT_RUG_STRING);
+                if (!shortRugString.equals("n00")) {
+                    Rug rug = new Rug(shortRugString, this.tiles[row][col]);
+                    this.tiles[row][col].setTopRug(rug);
+                }
+            }
+        }
+        int[] position = parse(assamString.substring(0, 2));
+        this.assamTile = this.tiles[position[0]][position[1]];
+        this.assamDirection = Direction.charToDirection(assamString.charAt(2));
+    }
+
+    private static int[] parse(String coordinates) {
+        int row = Integer.parseInt(coordinates.charAt(1) + "", 10);
+        int col = Integer.parseInt(coordinates.charAt(0) + "", 10);
+        return new int[]{row, col};
     }
 }
