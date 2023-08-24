@@ -137,7 +137,12 @@ public class GameState {
 
     public static boolean isGameOver(String currentGame) {
         GameState gameState = new GameState(currentGame);
-        return gameState.availablePlayers.get(0).getNumOfUnplacedRugs() == 0;
+        for (Player player : gameState.availablePlayers) {
+            if (player.getNumOfUnplacedRugs() != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static String moveAssam(String currentAssam, int dieResult) {
