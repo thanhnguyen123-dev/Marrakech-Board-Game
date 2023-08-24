@@ -155,4 +155,8 @@ public class Board {
         int col = Integer.parseInt(coordinates.charAt(0) + "", 10);
         return new int[]{row, col};
     }
+
+    public String generateAssamString() {
+        return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.directionChar;
+    }
 }
