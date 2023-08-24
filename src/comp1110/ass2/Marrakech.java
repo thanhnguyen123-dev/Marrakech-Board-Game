@@ -139,8 +139,7 @@ public class Marrakech {
      * @return A String representing Assam's state after the movement.
      */
     public static String moveAssam(String currentAssam, int dieResult){
-        // FIXME: Task 13
-        return "";
+        return GameState.moveAssam(currentAssam, dieResult);
     }
 
     /**

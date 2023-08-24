@@ -16,6 +16,7 @@ import java.util.List;
 public class GameState {
     private static final int LENGTH_OF_PLAYER_STRING = 7;
     private static final int LENGTH_OF_ASSAM_STRING = 3;
+    private static final String EMPTY_BOARD_STRING = "Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00";
 
     private Board board;
     // All players
@@ -137,5 +138,11 @@ public class GameState {
     public static boolean isGameOver(String currentGame) {
         GameState gameState = new GameState(currentGame);
         return gameState.availablePlayers.get(0).getNumOfUnplacedRugs() == 0;
+    }
+
+    public static String moveAssam(String currentAssam, int dieResult) {
+        GameState gameState = new GameState(currentAssam + EMPTY_BOARD_STRING);
+        gameState.moveAssam(dieResult);
+        return gameState.board.generateAssamString();
     }
 }
