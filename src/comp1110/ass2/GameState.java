@@ -14,6 +14,9 @@ import java.util.List;
  * Make sure the game is played according to the rules
  */
 public class GameState {
+    private static final int LENGTH_OF_PLAYER_STRING = 7;
+    private static final int LENGTH_OF_ASSAM_STRING = 3;
+
     private Board board;
     // All players
     private Player[] players;
@@ -91,13 +94,9 @@ public class GameState {
     }
 
     public GameState(String gameString) {
-        List<String> playerStrings = new ArrayList<String>(Arrays.asList(gameString.split("P")));
-        playerStrings.remove(0);
-        String[] tmp = playerStrings.remove(playerStrings.size() - 1).split("A");
-        playerStrings.add(tmp[0]);
-        String[] assamBoardString = tmp[1].split("B");
-        String assamString = assamBoardString[0];
-        String boardString = assamBoardString[1];
+        List<String> playerStrings = getPlayerStrings(gameString);
+        String assamString = getAssamString(gameString);
+        String boardString = getBoardString(gameString);
         this.board = new Board(assamString, boardString);
         this.players = new Player[playerStrings.size()];
         this.availablePlayers = new ArrayList<Player>();
@@ -108,6 +107,26 @@ public class GameState {
                 this.availablePlayers.add(this.players[i]);
             }
         }
+    }
+
+    private static List<String> getPlayerStrings(String gameString) {
+        List<String> playerStrings = new ArrayList<String>();
+        int beginIndex = 1;
+        while (gameString.contains("P")) {
+            playerStrings.add(gameString.substring(beginIndex, beginIndex + LENGTH_OF_PLAYER_STRING));
+            gameString = gameString.substring(beginIndex + LENGTH_OF_PLAYER_STRING);
+        }
+        return playerStrings;
+    }
+
+    private static String getAssamString(String gameString) {
+        int beginIndex = gameString.indexOf("A") + 1;
+        return gameString.substring(beginIndex, beginIndex + LENGTH_OF_ASSAM_STRING);
+    }
+
+    private static String getBoardString(String gameString) {
+        int beginIndex = gameString.indexOf("B") + 1;
+        return gameString.substring(beginIndex);
     }
 
     public static boolean isRugValid(String gameString, String rug) {
