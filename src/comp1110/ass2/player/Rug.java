@@ -48,4 +48,16 @@ public class Rug {
     public Tile[] getRugTiles() {
         return this.rugTiles;
     }
+
+    public Rug(String shortRugString, Tile tile) {
+        this.colour = Colour.charToColour(shortRugString.charAt(0));
+        this.id = Integer.parseInt(shortRugString.substring(1), 10);
+        this.rugTiles = new Tile[]{tile};
+    }
+
+    public Rug(String fullRugString, Tile[] tiles) {
+        this.colour = Colour.charToColour(fullRugString.charAt(0));
+        this.id = Integer.parseInt(fullRugString.substring(1, 3), 10);
+        this.rugTiles = tiles;
+    }
 }
