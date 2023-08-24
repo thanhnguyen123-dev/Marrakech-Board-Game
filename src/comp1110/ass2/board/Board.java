@@ -33,6 +33,10 @@ public class Board {
         return this.assamTile;
     }
 
+    public Direction getAssamDirection() {
+        return this.assamDirection;
+    }
+
     public void moveAssam(int steps) {
         int row = this.assamTile.getRow();
         int col = this.assamTile.getCol();
@@ -81,7 +85,7 @@ public class Board {
         int col = this.assamTile.getCol();
         if (row == 0 && col == NUM_OF_COLS - 1) {
             switch (this.assamDirection) {
-                case NORTH -> this.assamDirection = Direction.NORTH;
+                case NORTH -> this.assamDirection = Direction.WEST;
                 case EAST -> this.assamDirection = Direction.SOUTH;
             }
             return;
