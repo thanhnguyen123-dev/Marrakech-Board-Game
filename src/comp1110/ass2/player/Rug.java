@@ -60,4 +60,16 @@ public class Rug {
         this.id = Integer.parseInt(fullRugString.substring(1, 3), 10);
         this.rugTiles = tiles;
     }
+
+    /**
+     * Decode full rug string to object
+     * @param fullRugString
+     */
+    public Rug(String fullRugString){
+        this.colour = Colour.charToColour(fullRugString.charAt(0));
+        this.id = Integer.parseInt(fullRugString.substring(1, 3), 10);
+        Tile tile1=new Tile(Integer.parseInt(fullRugString.charAt(3)+"",10),Integer.parseInt(fullRugString.charAt(4)+"",10));
+        Tile tile2=new Tile(Integer.parseInt(fullRugString.charAt(5)+"",10),Integer.parseInt(fullRugString.charAt(6)+"",10));
+        this.rugTiles = new Tile[]{tile1, tile2};
+    }
 }
