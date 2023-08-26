@@ -1,6 +1,7 @@
 package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
+import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
@@ -110,7 +111,7 @@ public class GameState {
         }
     }
 
-    private static List<String> getPlayerStrings(String gameString) {
+    private List<String> getPlayerStrings(String gameString) {
         List<String> playerStrings = new ArrayList<String>();
         int beginIndex = 1;
         while (gameString.contains("P")) {
@@ -130,9 +131,34 @@ public class GameState {
         return gameString.substring(beginIndex);
     }
 
-    public static boolean isRugValid(String gameString, String rug) {
-        // FIXME
-        return false;
+    /**
+     * Determine whether a rug String is valid.
+     * @param gameString
+     * @param rugString
+     * @return
+     */
+    public static boolean isRugValid(String gameString, String rugString) {
+        // The String is 7 characters long
+        if (rugString.length()!=7) {return false;}
+        GameState gameState=new GameState(gameString);
+        Rug rug=new Rug(rugString);
+        // The first character in the String corresponds to the colour character of a player present in the game
+        if (!Colour.isColourValid(rugString.charAt(0))) {return false;}
+        // The next 4 characters represent coordinates that are on the board
+        for (Tile tile : rug.getRugTiles()){
+            if (!Board.isTileValid(tile)){
+                return false;
+            }
+        }
+        Board board=new Board();
+        List<Rug> placedRugs=board.placedRugs;
+        // The combination of that ID number and colour is unique
+        for (Rug placedRug:placedRugs){
+            if (rug.getColour()==placedRug.getColour() && rug.getID()==placedRug.getID()){
+                return false;
+            }
+        }
+        return true;
     }
 
     public static boolean isGameOver(String currentGame) {

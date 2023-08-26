@@ -25,8 +25,7 @@ public class Marrakech {
      * @return true if the rug is valid, and false otherwise.
      */
     public static boolean isRugValid(String gameString, String rug) {
-        // FIXME: Task 4
-        return false;
+        return GameState.isRugValid(gameString, rug);
     }
 
     /**
