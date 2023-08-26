@@ -34,4 +34,14 @@ public enum Colour {
         return null;
     }
 
+    /**
+     * Determine whether the colour of a rug is valid
+     * @param colourChar
+     * @return
+     */
+    public static boolean isColourValid(char colourChar){
+        if (charToColour(colourChar)!=null){
+            return true;
+        }else return false;
+    }
 }
