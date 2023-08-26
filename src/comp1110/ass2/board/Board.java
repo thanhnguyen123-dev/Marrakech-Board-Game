@@ -15,7 +15,7 @@ public class Board {
     private static final int LENGTH_OF_SHORT_RUG_STRING = 3;
 
     private Tile[][] tiles = new Tile[NUM_OF_ROWS][NUM_OF_COLS];
-    private List<Rug> placedRugs = new ArrayList<Rug>();
+    public List<Rug> placedRugs = new ArrayList<Rug>();
     private Tile assamTile;
     private Direction assamDirection;
 
@@ -158,5 +158,21 @@ public class Board {
 
     public String generateAssamString() {
         return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.directionChar;
+    }
+
+    /**
+     * Determine whether the coordinate of a tile on which can place a rug is valid
+     * @param tile
+     * @return
+     */
+    public static boolean isTileValid(Tile tile){
+        int row= tile.getRow();
+        int col=tile.getCol();
+        if (row >=0 && row <NUM_OF_ROWS){
+            if (col >= 0 && col<NUM_OF_COLS){
+                return true;
+            }
+        }
+        return false;
     }
 }
