@@ -164,7 +164,6 @@ public class GameState {
         String boardString = getBoardString(gameString);
         Board board = new Board(assamString, boardString);
         List<Rug> visibleRugs = board.getVisibleRugs();
-        System.out.println(visibleRugs);
         for (Rug placedRug : visibleRugs) {
             if (rug.getColour() == placedRug.getColour() && rug.getID() == placedRug.getID()) {
                 return false;
