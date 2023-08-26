@@ -15,7 +15,7 @@ public class Board {
     private static final int LENGTH_OF_SHORT_RUG_STRING = 3;
 
     private Tile[][] tiles = new Tile[NUM_OF_ROWS][NUM_OF_COLS];
-    public List<Rug> placedRugs = new ArrayList<Rug>();
+    private List<Rug> placedRugs = new ArrayList<Rug>();
     private Tile assamTile;
     private Direction assamDirection;
 
@@ -27,6 +27,10 @@ public class Board {
         }
         this.assamTile = this.tiles[3][3];
         this.assamDirection = Direction.NORTH;
+    }
+
+    public List<Rug> getPlacedRugs(){
+        return this.placedRugs;
     }
 
     public Tile getAssamTile() {

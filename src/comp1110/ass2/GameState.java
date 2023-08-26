@@ -151,7 +151,7 @@ public class GameState {
             }
         }
         Board board=new Board();
-        List<Rug> placedRugs=board.placedRugs;
+        List<Rug> placedRugs=board.getPlacedRugs();
         // The combination of that ID number and colour is unique
         for (Rug placedRug:placedRugs){
             if (rug.getColour()==placedRug.getColour() && rug.getID()==placedRug.getID()){
