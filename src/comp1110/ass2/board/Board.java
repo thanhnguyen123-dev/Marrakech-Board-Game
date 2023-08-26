@@ -16,6 +16,7 @@ public class Board {
 
     private Tile[][] tiles = new Tile[NUM_OF_ROWS][NUM_OF_COLS];
     private List<Rug> placedRugs = new ArrayList<Rug>();
+    private List<Rug> visibleRugs = new ArrayList<Rug>(); // All visible rugs on the board
     private Tile assamTile;
     private Direction assamDirection;
 
@@ -29,8 +30,12 @@ public class Board {
         this.assamDirection = Direction.NORTH;
     }
 
-    public List<Rug> getPlacedRugs(){
+    public List<Rug> getPlacedRugs() {
         return this.placedRugs;
+    }
+
+    public List<Rug> getVisibleRugs() {
+        return this.visibleRugs;
     }
 
     public Tile getAssamTile() {
@@ -146,6 +151,8 @@ public class Board {
                 if (!shortRugString.equals("n00")) {
                     Rug rug = new Rug(shortRugString, this.tiles[row][col]);
                     this.tiles[row][col].setTopRug(rug);
+                    // Get all visible rugs according to board string
+                    visibleRugs.add(rug);
                 }
             }
         }
@@ -166,14 +173,15 @@ public class Board {
 
     /**
      * Determine whether the coordinate of a tile on which can place a rug is valid
+     *
      * @param tile
      * @return
      */
-    public static boolean isTileValid(Tile tile){
-        int row= tile.getRow();
-        int col=tile.getCol();
-        if (row >=0 && row <NUM_OF_ROWS){
-            if (col >= 0 && col<NUM_OF_COLS){
+    public static boolean isTileValid(Tile tile) {
+        int row = tile.getRow();
+        int col = tile.getCol();
+        if (row >= 0 && row < NUM_OF_ROWS) {
+            if (col >= 0 && col < NUM_OF_COLS) {
                 return true;
             }
         }

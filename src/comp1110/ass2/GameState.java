@@ -95,6 +95,11 @@ public class GameState {
         this.board.placeRug(rug);
     }
 
+    /**
+     * Decode game string
+     *
+     * @param gameString
+     */
     public GameState(String gameString) {
         List<String> playerStrings = getPlayerStrings(gameString);
         String assamString = getAssamString(gameString);
@@ -133,28 +138,35 @@ public class GameState {
 
     /**
      * Determine whether a rug String is valid.
+     *
      * @param gameString
      * @param rugString
      * @return
      */
     public static boolean isRugValid(String gameString, String rugString) {
         // The String is 7 characters long
-        if (rugString.length()!=7) {return false;}
-        GameState gameState=new GameState(gameString);
-        Rug rug=new Rug(rugString);
+        if (rugString.length() != 7) {
+            return false;
+        }
+        Rug rug = new Rug(rugString);
         // The first character in the String corresponds to the colour character of a player present in the game
-        if (!Colour.isColourValid(rugString.charAt(0))) {return false;}
+        if (!Colour.isColourValid(rugString.charAt(0))) {
+            return false;
+        }
         // The next 4 characters represent coordinates that are on the board
-        for (Tile tile : rug.getRugTiles()){
-            if (!Board.isTileValid(tile)){
+        for (Tile tile : rug.getRugTiles()) {
+            if (!Board.isTileValid(tile)) {
                 return false;
             }
         }
-        Board board=new Board();
-        List<Rug> placedRugs=board.getPlacedRugs();
         // The combination of that ID number and colour is unique
-        for (Rug placedRug:placedRugs){
-            if (rug.getColour()==placedRug.getColour() && rug.getID()==placedRug.getID()){
+        String assamString = getAssamString(gameString);
+        String boardString = getBoardString(gameString);
+        Board board = new Board(assamString, boardString);
+        List<Rug> visibleRugs = board.getVisibleRugs();
+        System.out.println(visibleRugs);
+        for (Rug placedRug : visibleRugs) {
+            if (rug.getColour() == placedRug.getColour() && rug.getID() == placedRug.getID()) {
                 return false;
             }
         }
