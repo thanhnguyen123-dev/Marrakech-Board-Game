@@ -175,7 +175,7 @@ public class Board {
      * Determine whether the coordinate of a tile on which can place a rug is valid
      *
      * @param tile
-     * @return
+     * @return true if the coordinate of tile is valid, or false otherwise
      */
     public static boolean isTileValid(Tile tile) {
         int row = tile.getRow();

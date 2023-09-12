@@ -137,11 +137,11 @@ public class GameState {
     }
 
     /**
-     * Determine whether a rug String is valid.
+     * Determine whether a rug(string) is valid.
      *
      * @param gameString
      * @param rugString
-     * @return
+     * @return true if the rug is valid, or false otherwise
      */
     public static boolean isRugValid(String gameString, String rugString) {
         // The String is 7 characters long
