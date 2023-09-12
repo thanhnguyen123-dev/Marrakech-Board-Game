@@ -40,6 +40,8 @@ public class Viewer extends Application {
     public class FrontEndTile extends Polygon {
         Tile backEndTile;
         double side;
+
+        // frontEndTile stores the data of backEndTile
         public FrontEndTile(double x, double y, double side, Tile backEndTile) {
             double halfSide = side / 2;
             this.backEndTile = backEndTile;
@@ -48,7 +50,7 @@ public class Viewer extends Application {
                     x - halfSide, y + halfSide, x + halfSide, y + halfSide,
                     x + halfSide, y - halfSide, x - halfSide, y - halfSide
             );
-            this.setStroke(Color.RED);
+            this.setStroke(Color.BLACK);
             this.setStrokeWidth(5);
 
         }
