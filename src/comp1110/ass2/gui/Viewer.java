@@ -1,5 +1,10 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.GameState;
+import comp1110.ass2.board.Board;
+import comp1110.ass2.board.Tile;
+import comp1110.ass2.player.Colour;
+import comp1110.ass2.player.Rug;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -9,7 +14,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class Viewer extends Application {
 
@@ -18,7 +27,48 @@ public class Viewer extends Application {
 
     private final Group root = new Group();
     private final Group controls = new Group();
+    private final Group display = new Group();
     private TextField boardTextField;
+
+    // FRONT END fields
+    private FrontEndTile[][] frontEndTiles = new FrontEndTile[Board.NUM_OF_ROWS][Board.NUM_OF_COLS];
+
+
+
+    /**
+     * Constructor: creates an instance of FrontEndTile
+     * - Front-End representation of a Tile
+     */
+    public class FrontEndTile extends Polygon {
+        Tile backEndTile;
+        double side;
+        public FrontEndTile(double x, double y, double side, Tile backEndTile) {
+            this.backEndTile = backEndTile;
+            this.side = side;
+            this.getPoints().setAll(
+                    x - side, y + side, x + side, y + side,
+                    x + side, y - side, x - side, y - side
+            );
+            this.setStroke(Color.RED);
+            this.setStrokeWidth(5);
+
+        }
+
+        /**
+         *
+         * @param backEndColour
+         */
+        public void fillFrontEndColour(Colour backEndColour) {
+            switch (backEndColour) {
+                case YELLOW -> this.setFill(Color.YELLOW);
+                case RED -> this.setFill(Color.RED);
+                case CYAN -> this.setFill(Color.CYAN);
+                case PURPLE -> this.setFill(Color.PURPLE);
+                default -> this.setFill(Color.ORANGE);
+            }
+        }
+    }
+
 
 
     /**
@@ -28,6 +78,53 @@ public class Viewer extends Application {
      */
     void displayState(String state) {
         // FIXME Task 5: implement the simple state viewer
+        GameState gameState = new GameState(state);
+        Board board = gameState.getBoard();
+        double x = 100;
+        double y = 100;
+        double side = 100;
+        for(int row = 0; row < Board.NUM_OF_ROWS; row ++) {
+            for (int col = 0; col < Board.NUM_OF_COLS; col++) {
+
+                Tile[][] backEndTiles = board.getTiles();
+                Tile backEndTile = backEndTiles[row][col];
+                FrontEndTile frontEndTile = new FrontEndTile(x, y, side, backEndTile);
+
+                if (backEndTile.isEmpty()) {
+                    frontEndTile.setFill(Color.ORANGE);
+                }
+                else {
+                    // Temporary: Assam as white
+                    if (backEndTile.isAssam(board)) {
+                        frontEndTile.setFill(Color.WHITE);
+                    }
+//                    else {
+//                        Rug rug = backEndTile.getTopRug();
+//                        Colour rugColour = rug.getColour();
+//                        frontEndTile.fillFrontEndColour(rugColour);
+//
+//                    }
+                }
+
+                frontEndTiles[row][col] = frontEndTile;
+                x += side;
+            }
+            y += side;
+            x = 100;
+        }
+
+        ArrayList<FrontEndTile> frontEndTileArrayList = new ArrayList<>();
+        for (int row = 0; row < Board.NUM_OF_ROWS; row++) {
+            for (int col = 0; col < Board.NUM_OF_COLS ; col++) {
+                FrontEndTile frontEndTile = frontEndTiles[row][col];
+                frontEndTileArrayList.add(frontEndTile);
+            }
+        }
+
+        display.getChildren().addAll(frontEndTileArrayList);
+
+
+
     }
 
     /**
@@ -59,6 +156,9 @@ public class Viewer extends Application {
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
 
         root.getChildren().add(controls);
+        root.getChildren().add(display);
+
+
 
         makeControls();
 

@@ -10,9 +10,9 @@ import java.util.List;
  * the board
  */
 public class Board {
-    private static final int NUM_OF_ROWS = 7;
-    private static final int NUM_OF_COLS = 7;
-    private static final int LENGTH_OF_SHORT_RUG_STRING = 3;
+    public static final int NUM_OF_ROWS = 7;
+    public static final int NUM_OF_COLS = 7;
+    public static final int LENGTH_OF_SHORT_RUG_STRING = 3;
 
     private Tile[][] tiles = new Tile[NUM_OF_ROWS][NUM_OF_COLS];
     private List<Rug> placedRugs = new ArrayList<Rug>();
@@ -187,4 +187,15 @@ public class Board {
         }
         return false;
     }
+
+    /**
+     * getter method for the Tiles matrix
+     */
+    public Tile[][] getTiles() {
+        return tiles;
+    }
+
+
+
+
 }

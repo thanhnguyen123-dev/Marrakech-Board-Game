@@ -10,6 +10,7 @@ public class Tile {
     private final int row, col;
     private Rug topRug;
 
+
     /**
      * Enum determines whether a Tile is empty or not
      * If there is a rug or Assam on the Tile, it's occupied
@@ -54,4 +55,31 @@ public class Tile {
     public boolean isEmpty(){
         return tileState==TileState.EMPTY;
     }
+
+    /**
+     * check if the tile contains a part of the rug
+     */
+    public boolean isRug() {
+        if (this.getTopRug() != null) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param board
+     * @return
+     */
+    public boolean isAssam(Board board) {
+        Tile assamTile = board.getAssamTile();
+        if (this.getRow() == assamTile.getRow() &&
+                this.getCol() == assamTile.getCol()) {
+            return true;
+        }
+        return false;
+    }
+
+
+
 }

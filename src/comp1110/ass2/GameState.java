@@ -116,7 +116,8 @@ public class GameState {
         }
     }
 
-    private List<String> getPlayerStrings(String gameString) {
+
+    public static List<String> getPlayerStrings(String gameString) {
         List<String> playerStrings = new ArrayList<String>();
         int beginIndex = 1;
         while (gameString.contains("P")) {
@@ -126,12 +127,12 @@ public class GameState {
         return playerStrings;
     }
 
-    private static String getAssamString(String gameString) {
+    public static String getAssamString(String gameString) {
         int beginIndex = gameString.indexOf("A") + 1;
         return gameString.substring(beginIndex, beginIndex + LENGTH_OF_ASSAM_STRING);
     }
 
-    private static String getBoardString(String gameString) {
+    public static String getBoardString(String gameString) {
         int beginIndex = gameString.indexOf("B") + 1;
         return gameString.substring(beginIndex);
     }
@@ -187,4 +188,12 @@ public class GameState {
         gameState.moveAssam(dieResult);
         return gameState.board.generateAssamString();
     }
+
+    public Board getBoard() {
+        return board;
+    }
+
+
 }
+
+
