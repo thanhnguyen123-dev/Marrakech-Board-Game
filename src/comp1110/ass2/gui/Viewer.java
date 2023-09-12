@@ -84,26 +84,28 @@ public class Viewer extends Application {
         for(int row = 0; row < Board.NUM_OF_ROWS; row ++) {
             for (int col = 0; col < Board.NUM_OF_COLS; col++) {
 
+                // Get the Tiles matrix from Board
                 Tile[][] backEndTiles = board.getTiles();
                 Tile backEndTile = backEndTiles[row][col];
-                // instantiate the FrontEndTile class
+
+                // Instantiate the FrontEndTile class
                 FrontEndTile frontEndTile = new FrontEndTile(rowPixelValue, colPixelValue, side, backEndTile);
 
                 // Check the condition when the Tile is EMPTY
                 if (backEndTile.isEmpty()) {
                     frontEndTile.setFill(Color.ORANGE);
                 }
-                else {
-                    // Temporary: Assam as white
-                    if (backEndTile.isAssam(board)) {
-                        frontEndTile.setFill(Color.WHITE);
-                    }
-                    else {
-                        Rug rug = backEndTile.getTopRug();
-                        Colour rugColour = rug.getColour();
-                        frontEndTile.fillFrontEndColour(rugColour);
 
-                    }
+                // Check the condition when the Tile is OCCUPIED by Assam
+                else if (backEndTile.isAssam(board)) {
+                    frontEndTile.setFill(Color.WHITE);
+                }
+
+                // Check the condition when the Tile is OCCUPIED by a Rug piece
+                else {
+                    Rug rug = backEndTile.getTopRug();
+                    Colour rugColour = rug.getColour();
+                    frontEndTile.fillFrontEndColour(rugColour);
                 }
                 frontEndTiles[row][col] = frontEndTile;
                 rowPixelValue += side;
@@ -112,6 +114,7 @@ public class Viewer extends Application {
             rowPixelValue = 100;
         }
 
+        // Initialize the ArrayList containing FrontEndTile
         ArrayList<FrontEndTile> frontEndTileArrayList = new ArrayList<>();
         for (int row = 0; row < Board.NUM_OF_ROWS; row++) {
             for (int col = 0; col < Board.NUM_OF_COLS; col++) {
