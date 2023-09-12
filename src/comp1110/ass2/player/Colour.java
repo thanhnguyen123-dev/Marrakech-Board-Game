@@ -21,7 +21,7 @@ public enum Colour {
 
 
     /**
-     * convert the character to its corresponding colour
+     * Convert the character to its corresponding colour
      * @param colourChar
      * @return Colour
      */

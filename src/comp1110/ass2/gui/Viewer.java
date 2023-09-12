@@ -24,39 +24,40 @@ public class Viewer extends Application {
 
     private static final int VIEWER_WIDTH = 1200;
     private static final int VIEWER_HEIGHT = 700;
-
     private final Group root = new Group();
     private final Group controls = new Group();
     private final Group display = new Group();
     private TextField boardTextField;
-
-    // FRONT END fields
     private FrontEndTile[][] frontEndTiles = new FrontEndTile[Board.NUM_OF_ROWS][Board.NUM_OF_COLS];
 
     /**
-     * Constructor: creates an instance of FrontEndTile
-     * - Front-End representation of a Tile
+     * Subclass FrontEndTile that inherits properties from Superclass Polygon, containing BackEnd information
      */
     public class FrontEndTile extends Polygon {
         Tile backEndTile;
         double side;
 
-        // frontEndTile stores the data of backEndTile
+        /**
+         * Constructor: creates an instance of FrontEndTile
+         * FrontEnd representation of a Tile
+         */
         public FrontEndTile(double x, double y, double side, Tile backEndTile) {
             double halfSide = side / 2;
             this.backEndTile = backEndTile;
             this.side = side;
+
+            // plot the points for the Square tile
             this.getPoints().setAll(
                     x - halfSide, y + halfSide, x + halfSide, y + halfSide,
                     x + halfSide, y - halfSide, x - halfSide, y - halfSide
             );
             this.setStroke(Color.BLACK);
-            this.setStrokeWidth(5);
+            this.setStrokeWidth(0.5);
 
         }
 
         /**
-         * fill the colour for front-end elements
+         * Fill the colour for FrontEndTile based on colour of BackEnd Tile
          * @param backEndColour
          */
         public void fillFrontEndColour(Colour backEndColour) {
@@ -70,7 +71,6 @@ public class Viewer extends Application {
         }
     }
 
-
     /**
      * Draw the board at the current game state
      * @param state
@@ -78,16 +78,18 @@ public class Viewer extends Application {
     public void drawBoard(String state) {
         GameState gameState = new GameState(state);
         Board board = gameState.getBoard();
-        double x = 100;
-        double y = 100;
+        double rowPixelValue = 100;
+        double colPixelValue = 100;
         double side = 30;
         for(int row = 0; row < Board.NUM_OF_ROWS; row ++) {
             for (int col = 0; col < Board.NUM_OF_COLS; col++) {
 
                 Tile[][] backEndTiles = board.getTiles();
                 Tile backEndTile = backEndTiles[row][col];
-                FrontEndTile frontEndTile = new FrontEndTile(x, y, side, backEndTile);
+                // instantiate the FrontEndTile class
+                FrontEndTile frontEndTile = new FrontEndTile(rowPixelValue, colPixelValue, side, backEndTile);
 
+                // Check the condition when the Tile is EMPTY
                 if (backEndTile.isEmpty()) {
                     frontEndTile.setFill(Color.ORANGE);
                 }
@@ -104,10 +106,10 @@ public class Viewer extends Application {
                     }
                 }
                 frontEndTiles[row][col] = frontEndTile;
-                x += side;
+                rowPixelValue += side;
             }
-            y += side;
-            x = 100;
+            colPixelValue += side;
+            rowPixelValue = 100;
         }
 
         ArrayList<FrontEndTile> frontEndTileArrayList = new ArrayList<>();
@@ -126,9 +128,7 @@ public class Viewer extends Application {
      * @param state an array of two strings, representing the current game state
      */
     void displayState(String state) {
-        // FIXME Task 5: implement the simple state viewer
         drawBoard(state);
-
     }
 
     /**
@@ -161,8 +161,6 @@ public class Viewer extends Application {
 
         root.getChildren().add(controls);
         root.getChildren().add(display);
-
-
 
         makeControls();
 
