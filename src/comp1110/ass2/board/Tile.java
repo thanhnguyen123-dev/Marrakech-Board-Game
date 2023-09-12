@@ -19,7 +19,7 @@ public class Tile {
         EMPTY, OCCUPIED;
     }
 
-    private TileState tileState;
+    private TileState tileState = TileState.EMPTY;
 
     public Tile(int row, int col) {
         this.row = row;
@@ -40,6 +40,7 @@ public class Tile {
 
     public void setTopRug(Rug rug) {
         this.topRug = rug;
+        this.tileState = TileState.OCCUPIED;
     }
 
     public boolean isAdjacent(Tile otherTile) {

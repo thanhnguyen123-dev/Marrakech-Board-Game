@@ -33,8 +33,6 @@ public class Viewer extends Application {
     // FRONT END fields
     private FrontEndTile[][] frontEndTiles = new FrontEndTile[Board.NUM_OF_ROWS][Board.NUM_OF_COLS];
 
-
-
     /**
      * Constructor: creates an instance of FrontEndTile
      * - Front-End representation of a Tile
@@ -43,11 +41,12 @@ public class Viewer extends Application {
         Tile backEndTile;
         double side;
         public FrontEndTile(double x, double y, double side, Tile backEndTile) {
+            double halfSide = side / 2;
             this.backEndTile = backEndTile;
             this.side = side;
             this.getPoints().setAll(
-                    x - side, y + side, x + side, y + side,
-                    x + side, y - side, x - side, y - side
+                    x - halfSide, y + halfSide, x + halfSide, y + halfSide,
+                    x + halfSide, y - halfSide, x - halfSide, y - halfSide
             );
             this.setStroke(Color.RED);
             this.setStrokeWidth(5);
@@ -55,7 +54,7 @@ public class Viewer extends Application {
         }
 
         /**
-         *
+         * fill the colour for front-end elements
          * @param backEndColour
          */
         public void fillFrontEndColour(Colour backEndColour) {
@@ -70,19 +69,16 @@ public class Viewer extends Application {
     }
 
 
-
     /**
-     * Draw a placement in the window, removing any previously drawn placements
-     *
-     * @param state an array of two strings, representing the current game state
+     * Draw the board at the current game state
+     * @param state
      */
-    void displayState(String state) {
-        // FIXME Task 5: implement the simple state viewer
+    public void drawBoard(String state) {
         GameState gameState = new GameState(state);
         Board board = gameState.getBoard();
         double x = 100;
         double y = 100;
-        double side = 100;
+        double side = 30;
         for(int row = 0; row < Board.NUM_OF_ROWS; row ++) {
             for (int col = 0; col < Board.NUM_OF_COLS; col++) {
 
@@ -98,14 +94,13 @@ public class Viewer extends Application {
                     if (backEndTile.isAssam(board)) {
                         frontEndTile.setFill(Color.WHITE);
                     }
-//                    else {
-//                        Rug rug = backEndTile.getTopRug();
-//                        Colour rugColour = rug.getColour();
-//                        frontEndTile.fillFrontEndColour(rugColour);
-//
-//                    }
-                }
+                    else {
+                        Rug rug = backEndTile.getTopRug();
+                        Colour rugColour = rug.getColour();
+                        frontEndTile.fillFrontEndColour(rugColour);
 
+                    }
+                }
                 frontEndTiles[row][col] = frontEndTile;
                 x += side;
             }
@@ -115,15 +110,22 @@ public class Viewer extends Application {
 
         ArrayList<FrontEndTile> frontEndTileArrayList = new ArrayList<>();
         for (int row = 0; row < Board.NUM_OF_ROWS; row++) {
-            for (int col = 0; col < Board.NUM_OF_COLS ; col++) {
+            for (int col = 0; col < Board.NUM_OF_COLS; col++) {
                 FrontEndTile frontEndTile = frontEndTiles[row][col];
                 frontEndTileArrayList.add(frontEndTile);
             }
         }
-
         display.getChildren().addAll(frontEndTileArrayList);
+    }
 
-
+    /**
+     * Draw a placement in the window, removing any previously drawn placements
+     *
+     * @param state an array of two strings, representing the current game state
+     */
+    void displayState(String state) {
+        // FIXME Task 5: implement the simple state viewer
+        drawBoard(state);
 
     }
 
