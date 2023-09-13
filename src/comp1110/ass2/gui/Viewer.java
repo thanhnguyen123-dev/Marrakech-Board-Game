@@ -2,6 +2,7 @@ package comp1110.ass2.gui;
 
 import comp1110.ass2.GameState;
 import comp1110.ass2.board.Board;
+import comp1110.ass2.board.Direction;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Rug;
@@ -109,13 +110,25 @@ public class Viewer extends Application {
                 // Check the condition when the Tile is OCCUPIED by Assam
                 else if (backEndTile.isAssam(board)) {
                     frontEndTile.setFill(Color.ORANGE);
+                    Direction assamDirection = board.getAssamDirection();
+
+                    // Assam FrontEnd representation
                     Image assamImage = new Image("Assam.png");
                     ImageView assamImageView = new ImageView(assamImage);
                     assamImageView.setFitWidth(50);
                     assamImageView.setFitHeight(50);
-                    assamImageView.setX(rowPixelValue - 25);
-                    assamImageView.setY(colPixelValue - 25);
+                    assamImageView.setX(rowPixelValue - 20);
+                    assamImageView.setY(colPixelValue - 20);
+
+                    // Direction FrontEnd representation
+                    Image arrowImage = new Image("arrow.png");
+                    ImageView arrowImageView = new ImageView(arrowImage);
+                    arrowImageView.setX(rowPixelValue + 2.5);
+                    arrowImageView.setY(colPixelValue - 28);
+
+
                     img.getChildren().addAll(assamImageView);
+                    img.getChildren().addAll(arrowImageView);
 
                 }
 

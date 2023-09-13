@@ -168,7 +168,7 @@ public class Board {
     }
 
     public String generateAssamString() {
-        return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.directionChar;
+        return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.getDirectionChar();
     }
 
     /**

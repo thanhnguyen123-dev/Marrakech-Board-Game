@@ -9,8 +9,8 @@ public enum Direction {
     SOUTH(180, 'S'),
     WEST(270, 'W');
 
-    public int angleValue;
-    public final char directionChar;
+    private int angleValue;
+    private final char directionChar;
 
     /**
      * Constructor: creates a new instance for the Direction enum
@@ -51,5 +51,13 @@ public enum Direction {
             }
         }
         return null;
+    }
+
+    public char getDirectionChar() {
+        return directionChar;
+    }
+
+    public int getAngleValue() {
+        return angleValue;
     }
 }
