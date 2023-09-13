@@ -19,8 +19,10 @@ public class Tile {
         EMPTY, OCCUPIED;
     }
 
+    // Initialize tileState to EMPTY when the Tile has not been placed on
     private TileState tileState = TileState.EMPTY;
 
+    // Constructor: creates an instance of the Tile class
     public Tile(int row, int col) {
         this.row = row;
         this.col = col;
