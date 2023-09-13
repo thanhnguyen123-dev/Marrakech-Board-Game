@@ -30,7 +30,7 @@ public class Viewer extends Application {
     private final Group root = new Group();
     private final Group controls = new Group();
     private final Group display = new Group();
-    private final Group img = new Group();
+    private final Group images = new Group();
     private TextField boardTextField;
     private FrontEndTile[][] frontEndTiles = new FrontEndTile[Board.NUM_OF_ROWS][Board.NUM_OF_COLS];
 
@@ -38,8 +38,8 @@ public class Viewer extends Application {
      * Subclass FrontEndTile that inherits properties from Superclass Polygon, containing BackEnd information
      */
     public class FrontEndTile extends Polygon {
-        Tile backEndTile;
-        double side;
+        private Tile backEndTile;
+        private double side;
 
         /**
          * Constructor: creates an instance of FrontEndTile
@@ -128,9 +128,8 @@ public class Viewer extends Application {
                     arrowImageView.setY(colPixelValue - 30);
                     arrowImageView.setRotate(assamAngleValue);
 
-
-                    img.getChildren().addAll(assamImageView);
-                    img.getChildren().addAll(arrowImageView);
+                    images.getChildren().addAll(assamImageView);
+                    images.getChildren().addAll(arrowImageView);
 
                 }
 
@@ -156,10 +155,7 @@ public class Viewer extends Application {
                 frontEndTileArrayList.add(frontEndTile);
             }
         }
-
-
         display.getChildren().addAll(frontEndTileArrayList);
-
     }
 
     /**
@@ -169,7 +165,7 @@ public class Viewer extends Application {
      */
     void displayState(String state) {
         drawBoard(state);
-        img.toFront();
+        images.toFront();
         displayPlayerInfo(state);
     }
 
@@ -203,7 +199,7 @@ public class Viewer extends Application {
 
         root.getChildren().add(controls);
         root.getChildren().add(display);
-        root.getChildren().add(img);
+        root.getChildren().add(images);
 
         makeControls();
 
