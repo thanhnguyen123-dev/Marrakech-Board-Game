@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
@@ -82,6 +83,8 @@ public class Viewer extends Application {
     public void displayPlayerInfo(String state) {
         GameState gameState = new GameState(state);
         Player[] players = gameState.getPlayers();
+        double xPixelValue = 750;
+        double yPixelValue = 125;
         for (Player player : players) {
             int remainingDirhams = player.getDirham();
             int numOfRemainingRugs = player.getNumOfUnplacedRugs();
@@ -90,8 +93,11 @@ public class Viewer extends Application {
             Text playerText = new Text("Player " + playerColourString);
             Text dirhamText = new Text("Remaining Dirhams: " + player.getDirham());
             Text rugText = new Text("Remaining Rugs: " + player.getNumOfUnplacedRugs());
-
-
+            VBox vbox = new VBox(playerText, dirhamText, rugText);
+            vbox.setLayoutX(xPixelValue);
+            vbox.setLayoutY(yPixelValue);
+            display.getChildren().addAll(vbox);
+            yPixelValue += 75;
         }
 
     }

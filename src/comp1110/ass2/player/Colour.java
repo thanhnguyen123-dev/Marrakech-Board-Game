@@ -45,6 +45,11 @@ public enum Colour {
         }else return false;
     }
 
+    /**
+     * 
+     * @param colour
+     * @return
+     */
     public static String colourToString(Colour colour) {
         switch (colour) {
             case YELLOW: return "Yellow";

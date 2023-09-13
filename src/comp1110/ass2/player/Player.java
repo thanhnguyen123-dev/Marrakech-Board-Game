@@ -48,6 +48,10 @@ public class Player {
         otherPlayer.dirham += amount;
     }
 
+    /**
+     *
+     * @param playerString
+     */
     public Player(String playerString) {
         this.dirham = Integer.parseInt(playerString.substring(1, 4), 10);
         this.numOfUnplacedRugs = Integer.parseInt(playerString.substring(4, 6), 10);
