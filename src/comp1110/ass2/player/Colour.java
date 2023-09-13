@@ -44,4 +44,14 @@ public enum Colour {
             return true;
         }else return false;
     }
+
+    public static String colourToString(Colour colour) {
+        switch (colour) {
+            case YELLOW: return "Yellow";
+            case RED: return "Red";
+            case CYAN: return "Cyan";
+            case PURPLE: return "Purple";
+            default: return null;
+        }
+    }
 }

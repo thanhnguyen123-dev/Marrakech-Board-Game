@@ -19,6 +19,7 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -80,7 +81,18 @@ public class Viewer extends Application {
      */
     public void displayPlayerInfo(String state) {
         GameState gameState = new GameState(state);
-        Player[] players = gameState.g
+        Player[] players = gameState.getPlayers();
+        for (Player player : players) {
+            int remainingDirhams = player.getDirham();
+            int numOfRemainingRugs = player.getNumOfUnplacedRugs();
+            Colour playerColour = player.getColour();
+            String playerColourString = Colour.colourToString(playerColour);
+            Text playerText = new Text("Player " + playerColourString);
+            Text dirhamText = new Text("Remaining Dirhams: " + player.getDirham());
+            Text rugText = new Text("Remaining Rugs: " + player.getNumOfUnplacedRugs());
+
+
+        }
 
     }
 
