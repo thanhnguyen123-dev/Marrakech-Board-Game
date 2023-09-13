@@ -193,6 +193,9 @@ public class GameState {
         return board;
     }
 
+    public Player[] getPlayers() {
+        return players;
+    }
 
 }
 

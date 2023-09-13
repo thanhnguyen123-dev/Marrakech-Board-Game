@@ -5,6 +5,7 @@ import comp1110.ass2.board.Board;
 import comp1110.ass2.board.Direction;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
+import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -78,7 +79,9 @@ public class Viewer extends Application {
      * Display the Players information at the current game state
      */
     public void displayPlayerInfo(String state) {
-        // TODO
+        GameState gameState = new GameState(state);
+        Player[] players = gameState.g
+
     }
 
     /**
