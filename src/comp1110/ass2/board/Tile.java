@@ -19,32 +19,57 @@ public class Tile {
         EMPTY, OCCUPIED;
     }
 
-    // Initialize tileState to EMPTY when the Tile has not been placed on
+    // Initialize tileState to EMPTY
     private TileState tileState = TileState.EMPTY;
 
-    // Constructor: creates an instance of the Tile class
+    /**
+     * Constructor: creates an instance of the Tile class
+     * @param row
+     * @param col
+     */
     public Tile(int row, int col) {
         this.row = row;
         this.col = col;
     }
 
+    /**
+     * getter method for the row position of the Tile
+     * @return row
+     */
     public int getRow() {
         return this.row;
     }
 
+    /**
+     * getter method for the column position of the Tile
+     * @return col
+     */
     public int getCol() {
         return this.col;
     }
 
+    /**
+     * getter method for the Rug on the Tile
+     * @return topRug
+     */
     public Rug getTopRug() {
         return this.topRug;
     }
 
+    /**
+     * setter method for the Rug on the Tile
+     * @param rug
+     */
     public void setTopRug(Rug rug) {
         this.topRug = rug;
         this.tileState = TileState.OCCUPIED;
     }
 
+    /**
+     * Check if two Tile objects are adjacent to each other
+     * @param otherTile
+     * @return true or false
+     */
     public boolean isAdjacent(Tile otherTile) {
         if (this.row == otherTile.row && Math.abs(this.col - otherTile.col) == 1) {
             return true;
@@ -55,6 +80,10 @@ public class Tile {
         return false;
     }
 
+    /**
+     * Check if the TileState is EMPTY
+     * @return true or false
+     */
     public boolean isEmpty(){
         return tileState==TileState.EMPTY;
     }
@@ -72,7 +101,7 @@ public class Tile {
     /**
      * Check if the Tile contains Assam
      * @param board
-     * @return boolean value (true or false)
+     * @return true or false
      */
     public boolean isAssam(Board board) {
         Tile assamTile = board.getAssamTile();
