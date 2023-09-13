@@ -13,7 +13,4 @@ public class Die {
         int index = new Random().nextInt(SIDES.length);
         return SIDES[index];
     }
-
-
-
 }

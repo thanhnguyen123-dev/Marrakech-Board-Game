@@ -72,6 +72,13 @@ public class Viewer extends Application {
     }
 
     /**
+     * Display the Players information at the current game state
+     */
+    public void displayPlayerInfo() {
+
+    }
+
+    /**
      * Draw the board at the current game state
      * @param state
      */
