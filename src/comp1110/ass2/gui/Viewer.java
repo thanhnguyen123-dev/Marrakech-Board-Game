@@ -86,13 +86,16 @@ public class Viewer extends Application {
         double xPixelValue = 750;
         double yPixelValue = 125;
         for (Player player : players) {
+            // Access some BackEnd data of Player
             int remainingDirhams = player.getDirham();
             int numOfRemainingRugs = player.getNumOfUnplacedRugs();
             Colour playerColour = player.getColour();
+
+            // FrontEnd elements to represent the Player information
             String playerColourString = Colour.colourToString(playerColour);
             Text playerText = new Text("Player " + playerColourString);
-            Text dirhamText = new Text("Remaining Dirhams: " + player.getDirham());
-            Text rugText = new Text("Remaining Rugs: " + player.getNumOfUnplacedRugs());
+            Text dirhamText = new Text("Remaining Dirhams: " + remainingDirhams);
+            Text rugText = new Text("Remaining Rugs: " + numOfRemainingRugs);
             VBox vbox = new VBox(playerText, dirhamText, rugText);
             vbox.setLayoutX(xPixelValue);
             vbox.setLayoutY(yPixelValue);
