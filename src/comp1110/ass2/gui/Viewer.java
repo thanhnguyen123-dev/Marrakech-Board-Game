@@ -111,6 +111,7 @@ public class Viewer extends Application {
                 else if (backEndTile.isAssam(board)) {
                     frontEndTile.setFill(Color.ORANGE);
                     Direction assamDirection = board.getAssamDirection();
+                    int assamAngleValue = assamDirection.getAngleValue();
 
                     // Assam FrontEnd representation
                     Image assamImage = new Image("Assam.png");
@@ -123,8 +124,9 @@ public class Viewer extends Application {
                     // Direction FrontEnd representation
                     Image arrowImage = new Image("arrow.png");
                     ImageView arrowImageView = new ImageView(arrowImage);
-                    arrowImageView.setX(rowPixelValue + 2.5);
-                    arrowImageView.setY(colPixelValue - 28);
+                    arrowImageView.setX(rowPixelValue - 10);
+                    arrowImageView.setY(colPixelValue - 30);
+                    arrowImageView.setRotate(assamAngleValue);
 
 
                     img.getChildren().addAll(assamImageView);

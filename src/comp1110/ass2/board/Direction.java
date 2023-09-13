@@ -4,10 +4,10 @@ package comp1110.ass2.board;
  * Possible rotation direction for Assam
  */
 public enum Direction {
-    NORTH(0, 'N'),
-    EAST(90, 'E'),
-    SOUTH(180, 'S'),
-    WEST(270, 'W');
+    EAST(0, 'E'),
+    SOUTH(90, 'S'),
+    WEST(180, 'W'),
+    NORTH(270, 'N');
 
     private int angleValue;
     private final char directionChar;
