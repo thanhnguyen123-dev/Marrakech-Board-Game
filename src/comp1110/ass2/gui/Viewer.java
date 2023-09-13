@@ -13,11 +13,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
-
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import java.util.ArrayList;
 
 public class Viewer extends Application {
@@ -27,6 +29,7 @@ public class Viewer extends Application {
     private final Group root = new Group();
     private final Group controls = new Group();
     private final Group display = new Group();
+    private final Group img = new Group();
     private TextField boardTextField;
     private FrontEndTile[][] frontEndTiles = new FrontEndTile[Board.NUM_OF_ROWS][Board.NUM_OF_COLS];
 
@@ -53,7 +56,6 @@ public class Viewer extends Application {
             );
             this.setStroke(Color.BLACK);
             this.setStrokeWidth(0.5);
-
         }
 
         /**
@@ -74,8 +76,8 @@ public class Viewer extends Application {
     /**
      * Display the Players information at the current game state
      */
-    public void displayPlayerInfo() {
-
+    public void displayPlayerInfo(String state) {
+        // TODO
     }
 
     /**
@@ -87,8 +89,8 @@ public class Viewer extends Application {
         Board board = gameState.getBoard();
         double rowPixelValue = 100;
         double colPixelValue = 100;
-        double side = 30;
-        for(int row = 0; row < Board.NUM_OF_ROWS; row ++) {
+        double side = 75;
+        for (int row = 0; row < Board.NUM_OF_ROWS; row ++) {
             for (int col = 0; col < Board.NUM_OF_COLS; col++) {
 
                 // Get the Tiles matrix from Board
@@ -101,11 +103,20 @@ public class Viewer extends Application {
                 // Check the condition when the Tile is EMPTY
                 if (backEndTile.isEmpty()) {
                     frontEndTile.setFill(Color.ORANGE);
+
                 }
 
                 // Check the condition when the Tile is OCCUPIED by Assam
                 else if (backEndTile.isAssam(board)) {
-                    frontEndTile.setFill(Color.WHITE);
+                    frontEndTile.setFill(Color.ORANGE);
+                    Image assamImage = new Image("Assam.png");
+                    ImageView assamImageView = new ImageView(assamImage);
+                    assamImageView.setFitWidth(50);
+                    assamImageView.setFitHeight(50);
+                    assamImageView.setX(rowPixelValue - 25);
+                    assamImageView.setY(colPixelValue - 25);
+                    img.getChildren().addAll(assamImageView);
+
                 }
 
                 // Check the condition when the Tile is OCCUPIED by a Rug piece
@@ -114,6 +125,7 @@ public class Viewer extends Application {
                     Colour rugColour = rug.getColour();
                     frontEndTile.fillRugColour(rugColour);
                 }
+
                 frontEndTiles[row][col] = frontEndTile;
                 rowPixelValue += side;
             }
@@ -129,7 +141,10 @@ public class Viewer extends Application {
                 frontEndTileArrayList.add(frontEndTile);
             }
         }
+
+
         display.getChildren().addAll(frontEndTileArrayList);
+
     }
 
     /**
@@ -139,6 +154,8 @@ public class Viewer extends Application {
      */
     void displayState(String state) {
         drawBoard(state);
+        img.toFront();
+        displayPlayerInfo(state);
     }
 
     /**
@@ -171,6 +188,7 @@ public class Viewer extends Application {
 
         root.getChildren().add(controls);
         root.getChildren().add(display);
+        root.getChildren().add(img);
 
         makeControls();
 
