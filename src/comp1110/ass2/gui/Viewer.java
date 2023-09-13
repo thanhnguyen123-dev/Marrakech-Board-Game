@@ -60,7 +60,7 @@ public class Viewer extends Application {
          * Fill the colour for FrontEndTile based on colour of BackEnd Tile
          * @param backEndColour
          */
-        public void fillFrontEndColour(Colour backEndColour) {
+        public void fillRugColour(Colour backEndColour) {
             switch (backEndColour) {
                 case YELLOW -> this.setFill(Color.YELLOW);
                 case RED -> this.setFill(Color.RED);
@@ -105,7 +105,7 @@ public class Viewer extends Application {
                 else {
                     Rug rug = backEndTile.getTopRug();
                     Colour rugColour = rug.getColour();
-                    frontEndTile.fillFrontEndColour(rugColour);
+                    frontEndTile.fillRugColour(rugColour);
                 }
                 frontEndTiles[row][col] = frontEndTile;
                 rowPixelValue += side;
