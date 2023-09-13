@@ -58,7 +58,7 @@ public class Tile {
     }
 
     /**
-     * check if the tile contains a part of the rug
+     * Check if the Tile contains a part of the rug
      */
     public boolean isRug() {
         if (this.getTopRug() != null) {
@@ -68,9 +68,9 @@ public class Tile {
     }
 
     /**
-     *
+     * Check if the Tile contains Assam
      * @param board
-     * @return
+     * @return boolean value (true or false)
      */
     public boolean isAssam(Board board) {
         Tile assamTile = board.getAssamTile();
