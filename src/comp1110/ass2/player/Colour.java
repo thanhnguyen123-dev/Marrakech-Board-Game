@@ -1,5 +1,7 @@
 package comp1110.ass2.player;
 
+import javafx.scene.paint.Color;
+
 /**
  * Colour enum represents each player's representative
  */
@@ -56,6 +58,16 @@ public enum Colour {
             case RED: return "Red";
             case CYAN: return "Cyan";
             case PURPLE: return "Purple";
+            default: return null;
+        }
+    }
+
+    public Color getFrontEndColor(Colour colour) {
+        switch (colour) {
+            case YELLOW: return Color.YELLOW;
+            case RED: return Color.RED;
+            case CYAN: return Color.CYAN;
+            case PURPLE: return Color.PURPLE;
             default: return null;
         }
     }

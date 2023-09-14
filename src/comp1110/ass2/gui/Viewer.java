@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
@@ -98,6 +99,7 @@ public class Viewer extends Application {
             // FrontEnd elements to represent the Player information
             String playerColourString = Colour.colourToString(playerColour);
             Text playerText = new Text("Player " + playerColourString);
+            playerText.setFont(Font.font("Inter", 20));
             Text dirhamText = new Text("Remaining Dirhams: " + remainingDirhams);
             Text rugText = new Text("Remaining Rugs: " + numOfRemainingRugs);
             VBox vbox = new VBox(playerText, dirhamText, rugText);
@@ -222,10 +224,6 @@ public class Viewer extends Application {
             mosaicTrack.getChildren().add(circle);
             yRight += 150;
         }
-
-
-
-
     }
 
 
