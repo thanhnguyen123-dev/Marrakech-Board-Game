@@ -16,8 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
@@ -68,6 +67,17 @@ public class Viewer extends Application {
         }
     }
 
+    public class MosaicTrackCircle extends Circle {
+        public MosaicTrackCircle(double x, double y) {
+            this.setCenterX(x);
+            this.setCenterY(y);
+            this.setRadius(CIRCLE_RADIUS);
+            this.setFill(Color.LIGHTBLUE);
+            this.setStroke(Color.BLACK);
+            this.setStrokeWidth(0.5);
+        }
+    }
+
     /**
      * Display the Players information at the current game state
      */
@@ -86,7 +96,7 @@ public class Viewer extends Application {
             String playerColourString = Colour.colourToString(playerColour);
             Color textColor = Colour.getFrontEndColor(playerColour);
             Text playerText = new Text("Player " + playerColourString);
-            playerText.setFont(Font.font("Inter", 20));
+            playerText.setFont(Font.font("Verdana", 20));
             playerText.setFill(textColor);
             Text dirhamText = new Text("Remaining Dirhams: " + remainingDirhams);
             Text rugText = new Text("Remaining Rugs: " + numOfRemainingRugs);
@@ -137,7 +147,10 @@ public class Viewer extends Application {
                     assamImageView.setLayoutX(rowPixelValue - 15);
                     assamImageView.setLayoutY(colPixelValue - 15);
                     assamImageView.setRotate(assamAngleValue);
-                    images.getChildren().addAll(assamImageView);
+
+                    Text assamIndicator = new Text("Assam");
+
+                    images.getChildren().addAll(assamImageView, assamIndicator);
                 }
 
                 // Check the condition when the Tile is OCCUPIED by a Rug piece
@@ -173,10 +186,7 @@ public class Viewer extends Application {
         double xTop = 137.5;
         double yTop = 62.5;
         for (int i = 0; i < 4; i++) {
-            Circle circle = new Circle(CIRCLE_RADIUS);
-            circle.setCenterX(xTop);
-            circle.setCenterY(yTop);
-            circle.setFill(Color.LIGHTBLUE);
+            MosaicTrackCircle circle = new MosaicTrackCircle(xTop, yTop);
             mosaicTrack.getChildren().add(circle);
             xTop += 150;
         }
@@ -184,10 +194,7 @@ public class Viewer extends Application {
         double xBot = 62.5;
         double yBot = xBot + Board.NUM_OF_ROWS * SQUARE_SIDE;
         for (int i = 0; i < 4; i++) {
-            Circle circle = new Circle(CIRCLE_RADIUS);
-            circle.setCenterX(xBot);
-            circle.setCenterY(yBot);
-            circle.setFill(Color.LIGHTBLUE);
+            MosaicTrackCircle circle = new MosaicTrackCircle(xBot, yBot);
             mosaicTrack.getChildren().add(circle);
             xBot += 150;
         }
@@ -195,10 +202,7 @@ public class Viewer extends Application {
         double xLeft = 62.5;
         double yLeft = 137.5;
         for (int i = 0; i < 3; i++) {
-            Circle circle = new Circle(CIRCLE_RADIUS);
-            circle.setCenterX(xLeft);
-            circle.setCenterY(yLeft);
-            circle.setFill(Color.LIGHTBLUE);
+            MosaicTrackCircle circle = new MosaicTrackCircle(xLeft, yLeft);
             mosaicTrack.getChildren().add(circle);
             yLeft += 150;
         }
@@ -206,10 +210,7 @@ public class Viewer extends Application {
         double xRight = xLeft + Board.NUM_OF_COLS * SQUARE_SIDE;
         double yRight = 212.5;
         for (int i = 0; i < 3; i++) {
-            Circle circle = new Circle(CIRCLE_RADIUS);
-            circle.setCenterX(xRight);
-            circle.setCenterY(yRight);
-            circle.setFill(Color.LIGHTBLUE);
+            MosaicTrackCircle circle = new MosaicTrackCircle(xRight, yRight);
             mosaicTrack.getChildren().add(circle);
             yRight += 150;
         }
@@ -260,8 +261,10 @@ public class Viewer extends Application {
 
         root.getChildren().add(controls);
         root.getChildren().addAll(display, images, mosaicTrack);
+
         makeControls();
 
+        scene.setFill(Color.rgb(200, 200, 200));
         primaryStage.setScene(scene);
         primaryStage.show();
     }
