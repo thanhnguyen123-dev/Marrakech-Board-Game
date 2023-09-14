@@ -8,6 +8,10 @@ public class Player {
     private int numOfUnplacedRugs;
     private Colour colour;
 
+    /**
+     * Constructor: creates an instance of the Player class
+     * @param colour
+     */
     public Player(Colour colour) {
         this.dirham = 30;
         this.numOfUnplacedRugs = 15;
@@ -49,7 +53,8 @@ public class Player {
     }
 
     /**
-     *
+     * Constructor: creates an instance of the Player class
+     * Decode the playerString to get corresponding value for instance fields
      * @param playerString
      */
     public Player(String playerString) {

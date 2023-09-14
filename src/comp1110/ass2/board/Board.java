@@ -20,6 +20,10 @@ public class Board {
     private Tile assamTile;
     private Direction assamDirection;
 
+    /**
+     * Constructor: creates an instance of the Board class
+     * Initialize the board
+     */
     public Board() {
         for (int row = 0; row < NUM_OF_ROWS; row++) {
             for (int col = 0; col < NUM_OF_COLS; col++) {
@@ -30,22 +34,42 @@ public class Board {
         this.assamDirection = Direction.NORTH;
     }
 
+    /**
+     * getter method for placedRugs
+     * @return
+     */
     public List<Rug> getPlacedRugs() {
         return this.placedRugs;
     }
 
+    /**
+     * getter method for visibleRugs
+     * @return
+     */
     public List<Rug> getVisibleRugs() {
         return this.visibleRugs;
     }
 
+    /**
+     * getter method for assamTile
+     * @return
+     */
     public Tile getAssamTile() {
         return this.assamTile;
     }
 
+    /**
+     * getter method for assamDirection
+     * @return
+     */
     public Direction getAssamDirection() {
         return this.assamDirection;
     }
 
+    /**
+     * Move Assam by a given number of steps from rolling the die
+     * @param steps
+     */
     public void moveAssam(int steps) {
         int row = this.assamTile.getRow();
         int col = this.assamTile.getCol();
@@ -89,6 +113,9 @@ public class Board {
         }
     }
 
+    /**
+     * Move Assam out of the board
+     */
     private void moveAssamOutOfBounds() {
         int row = this.assamTile.getRow();
         int col = this.assamTile.getCol();
@@ -117,10 +144,19 @@ public class Board {
         this.assamDirection = this.assamDirection.rotate(180);
     }
 
+    /**
+     * Rotate Assam by a given angle of rotation
+     * @param rotation
+     */
     public void rotateAssam(int rotation) {
         this.assamDirection = this.assamDirection.rotate(rotation);
     }
 
+    /**
+     * Check if a Rug placement is valid according to the game rules
+     * @param rug
+     * @return true or false
+     */
     public boolean isPlacementValid(Rug rug) {
         Tile[] rugTiles = rug.getRugTiles();
         if (!rugTiles[0].isAdjacent(this.assamTile) && !rugTiles[1].isAdjacent(this.assamTile)) {
@@ -135,6 +171,10 @@ public class Board {
         return true;
     }
 
+    /**
+     * Place the rug onto the board's Tile
+     * @param rug
+     */
     public void placeRug(Rug rug) {
         placedRugs.add(rug);
         for (Tile tile : rug.getRugTiles()) {
@@ -142,6 +182,12 @@ public class Board {
         }
     }
 
+    /**
+     * Constructor: creates an instance of the Board class
+     * Decode assamString and boardString to Assam and Board objects
+     * @param assamString
+     * @param boardString
+     */
     public Board(String assamString, String boardString) {
         for (int col = 0; col < NUM_OF_ROWS; col++) {
             for (int row = 0; row < NUM_OF_COLS; row++) {
@@ -167,13 +213,16 @@ public class Board {
         return new int[]{row, col};
     }
 
+    /**
+     * Generate AssamString based on data of the Board
+     * @return
+     */
     public String generateAssamString() {
         return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.getDirectionChar();
     }
 
     /**
      * Determine whether the coordinate of a tile on which can place a rug is valid
-     *
      * @param tile
      * @return true if the coordinate of tile is valid, or false otherwise
      */
@@ -189,7 +238,7 @@ public class Board {
     }
 
     /**
-     * getter method for the Tiles matrix
+     * getter method for tiles
      */
     public Tile[][] getTiles() {
         return tiles;

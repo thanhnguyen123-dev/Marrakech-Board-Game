@@ -44,6 +44,11 @@ public enum Direction {
         return null;
     }
 
+    /**
+     * Convert character to corresponding Direction
+     * @param directionChar
+     * @return
+     */
     public static Direction charToDirection(char directionChar) {
         for (Direction direction : Direction.values()) {
             if (direction.directionChar == directionChar) {
@@ -53,10 +58,18 @@ public enum Direction {
         return null;
     }
 
+    /**
+     * getter method for directionChar
+     * @return directionChar
+     */
     public char getDirectionChar() {
         return directionChar;
     }
 
+    /**
+     * getter method for angleValue
+     * @return angleValue
+     */
     public int getAngleValue() {
         return angleValue;
     }
