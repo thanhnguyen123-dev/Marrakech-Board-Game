@@ -62,7 +62,7 @@ public enum Colour {
         }
     }
 
-    public Color getFrontEndColor(Colour colour) {
+    public static Color getFrontEndColor(Colour colour) {
         switch (colour) {
             case YELLOW: return Color.YELLOW;
             case RED: return Color.RED;

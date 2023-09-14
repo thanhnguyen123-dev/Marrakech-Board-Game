@@ -66,20 +66,6 @@ public class Viewer extends Application {
             this.setStroke(Color.BLACK);
             this.setStrokeWidth(0.5);
         }
-
-        /**
-         * Fill the colour for FrontEndTile based on colour of BackEnd Tile
-         * @param backEndColour
-         */
-        public void fillRugColour(Colour backEndColour) {
-            switch (backEndColour) {
-                case YELLOW -> this.setFill(Color.YELLOW);
-                case RED -> this.setFill(Color.RED);
-                case CYAN -> this.setFill(Color.CYAN);
-                case PURPLE -> this.setFill(Color.PURPLE);
-                default -> this.setFill(Color.ORANGE);
-            }
-        }
     }
 
     /**
@@ -98,8 +84,10 @@ public class Viewer extends Application {
 
             // FrontEnd elements to represent the Player information
             String playerColourString = Colour.colourToString(playerColour);
+            Color textColor = Colour.getFrontEndColor(playerColour);
             Text playerText = new Text("Player " + playerColourString);
             playerText.setFont(Font.font("Inter", 20));
+            playerText.setFill(textColor);
             Text dirhamText = new Text("Remaining Dirhams: " + remainingDirhams);
             Text rugText = new Text("Remaining Rugs: " + numOfRemainingRugs);
             VBox vbox = new VBox(playerText, dirhamText, rugText);
@@ -156,7 +144,8 @@ public class Viewer extends Application {
                 else {
                     Rug rug = backEndTile.getTopRug();
                     Colour rugColour = rug.getColour();
-                    frontEndTile.fillRugColour(rugColour);
+                    Color frontEndColor = Colour.getFrontEndColor(rugColour);
+                    frontEndTile.setFill(frontEndColor);
                 }
 
                 frontEndTiles[row][col] = frontEndTile;
