@@ -38,6 +38,8 @@ public class Viewer extends Application {
     private final Group mosaicTrack =  new Group();
     private TextField boardTextField;
     private FrontEndTile[][] frontEndTiles = new FrontEndTile[Board.NUM_OF_ROWS][Board.NUM_OF_COLS];
+    private final double CIRCLE_RADIUS = 50;
+    private final double SQUARE_SIDE = 75;
 
     /**
      * Subclass FrontEndTile that inherits properties from Superclass Polygon, containing BackEnd information
@@ -116,7 +118,7 @@ public class Viewer extends Application {
         Board board = gameState.getBoard();
         double rowPixelValue = 100;
         double colPixelValue = 100;
-        double side = 75;
+        double side = SQUARE_SIDE;
         for (int row = 0; row < Board.NUM_OF_ROWS; row ++) {
             for (int col = 0; col < Board.NUM_OF_COLS; col++) {
 
@@ -174,22 +176,58 @@ public class Viewer extends Application {
     }
 
     /**
-     * Draw the mosaic track on the edge of the board
+     * Draw mosaic tracks on the edge of the board
      */
     public void drawMosaicTrack() {
-        final double CIRCLE_RADIUS = 50;
-        double rowPixelValue = 137.5;
-        double colPixelValue = 62.5;
+        double xTop = 137.5;
+        double yTop = 62.5;
         for (int i = 0; i < 4; i++) {
             Circle circle = new Circle(CIRCLE_RADIUS);
-            circle.setCenterX(rowPixelValue);
-            circle.setCenterY(colPixelValue);
+            circle.setCenterX(xTop);
+            circle.setCenterY(yTop);
             circle.setFill(Color.LIGHTBLUE);
             mosaicTrack.getChildren().add(circle);
-            rowPixelValue += 150;
+            xTop += 150;
         }
 
+        double xBot = 62.5;
+        double yBot = xBot + Board.NUM_OF_ROWS * SQUARE_SIDE;
+        for (int i = 0; i < 4; i++) {
+            Circle circle = new Circle(CIRCLE_RADIUS);
+            circle.setCenterX(xBot);
+            circle.setCenterY(yBot);
+            circle.setFill(Color.LIGHTBLUE);
+            mosaicTrack.getChildren().add(circle);
+            xBot += 150;
+        }
+
+        double xLeft = 62.5;
+        double yLeft = 137.5;
+        for (int i = 0; i < 3; i++) {
+            Circle circle = new Circle(CIRCLE_RADIUS);
+            circle.setCenterX(xLeft);
+            circle.setCenterY(yLeft);
+            circle.setFill(Color.LIGHTBLUE);
+            mosaicTrack.getChildren().add(circle);
+            yLeft += 150;
+        }
+
+        double xRight = xLeft + Board.NUM_OF_COLS * SQUARE_SIDE;
+        double yRight = 212.5;
+        for (int i = 0; i < 3; i++) {
+            Circle circle = new Circle(CIRCLE_RADIUS);
+            circle.setCenterX(xRight);
+            circle.setCenterY(yRight);
+            circle.setFill(Color.LIGHTBLUE);
+            mosaicTrack.getChildren().add(circle);
+            yRight += 150;
+        }
+
+
+
+
     }
+
 
 
     /**
