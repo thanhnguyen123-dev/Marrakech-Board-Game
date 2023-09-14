@@ -19,6 +19,7 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -34,6 +35,7 @@ public class Viewer extends Application {
     private final Group controls = new Group();
     private final Group display = new Group();
     private final Group images = new Group();
+    private final Group mosaicTrack =  new Group();
     private TextField boardTextField;
     private FrontEndTile[][] frontEndTiles = new FrontEndTile[Board.NUM_OF_ROWS][Board.NUM_OF_COLS];
 
@@ -86,7 +88,7 @@ public class Viewer extends Application {
         double xPixelValue = 750;
         double yPixelValue = 125;
         for (Player player : players) {
-            // Access some BackEnd data of Player
+            // BackEnd data of Player
             int remainingDirhams = player.getDirham();
             int numOfRemainingRugs = player.getNumOfUnplacedRugs();
             Colour playerColour = player.getColour();
@@ -172,6 +174,25 @@ public class Viewer extends Application {
     }
 
     /**
+     * Draw the mosaic track on the edge of the board
+     */
+    public void drawMosaicTrack() {
+        final double CIRCLE_RADIUS = 50;
+        double rowPixelValue = 137.5;
+        double colPixelValue = 62.5;
+        for (int i = 0; i < 4; i++) {
+            Circle circle = new Circle(CIRCLE_RADIUS);
+            circle.setCenterX(rowPixelValue);
+            circle.setCenterY(colPixelValue);
+            circle.setFill(Color.LIGHTBLUE);
+            mosaicTrack.getChildren().add(circle);
+            rowPixelValue += 150;
+        }
+
+    }
+
+
+    /**
      * Draw a placement in the window, removing any previously drawn placements
      *
      * @param state an array of two strings, representing the current game state
@@ -179,6 +200,8 @@ public class Viewer extends Application {
     void displayState(String state) {
         drawBoard(state);
         images.toFront();
+        drawMosaicTrack();
+        mosaicTrack.toBack();
         displayPlayerInfo(state);
     }
 
@@ -211,7 +234,7 @@ public class Viewer extends Application {
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
 
         root.getChildren().add(controls);
-        root.getChildren().addAll(display, images);
+        root.getChildren().addAll(display, images, mosaicTrack);
         makeControls();
 
         primaryStage.setScene(scene);
