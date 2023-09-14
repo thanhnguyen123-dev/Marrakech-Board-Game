@@ -102,7 +102,7 @@ public class Viewer extends Application {
             display.getChildren().addAll(vbox);
             yPixelValue += 75;
         }
-
+    
     }
 
     /**
@@ -140,21 +140,10 @@ public class Viewer extends Application {
                     // Assam FrontEnd representation
                     Image assamImage = new Image("Assam.png");
                     ImageView assamImageView = new ImageView(assamImage);
-                    assamImageView.setFitWidth(50);
-                    assamImageView.setFitHeight(50);
-                    assamImageView.setX(rowPixelValue - 20);
-                    assamImageView.setY(colPixelValue - 20);
-
-                    // Direction FrontEnd representation
-                    Image arrowImage = new Image("arrow.png");
-                    ImageView arrowImageView = new ImageView(arrowImage);
-                    arrowImageView.setX(rowPixelValue - 10);
-                    arrowImageView.setY(colPixelValue - 30);
-                    arrowImageView.setRotate(assamAngleValue);
-
+                    assamImageView.setLayoutX(rowPixelValue - 15);
+                    assamImageView.setLayoutY(colPixelValue - 15);
+                    assamImageView.setRotate(assamAngleValue);
                     images.getChildren().addAll(assamImageView);
-                    images.getChildren().addAll(arrowImageView);
-
                 }
 
                 // Check the condition when the Tile is OCCUPIED by a Rug piece
@@ -222,9 +211,7 @@ public class Viewer extends Application {
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
 
         root.getChildren().add(controls);
-        root.getChildren().add(display);
-        root.getChildren().add(images);
-
+        root.getChildren().addAll(display, images);
         makeControls();
 
         primaryStage.setScene(scene);
