@@ -21,7 +21,7 @@ declaration: >-
 # (or remove it altogether if you haven't collaborated with anyone)
 collaboration:
   - name:
-    comment: >-
+    comment:
 
 # Use this to list any code that you used that you did not write,
 # aside from code provided by the lecturer.  Provide a comment
@@ -43,7 +43,7 @@ code:
 # (or remove it altogether if you haven't used any external assets)
 assets:
   - comment:
-    url:
+    url: https://www.flaticon.com/free-icon/right-arrowhead-in-a-circle_44567?term=arrow+circle&page=3&position=6&origin=search&related_id=44567
     licence:
 
 

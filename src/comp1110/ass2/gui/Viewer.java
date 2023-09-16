@@ -63,7 +63,7 @@ public class Viewer extends Application {
                     x + halfSide, y - halfSide, x - halfSide, y - halfSide
             );
             this.setStroke(Color.BLACK);
-            this.setStrokeWidth(0.5);
+            this.setStrokeWidth(2);
         }
     }
 
@@ -74,7 +74,7 @@ public class Viewer extends Application {
             this.setRadius(CIRCLE_RADIUS);
             this.setFill(Color.LIGHTBLUE);
             this.setStroke(Color.BLACK);
-            this.setStrokeWidth(0.5);
+            this.setStrokeWidth(1.5);
         }
     }
 
@@ -98,8 +98,13 @@ public class Viewer extends Application {
             Text playerText = new Text("Player " + playerColourString);
             playerText.setFont(Font.font("Verdana", 20));
             playerText.setFill(textColor);
+
             Text dirhamText = new Text("Remaining Dirhams: " + remainingDirhams);
+            dirhamText.setScaleX(1.25);
+            dirhamText.setScaleY(1.25);
             Text rugText = new Text("Remaining Rugs: " + numOfRemainingRugs);
+            rugText.setScaleX(1.25);
+            rugText.setScaleY(1.25);
             VBox vbox = new VBox(playerText, dirhamText, rugText);
             vbox.setLayoutX(xPixelValue);
             vbox.setLayoutY(yPixelValue);
