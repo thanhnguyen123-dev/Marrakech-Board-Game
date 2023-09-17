@@ -9,7 +9,7 @@ public enum Direction {
     WEST(180, 'W'),
     NORTH(270, 'N');
 
-    private int angle;
+    private final int angle;
     private final char directionChar;
 
     /**

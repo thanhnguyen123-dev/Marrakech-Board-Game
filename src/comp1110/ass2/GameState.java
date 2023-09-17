@@ -19,11 +19,11 @@ public class GameState {
     private static final int LENGTH_OF_ASSAM_STRING = 3;
     private static final String EMPTY_BOARD_STRING = "Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00";
 
-    private Board board;
+    private final Board board;
     // All players
-    private Player[] players;
+    private final Player[] players;
     // Players are still in game
-    private List<Player> availablePlayers;
+    private final List<Player> availablePlayers;
     private Player currentPlayer;
 
     public GameState(Player[] players) {
