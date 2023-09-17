@@ -137,7 +137,11 @@ public class GameState {
         }
     }
 
-
+    /**
+     * Obtains playerStrings from a given gameString
+     * @param gameString string representation for game state
+     * @return a list of string representations for each player;
+     */
     private static List<String> getPlayerStrings(String gameString) {
         List<String> playerStrings = new ArrayList<String>();
         int beginIndex = 1;
@@ -148,11 +152,21 @@ public class GameState {
         return playerStrings;
     }
 
+    /**
+     * Obtains assamString from a given gameString
+     * @param gameString string representation for game state
+     * @return the string representation for Assam
+     */
     private static String getAssamString(String gameString) {
         int beginIndex = gameString.indexOf("A") + 1;
         return gameString.substring(beginIndex, beginIndex + LENGTH_OF_ASSAM_STRING);
     }
 
+    /**
+     * Obtains boardString from a given gameString
+     * @param gameString string representation for game state
+     * @return the string representation for the board
+     */
     private static String getBoardString(String gameString) {
         int beginIndex = gameString.indexOf("B") + 1;
         return gameString.substring(beginIndex);
@@ -167,7 +181,7 @@ public class GameState {
      */
     public static boolean isRugValid(String gameString, String rugString) {
         GameState gameState = new GameState(gameString);
-        Board board = gameState.getBoard();
+        Board board = gameState.board;
         // The String is 7 characters long
         if (rugString.length() != 7) {
             return false;
@@ -206,7 +220,7 @@ public class GameState {
     public static String moveAssam(String currentAssam, int dieResult) {
         GameState gameState = new GameState(currentAssam + EMPTY_BOARD_STRING);
         gameState.moveAssam(dieResult);
-        return Board.generateAssamString(gameState.getBoard());
+        return Board.generateAssamString(gameState.board);
     }
 
 }
