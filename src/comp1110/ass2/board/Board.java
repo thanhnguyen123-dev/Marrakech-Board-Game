@@ -180,9 +180,9 @@ public class Board {
 
     /**
      * Constructor: creates an instance of the Board class
-     * Decode assamString and boardString to Assam and Board objects
+     * Decode the assamString and the boardString to get corresponding values for instance fields
      * @param assamString string representation for Assam
-     * @param boardString string representation for Board
+     * @param boardString string representation for the Board
      */
     public Board(String assamString, String boardString) {
         for (int col = 0; col < NUM_OF_ROWS; col++) {

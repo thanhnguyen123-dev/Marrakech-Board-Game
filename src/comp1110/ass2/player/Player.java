@@ -58,7 +58,7 @@ public class Player {
 
     /**
      * Constructor: creates an instance of the Player class
-     * Decode the playerString to get corresponding value for instance fields
+     * Decode the playerString to get corresponding values for instance fields
      * @param playerString string representation for the Player
      */
     public Player(String playerString) {
