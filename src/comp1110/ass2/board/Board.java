@@ -225,8 +225,8 @@ public class Board {
      * @return string representation for Assam
      */
     public static String generateAssamString(Board board) {
-        Tile assamTile = board.getAssamTile();
-        Direction assamDirection = board.getAssamDirection();
+        Tile assamTile = board.assamTile;
+        Direction assamDirection = board.assamDirection;
         return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.getDirectionChar();
     }
 
@@ -235,8 +235,8 @@ public class Board {
      * @return string representation for the board
      */
     public static String generateBoardString(Board board) {
-        StringBuilder stringBuilder = new StringBuilder();
-        Tile[][] tiles = board.getTiles();
+        StringBuilder stringBuilder = new StringBuilder("B");
+        Tile[][] tiles = board.tiles;
         for (int col = 0; col < NUM_OF_ROWS; col++) {
             for (int row = 0; row < NUM_OF_COLS; row++) {
                 if (tiles[row][col].getTopRug() == null) {
