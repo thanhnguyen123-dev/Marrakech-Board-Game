@@ -13,7 +13,7 @@ public class Tile {
 
     /**
      * Enum determines whether a Tile is empty or not
-     * If there is a rug or Assam on the Tile, it's occupied
+     * If a Rug or Assam is on the Tile, it's occupied
      */
     private enum TileState{
         EMPTY, OCCUPIED;
@@ -24,8 +24,8 @@ public class Tile {
 
     /**
      * Constructor: creates an instance of the Tile class
-     * @param row
-     * @param col
+     * @param row row index of the Tile
+     * @param col column index of the Tile
      */
     public Tile(int row, int col) {
         this.row = row;
@@ -33,32 +33,29 @@ public class Tile {
     }
 
     /**
-     * getter method for the row position of the Tile
-     * @return row
+     * @return the row index
      */
     public int getRow() {
         return this.row;
     }
 
     /**
-     * getter method for the column position of the Tile
-     * @return col
+     * @return the column index
      */
     public int getCol() {
         return this.col;
     }
 
     /**
-     * getter method for the Rug on the Tile
-     * @return topRug
+     * @return the top Rug on the Tile
      */
     public Rug getTopRug() {
         return this.topRug;
     }
 
     /**
-     * setter method for the Rug on the Tile
-     * @param rug
+     * setter method to place a new top Rug on the Tile
+     * @param rug the new top Rug on the Tile
      */
     public void setTopRug(Rug rug) {
         this.topRug = rug;
@@ -67,7 +64,7 @@ public class Tile {
 
     /**
      * Check if two Tile objects are adjacent to each other
-     * @param otherTile
+     * @param otherTile the other Tile
      * @return true or false
      */
     public boolean isAdjacent(Tile otherTile) {
