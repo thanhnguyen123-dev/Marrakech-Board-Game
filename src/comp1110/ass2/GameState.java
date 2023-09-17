@@ -33,6 +33,14 @@ public class GameState {
         this.currentPlayer = this.availablePlayers.get(0);
     }
 
+    public Board getBoard() {
+        return this.board;
+    }
+
+    public Player[] getPlayers() {
+        return this.players;
+    }
+
     public void nextPlayer() {
         int index = this.availablePlayers.indexOf(this.currentPlayer);
         this.currentPlayer = this.availablePlayers.get((index + 1) % this.availablePlayers.size());
@@ -86,10 +94,6 @@ public class GameState {
         this.currentPlayer.makePayment(getAssamRugOwner(), amount);
     }
 
-    public boolean isPlacementValid(Rug rug) {
-        return this.board.isPlacementValid(rug);
-    }
-
     public void makePlacement(Rug rug) {
         this.currentPlayer.placeRug();
         this.board.placeRug(rug);
@@ -117,7 +121,7 @@ public class GameState {
     }
 
 
-    public static List<String> getPlayerStrings(String gameString) {
+    private static List<String> getPlayerStrings(String gameString) {
         List<String> playerStrings = new ArrayList<String>();
         int beginIndex = 1;
         while (gameString.contains("P")) {
@@ -127,12 +131,12 @@ public class GameState {
         return playerStrings;
     }
 
-    public static String getAssamString(String gameString) {
+    private static String getAssamString(String gameString) {
         int beginIndex = gameString.indexOf("A") + 1;
         return gameString.substring(beginIndex, beginIndex + LENGTH_OF_ASSAM_STRING);
     }
 
-    public static String getBoardString(String gameString) {
+    private static String getBoardString(String gameString) {
         int beginIndex = gameString.indexOf("B") + 1;
         return gameString.substring(beginIndex);
     }
@@ -145,6 +149,8 @@ public class GameState {
      * @return true if the rug is valid, or false otherwise
      */
     public static boolean isRugValid(String gameString, String rugString) {
+        GameState gameState = new GameState(gameString);
+        Board board = gameState.getBoard();
         // The String is 7 characters long
         if (rugString.length() != 7) {
             return false;
@@ -161,9 +167,6 @@ public class GameState {
             }
         }
         // The combination of that ID number and colour is unique
-        String assamString = getAssamString(gameString);
-        String boardString = getBoardString(gameString);
-        Board board = new Board(assamString, boardString);
         List<Rug> visibleRugs = board.getVisibleRugs();
         for (Rug placedRug : visibleRugs) {
             if (rug.getColour() == placedRug.getColour() && rug.getID() == placedRug.getID()) {
@@ -187,14 +190,6 @@ public class GameState {
         GameState gameState = new GameState(currentAssam + EMPTY_BOARD_STRING);
         gameState.moveAssam(dieResult);
         return gameState.board.generateAssamString();
-    }
-
-    public Board getBoard() {
-        return board;
-    }
-
-    public Player[] getPlayers() {
-        return players;
     }
 
 }
