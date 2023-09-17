@@ -69,4 +69,8 @@ public class Player {
         this.numOfUnplacedRugs = Integer.parseInt(playerString.substring(4, 6), 10);
         this.colour = Colour.charToColour(playerString.charAt(0));
     }
+
+    public static String generatePlayerString(Player player) {
+        return "P" + player.colour.colourChar + String.format("%03d", player.dirham) + String.format("%02d", player.numOfUnplacedRugs);
+    }
 }
