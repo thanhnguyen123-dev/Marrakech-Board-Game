@@ -14,9 +14,9 @@ public class Board {
     public static final int NUM_OF_COLS = 7;
     private static final int LENGTH_OF_SHORT_RUG_STRING = 3;
 
-    private Tile[][] tiles = new Tile[NUM_OF_ROWS][NUM_OF_COLS];
-    private List<Rug> placedRugs = new ArrayList<Rug>();
-    private List<Rug> visibleRugs = new ArrayList<Rug>(); // All visible rugs on the board
+    private final Tile[][] tiles = new Tile[NUM_OF_ROWS][NUM_OF_COLS];
+    private final List<Rug> placedRugs = new ArrayList<Rug>();
+    private final List<Rug> visibleRugs = new ArrayList<Rug>(); // All visible rugs on the board
     private Tile assamTile;
     private Direction assamDirection;
 
@@ -74,7 +74,7 @@ public class Board {
         int row = this.assamTile.getRow();
         int col = this.assamTile.getCol();
         switch (this.assamDirection) {
-            case NORTH:
+            case NORTH -> {
                 if (row - steps < 0) {
                     this.assamTile = this.tiles[0][col];
                     moveAssamOutOfBounds();
@@ -82,8 +82,8 @@ public class Board {
                 } else {
                     this.assamTile = this.tiles[row - steps][col];
                 }
-                break;
-            case EAST:
+            }
+            case EAST -> {
                 if (col + steps > NUM_OF_COLS - 1) {
                     this.assamTile = this.tiles[row][NUM_OF_COLS - 1];
                     moveAssamOutOfBounds();
@@ -91,8 +91,8 @@ public class Board {
                 } else {
                     this.assamTile = this.tiles[row][col + steps];
                 }
-                break;
-            case SOUTH:
+            }
+            case SOUTH -> {
                 if (row + steps > NUM_OF_ROWS - 1) {
                     this.assamTile = this.tiles[NUM_OF_ROWS - 1][col];
                     moveAssamOutOfBounds();
@@ -100,8 +100,8 @@ public class Board {
                 } else {
                     this.assamTile = this.tiles[row + steps][col];
                 }
-                break;
-            case WEST:
+            }
+            case WEST -> {
                 if (col - steps < 0) {
                     this.assamTile = this.tiles[row][0];
                     moveAssamOutOfBounds();
@@ -109,7 +109,7 @@ public class Board {
                 } else {
                     this.assamTile = this.tiles[row][col - steps];
                 }
-                break;
+            }
         }
     }
 
@@ -243,9 +243,6 @@ public class Board {
     public Tile[][] getTiles() {
         return tiles;
     }
-
-
-
 
 
 }
