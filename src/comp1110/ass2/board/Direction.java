@@ -14,8 +14,8 @@ public enum Direction {
 
     /**
      * Constructor: creates a new instance for the Direction enum
-     * @param angle angle of the Direction in degrees
-     * @param directionChar character for the Direction
+     * @param angle angle of the direction in degrees
+     * @param directionChar character for the direction
      */
     Direction(int angle, char directionChar) {
         this.angle = angle;
@@ -31,9 +31,9 @@ public enum Direction {
     }
 
     /**
-     * Converts angle to the corresponding Direction
+     * Converts angle to the corresponding direction
      * @param angle angle in degrees
-     * @return the corresponding Direction
+     * @return the corresponding direction
      */
     public static Direction angleToDirection(int angle) {
         angle = (angle + 360) % 360;
@@ -46,9 +46,9 @@ public enum Direction {
     }
 
     /**
-     * Converts character to the corresponding Direction
-     * @param directionChar character for the Direction
-     * @return the corresponding Direction
+     * Converts character to the corresponding direction
+     * @param directionChar character for the direction
+     * @return the corresponding direction
      */
     public static Direction charToDirection(char directionChar) {
         for (Direction direction : Direction.values()) {
@@ -60,14 +60,16 @@ public enum Direction {
     }
 
     /**
-     * @return character for the Direction
+     * getter method for directionChar
+     * @return character for the direction
      */
     public char getDirectionChar() {
         return directionChar;
     }
 
     /**
-     * @return angle of the Direction in degrees
+     * getter method for angle
+     * @return angle of the direction in degrees
      */
     public int getAngle() {
         return angle;

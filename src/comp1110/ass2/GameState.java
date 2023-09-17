@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * GameState class determines the state of each player
- * Make sure the game is played according to the rules
+ * and makes sure the game is played according to the rules
  */
 public class GameState {
     private static final int LENGTH_OF_PLAYER_STRING = 7;
@@ -33,19 +33,33 @@ public class GameState {
         this.currentPlayer = this.availablePlayers.get(0);
     }
 
+    /**
+     * getter method for board
+     * @return the board
+     */
     public Board getBoard() {
         return this.board;
     }
 
+    /**
+     * getter method for players
+     * @return the array containing all the players
+     */
     public Player[] getPlayers() {
         return this.players;
     }
 
+    /**
+     * Changes current player to the next available player in the game
+     */
     public void nextPlayer() {
         int index = this.availablePlayers.indexOf(this.currentPlayer);
         this.currentPlayer = this.availablePlayers.get((index + 1) % this.availablePlayers.size());
     }
 
+    /**
+     * Removes current player from the list of available players in the game
+     */
     public void removeCurrentPlayer() {
         this.availablePlayers.remove(this.currentPlayer);
     }
@@ -54,6 +68,9 @@ public class GameState {
         return this.currentPlayer.getNumOfUnplacedRugs() == 0;
     }
 
+    /**
+     * Rotates Assam
+     */
     public void rotateAssam(int rotation) {
         this.board.rotateAssam(rotation);
     }
@@ -100,9 +117,9 @@ public class GameState {
     }
 
     /**
-     * Decode game string
-     *
-     * @param gameString
+     * Constructor: creates an instance of the GameState class
+     * Decodes the gameString to get corresponding values for instance fields
+     * @param gameString string representation for the game state
      */
     public GameState(String gameString) {
         List<String> playerStrings = getPlayerStrings(gameString);
@@ -142,10 +159,10 @@ public class GameState {
     }
 
     /**
-     * Determine whether a rug(string) is valid.
+     * Determines whether a rug(string) is valid.
      *
-     * @param gameString
-     * @param rugString
+     * @param gameString string representation for the game state
+     * @param rugString string representation for the rug
      * @return true if the rug is valid, or false otherwise
      */
     public static boolean isRugValid(String gameString, String rugString) {

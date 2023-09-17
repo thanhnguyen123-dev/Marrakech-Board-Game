@@ -10,7 +10,7 @@ public class Player {
 
     /**
      * Constructor: creates an instance of the Player class
-     * @param colour the Colour of the Player
+     * @param colour the colour of the player's rugs
      */
     public Player(Colour colour) {
         this.dirham = 30;
@@ -19,36 +19,39 @@ public class Player {
     }
 
     /**
-     * @return the amount of dirhams the Player has
+     * getter method for dirham
+     * @return the amount of dirhams that the player has
      */
     public int getDirham() {
         return dirham;
     }
 
     /**
-     * @return the number of unplaced Rugs the Player has
+     * getter method for numOfUnplacedRugs
+     * @return the number of unplaced rugs that the player has
      */
     public int getNumOfUnplacedRugs() {
         return numOfUnplacedRugs;
     }
 
     /**
-     * @return the Colour of the Player
+     * getter method for colour
+     * @return the colour of the player's rugs
      */
     public Colour getColour() {
         return this.colour;
     }
 
     /**
-     * Places a Rug on the Board, number of unplaced Rugs decreases by 1
+     * Places a rug on the board, number of unplaced rugs decreases by 1
      */
     public void placeRug() {
         this.numOfUnplacedRugs--;
     }
 
     /**
-     * Pays a certain amount of dirhams to the other Player
-     * @param otherPlayer the other Player
+     * Pays a certain amount of dirhams to the other player
+     * @param otherPlayer the other player
      * @param amount amount of dirhams to be paid
      */
     public void makePayment(Player otherPlayer, int amount) {
@@ -58,8 +61,8 @@ public class Player {
 
     /**
      * Constructor: creates an instance of the Player class
-     * Decode the playerString to get corresponding values for instance fields
-     * @param playerString string representation for the Player
+     * Decodes the playerString to get corresponding values for instance fields
+     * @param playerString string representation for the player
      */
     public Player(String playerString) {
         this.dirham = Integer.parseInt(playerString.substring(1, 4), 10);

@@ -22,7 +22,6 @@ public class Board {
 
     /**
      * Constructor: creates an instance of the Board class
-     * Initialize the Board
      */
     public Board() {
         for (int row = 0; row < NUM_OF_ROWS; row++) {
@@ -35,42 +34,47 @@ public class Board {
     }
 
     /**
-     * @return all the Tiles of the Board
+     * getter method for tiles
+     * @return the 2D array containing all the tiles of the board
      */
     public Tile[][] getTiles() {
         return tiles;
     }
 
     /**
-     * @return a list of all placed Rugs on the Board
+     * getter method for placedRugs
+     * @return the list containing all the placed rugs on the board
      */
     public List<Rug> getPlacedRugs() {
         return this.placedRugs;
     }
 
     /**
-     * @return a list of all visible Rugs on the Board
+     * getter method for visibleRugs
+     * @return the list containing all the visible rugs on the board
      */
     public List<Rug> getVisibleRugs() {
         return this.visibleRugs;
     }
 
     /**
-     * @return the Tile on which Assam is standing
+     * getter method for assamTile
+     * @return the tile on which Assam is standing
      */
     public Tile getAssamTile() {
         return this.assamTile;
     }
 
     /**
-     * @return the Direction which Assam is facing
+     * getter method for assamDirection
+     * @return the direction which Assam is facing
      */
     public Direction getAssamDirection() {
         return this.assamDirection;
     }
 
     /**
-     * Moves Assam by a given number of steps from rolling the Die
+     * Moves Assam by a given number of steps from rolling the die
      * @param steps number of steps to be taken by Assam
      */
     public void moveAssam(int steps) {
@@ -117,7 +121,7 @@ public class Board {
     }
 
     /**
-     * Moves Assam off and back onto the Board
+     * Moves Assam off and back onto the board following the mosaic track
      */
     private void moveAssamOutOfBounds() {
         int row = this.assamTile.getRow();
@@ -156,8 +160,8 @@ public class Board {
     }
 
     /**
-     * Checks if a Rug placement is valid according to the game rules
-     * @param rug the Rug to be validated
+     * Checks if a rug placement is valid according to the game rules
+     * @param rug the rug to be validated
      * @return true or false
      */
     public boolean isPlacementValid(Rug rug) {
@@ -175,8 +179,8 @@ public class Board {
     }
 
     /**
-     * Places a Rug onto the Board's Tile
-     * @param rug the Rug to be placed
+     * Places a rug on the board
+     * @param rug the rug to be placed
      */
     public void placeRug(Rug rug) {
         placedRugs.add(rug);
@@ -186,7 +190,7 @@ public class Board {
     }
 
     /**
-     * Generate AssamString based on data of the Board
+     * Generates AssamString based on data of the board
      * @return string representation for Assam
      */
     public String generateAssamString() {
@@ -195,9 +199,9 @@ public class Board {
 
     /**
      * Constructor: creates an instance of the Board class
-     * Decode the assamString and the boardString to get corresponding values for instance fields
+     * Decodes the assamString and the boardString to get corresponding values for instance fields
      * @param assamString string representation for Assam
-     * @param boardString string representation for the Board
+     * @param boardString string representation for the board
      */
     public Board(String assamString, String boardString) {
         for (int col = 0; col < NUM_OF_ROWS; col++) {
@@ -226,9 +230,9 @@ public class Board {
 
 
     /**
-     * Determines whether the coordinate of a Tile on which can place a Rug is valid
-     * @param tile the Tile to be validated
-     * @return true if the coordinate of Tile is valid, or false otherwise
+     * Determines whether the coordinate of the tile on which a rug is placed is valid
+     * @param tile the tile to be validated
+     * @return true if the coordinate of tile is valid, or false otherwise
      */
     public static boolean isTileValid(Tile tile) {
         int row = tile.getRow();

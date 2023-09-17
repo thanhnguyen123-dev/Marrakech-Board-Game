@@ -12,8 +12,8 @@ public class Tile {
 
 
     /**
-     * Enum determines whether a Tile is empty or not
-     * If a Rug or Assam is on the Tile, it's occupied
+     * TileState enum determines whether a tile is empty or not
+     * If a rug or Assam is on the tile, it's occupied
      */
     private enum TileState{
         EMPTY, OCCUPIED;
@@ -24,8 +24,8 @@ public class Tile {
 
     /**
      * Constructor: creates an instance of the Tile class
-     * @param row row index of the Tile
-     * @param col column index of the Tile
+     * @param row row index of the tile
+     * @param col column index of the tile
      */
     public Tile(int row, int col) {
         this.row = row;
@@ -33,6 +33,7 @@ public class Tile {
     }
 
     /**
+     * getter method for row
      * @return the row index
      */
     public int getRow() {
@@ -40,6 +41,7 @@ public class Tile {
     }
 
     /**
+     * getter method for col
      * @return the column index
      */
     public int getCol() {
@@ -47,15 +49,16 @@ public class Tile {
     }
 
     /**
-     * @return the top Rug on the Tile
+     * getter method for topRug
+     * @return the top rug on the tile
      */
     public Rug getTopRug() {
         return this.topRug;
     }
 
     /**
-     * setter method to place a new top Rug on the Tile
-     * @param rug the new top Rug on the Tile
+     * setter method for topRug
+     * @param rug the new top rug
      */
     public void setTopRug(Rug rug) {
         this.topRug = rug;
@@ -63,8 +66,8 @@ public class Tile {
     }
 
     /**
-     * Check if two Tile objects are adjacent to each other
-     * @param otherTile the other Tile
+     * Check if two tiles are adjacent to each other
+     * @param otherTile the other tile
      * @return true or false
      */
     public boolean isAdjacent(Tile otherTile) {
@@ -86,7 +89,7 @@ public class Tile {
     }
 
     /**
-     * Check if the Tile contains a part of the rug
+     * Check if the tile contains a part of the rug
      */
     public boolean isRug() {
         if (this.getTopRug() != null) {
@@ -96,8 +99,8 @@ public class Tile {
     }
 
     /**
-     * Check if the Tile contains Assam
-     * @param board
+     * Check if Assam is standing on the tile
+     * @param board the board
      * @return true or false
      */
     public boolean isAssam(Board board) {

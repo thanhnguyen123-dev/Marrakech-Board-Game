@@ -3,7 +3,7 @@ package comp1110.ass2.player;
 import javafx.scene.paint.Color;
 
 /**
- * Colour enum represents each player's representative
+ * Colour enum represents the colour of each player's rug
  */
 public enum Colour {
     YELLOW('y'),
@@ -15,7 +15,7 @@ public enum Colour {
 
     /**
      * Constructor: creates an instance of the Colour enum
-     * @param colourChar character for the Colour
+     * @param colourChar character for the colour
      */
     Colour(char colourChar) {
         this.colourChar = colourChar;
@@ -23,9 +23,9 @@ public enum Colour {
 
 
     /**
-     * Convert the character to its corresponding colour
-     * @param colourChar character for the Colour
-     * @return the corresponding Colour
+     * Converts the character to its corresponding colour
+     * @param colourChar character for the colour
+     * @return the corresponding colour
      */
     public static Colour charToColour(char colourChar) {
         for (Colour colour : Colour.values()) {
@@ -37,8 +37,8 @@ public enum Colour {
     }
 
     /**
-     * Determine whether the colour of a rug is valid
-     * @param colourChar: char of rug colour
+     * Determines whether the colour of a rug is valid or not
+     * @param colourChar character for the rug colour
      * @return true if rug colour is valid, or false otherwise
      */
     public static boolean isColourValid(char colourChar){
@@ -48,8 +48,8 @@ public enum Colour {
     }
 
     /**
-     * Converts Colour enum to a string of its full name
-     * @param colour Colour enum
+     * Converts a Colour enum to a string of its full name
+     * @param colour a Colour enum
      * @return full name of the colour
      */
     public static String colourToString(Colour colour) {
