@@ -35,6 +35,13 @@ public class Board {
     }
 
     /**
+     * @return all the Tiles of the Board
+     */
+    public Tile[][] getTiles() {
+        return tiles;
+    }
+
+    /**
      * @return a list of all placed Rugs on the Board
      */
     public List<Rug> getPlacedRugs() {
@@ -179,6 +186,14 @@ public class Board {
     }
 
     /**
+     * Generate AssamString based on data of the Board
+     * @return string representation for Assam
+     */
+    public String generateAssamString() {
+        return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.getDirectionChar();
+    }
+
+    /**
      * Constructor: creates an instance of the Board class
      * Decode the assamString and the boardString to get corresponding values for instance fields
      * @param assamString string representation for Assam
@@ -209,13 +224,6 @@ public class Board {
         return new int[]{row, col};
     }
 
-    /**
-     * Generate AssamString based on data of the Board
-     * @return string representation for Assam
-     */
-    public String generateAssamString() {
-        return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.getDirectionChar();
-    }
 
     /**
      * Determines whether the coordinate of a Tile on which can place a Rug is valid
@@ -232,13 +240,4 @@ public class Board {
         }
         return false;
     }
-
-    /**
-     * @return all the Tiles of the Board
-     */
-    public Tile[][] getTiles() {
-        return tiles;
-    }
-
-
 }
