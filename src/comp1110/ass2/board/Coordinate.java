@@ -2,6 +2,7 @@ package comp1110.ass2.board;
 
 /**
  * Coordinate class represents an object's position
+ * (unused for now)
  */
 public class Coordinate {
     private final int x;

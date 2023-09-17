@@ -26,6 +26,10 @@ public class GameState {
     private final List<Player> availablePlayers;
     private Player currentPlayer;
 
+    /**
+     * Constructor: creates an instance of the GameState class
+     * @param players an array of all the players at the beginning of the game
+     */
     public GameState(Player[] players) {
         this.board = new Board();
         this.players = players;
@@ -75,10 +79,18 @@ public class GameState {
         this.board.rotateAssam(rotation);
     }
 
+    /**
+     * Moves Assam
+     * @param steps number of steps to be taken by Assam
+     */
     public void moveAssam(int steps) {
         this.board.moveAssam(steps);
     }
 
+    /**
+     * Returns the player to which the rug Assam is standing on belongs, null if there is no valid rug
+     * @return owner of the valid rug on which Assam is standing
+     */
     private Player getAssamRugOwner() {
         Rug rug = this.board.getAssamTile().getTopRug();
         Colour rugColour = rug == null ? null : rug.getColour();
@@ -172,6 +184,10 @@ public class GameState {
         return gameString.substring(beginIndex);
     }
 
+    /**
+     * Generates gameString based on data of the game state
+     * @return string representation for the game state
+     */
     public static String generateGameString(GameState gameState) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Player player : gameState.players) {
@@ -188,7 +204,6 @@ public class GameState {
 
     /**
      * Determines whether a rug(string) is valid.
-     *
      * @param gameString string representation for the game state
      * @param rugString string representation for the rug
      * @return true if the rug is valid, or false otherwise
@@ -221,6 +236,11 @@ public class GameState {
         return true;
     }
 
+    /**
+     * Determines whether a game is over or not based on the gameString
+     * @param currentGame string representation for the game state
+     * @return true or false
+     */
     public static boolean isGameOver(String currentGame) {
         GameState gameState = new GameState(currentGame);
         for (Player player : gameState.availablePlayers) {
@@ -231,6 +251,12 @@ public class GameState {
         return true;
     }
 
+    /**
+     * Calculates Assam's position and direction after movement
+     * @param currentAssam string representation for Assam before movement
+     * @param dieResult number of steps to be taken by Assam
+     * @return string representation for Assam after movement
+     */
     public static String moveAssam(String currentAssam, int dieResult) {
         GameState gameState = new GameState(currentAssam + EMPTY_BOARD_STRING);
         gameState.moveAssam(dieResult);

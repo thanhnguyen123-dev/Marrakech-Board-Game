@@ -221,7 +221,7 @@ public class Board {
     }
 
     /**
-     * Generates AssamString based on data of the board
+     * Generates assamString based on data of the board
      * @return string representation for Assam
      */
     public static String generateAssamString(Board board) {
@@ -231,7 +231,7 @@ public class Board {
     }
 
     /**
-     * Generates BoardString based on data of the board
+     * Generates boardString based on data of the board
      * @return string representation for the board
      */
     public static String generateBoardString(Board board) {

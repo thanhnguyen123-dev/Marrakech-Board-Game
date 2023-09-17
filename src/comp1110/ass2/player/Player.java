@@ -70,6 +70,10 @@ public class Player {
         this.colour = Colour.charToColour(playerString.charAt(0));
     }
 
+    /**
+     * Generates playerString based on data of the player
+     * @return string representation for the player
+     */
     public static String generatePlayerString(Player player) {
         return "P" + player.colour.colourChar + String.format("%03d", player.dirham) + String.format("%02d", player.numOfUnplacedRugs);
     }
