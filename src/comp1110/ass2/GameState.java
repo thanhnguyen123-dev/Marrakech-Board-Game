@@ -206,7 +206,7 @@ public class GameState {
     public static String moveAssam(String currentAssam, int dieResult) {
         GameState gameState = new GameState(currentAssam + EMPTY_BOARD_STRING);
         gameState.moveAssam(dieResult);
-        return gameState.board.generateAssamString();
+        return Board.generateAssamString(gameState.getBoard());
     }
 
 }

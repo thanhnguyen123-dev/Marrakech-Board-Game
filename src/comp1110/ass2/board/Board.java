@@ -190,14 +190,6 @@ public class Board {
     }
 
     /**
-     * Generates AssamString based on data of the board
-     * @return string representation for Assam
-     */
-    public String generateAssamString() {
-        return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.getDirectionChar();
-    }
-
-    /**
      * Constructor: creates an instance of the Board class
      * Decodes the assamString and the boardString to get corresponding values for instance fields
      * @param assamString string representation for Assam
@@ -228,6 +220,37 @@ public class Board {
         return new int[]{row, col};
     }
 
+    /**
+     * Generates AssamString based on data of the board
+     * @return string representation for Assam
+     */
+    public static String generateAssamString(Board board) {
+        Tile assamTile = board.getAssamTile();
+        Direction assamDirection = board.getAssamDirection();
+        return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.getDirectionChar();
+    }
+
+    /**
+     * Generates BoardString based on data of the board
+     * @return string representation for the board
+     */
+    public static String generateBoardString(Board board) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Tile[][] tiles = board.getTiles();
+        for (int col = 0; col < NUM_OF_ROWS; col++) {
+            for (int row = 0; row < NUM_OF_COLS; row++) {
+                if (tiles[row][col].getTopRug() == null) {
+                    stringBuilder.append("n00");
+                } else {
+                    Rug rug = tiles[row][col].getTopRug();
+                    char colourChar = rug.getColour().colourChar;
+                    int id = rug.getID();
+                    stringBuilder.append(colourChar).append(id);
+                }
+            }
+        }
+        return stringBuilder.toString();
+    }
 
     /**
      * Determines whether the coordinate of the tile on which a rug is placed is valid
