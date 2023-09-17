@@ -172,6 +172,20 @@ public class GameState {
         return gameString.substring(beginIndex);
     }
 
+    public static String generateGameString(GameState gameState) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Player player : gameState.players) {
+            stringBuilder.append(Player.generatePlayerString(player));
+            if (gameState.availablePlayers.contains(player)) {
+                stringBuilder.append("i");
+            } else {
+                stringBuilder.append("o");
+            }
+        }
+        stringBuilder.append(Board.generateAssamString(gameState.board)).append(Board.generateBoardString(gameState.board));
+        return stringBuilder.toString();
+    }
+
     /**
      * Determines whether a rug(string) is valid.
      *
