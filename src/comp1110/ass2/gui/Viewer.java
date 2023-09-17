@@ -144,14 +144,14 @@ public class Viewer extends Application {
                 else if (backEndTile.isAssam(board)) {
                     frontEndTile.setFill(Color.ORANGE);
                     Direction assamDirection = board.getAssamDirection();
-                    int assamAngleValue = assamDirection.getAngleValue();
+                    int assamAngle = assamDirection.getAngle();
 
                     // Assam FrontEnd representation
                     Image assamImage = new Image("Assam.png");
                     ImageView assamImageView = new ImageView(assamImage);
                     assamImageView.setLayoutX(rowPixelValue - 15);
                     assamImageView.setLayoutY(colPixelValue - 15);
-                    assamImageView.setRotate(assamAngleValue);
+                    assamImageView.setRotate(assamAngle);
 
                     Text assamIndicator = new Text("Assam");
 

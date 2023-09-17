@@ -9,7 +9,7 @@ public enum Direction {
     WEST(180, 'W'),
     NORTH(270, 'N');
 
-    private int angleValue;
+    private int angle;
     private final char directionChar;
 
     /**
@@ -18,7 +18,7 @@ public enum Direction {
      * @param directionChar
      */
     Direction(int angle, char directionChar) {
-        this.angleValue = angle;
+        this.angle = angle;
         this.directionChar = directionChar;
     }
 
@@ -27,17 +27,17 @@ public enum Direction {
      * @param rotation
      */
     public void applyRotation(int rotation) {
-        angleValue = (angleValue + rotation) % 360;
+        angle = (angle + rotation) % 360;
     }
 
     public Direction rotate(int rotation) {
-        return angleToDirection(this.angleValue + rotation);
+        return angleToDirection(this.angle + rotation);
     }
 
-    public static Direction angleToDirection(int angleValue) {
-        angleValue = (angleValue + 360) % 360;
+    public static Direction angleToDirection(int angle) {
+        angle = (angle + 360) % 360;
         for (Direction direction : Direction.values()) {
-            if (angleValue == direction.angleValue) {
+            if (angle == direction.angle) {
                 return direction;
             }
         }
@@ -67,10 +67,9 @@ public enum Direction {
     }
 
     /**
-     * getter method for angleValue
-     * @return angleValue
+     * @return angle in degrees
      */
-    public int getAngleValue() {
-        return angleValue;
+    public int getAngle() {
+        return angle;
     }
 }
