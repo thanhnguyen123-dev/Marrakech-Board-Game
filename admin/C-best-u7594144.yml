@@ -22,7 +22,7 @@ class:
 # I wish to submit the following methods as entirely my own (remove this if
 # you want to just submit classes):
 method:
-   - https://gitlab.cecs.anu.edu.au/u7594144/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Viewer.java#L122-186
+   - https://gitlab.cecs.anu.edu.au/u7594144/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Viewer.java#L134-198
 
 # sign *your* name and uid here
 name: Le Thanh Nguyen
