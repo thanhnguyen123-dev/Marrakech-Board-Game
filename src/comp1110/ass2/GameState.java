@@ -15,8 +15,8 @@ import java.util.List;
  * and makes sure the game is played according to the rules
  */
 public class GameState {
-    private static final int LENGTH_OF_PLAYER_STRING = 7;
-    private static final int LENGTH_OF_ASSAM_STRING = 3;
+    private static final int LENGTH_OF_PLAYER_STRING = 8;
+    private static final int LENGTH_OF_ASSAM_STRING = 4;
     private static final String EMPTY_BOARD_STRING = "Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00";
 
     private final Board board;
@@ -128,6 +128,60 @@ public class GameState {
         this.board.placeRug(rug);
     }
 
+    public static boolean isGameStringValid(String gameString) {
+        int[] possibleLengths = {168, 176, 184};
+        boolean isLengthValid = false;
+        for (int possibleLength : possibleLengths) {
+            if (gameString.length() == possibleLength) {
+                isLengthValid = true;
+            }
+        }
+        if (!isLengthValid) {
+            return false;
+        }
+
+        int[] possibleIndicesOfP = {0, 8, 16, 24};
+        int indexOfP = gameString.indexOf('P');
+        int numberOfPlayers = 0;
+        boolean isPValid = false;
+        while (indexOfP != -1) {
+            for (int possibleIndexOfP : possibleIndicesOfP) {
+                if (indexOfP == possibleIndexOfP) {
+                    isPValid = true;
+                }
+            }
+            if (!isPValid) {
+                return false;
+            }
+            numberOfPlayers++;
+            indexOfP = gameString.indexOf('P', indexOfP + 1);
+            isPValid = false;
+        }
+
+        int indexOfA = gameString.indexOf('A');
+        if (indexOfA != gameString.length() - 152) {
+            return false;
+        }
+        if (gameString.indexOf('A', indexOfA + 1) != -1) {
+            return false;
+        }
+
+        int indexOfB = gameString.indexOf('B');
+        if (indexOfB != gameString.length() - 148) {
+            return false;
+        }
+        if (gameString.indexOf('B', indexOfB + 1) != -1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String a = "PcP3014iPy03015iPp03015iPr03015iA31NBn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00c00n00n00n00n00n00n00c00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00";
+        System.out.println(isGameStringValid(a));
+    }
+
     /**
      * Constructor: creates an instance of the GameState class
      * Decodes the gameString to get corresponding values for instance fields
@@ -156,7 +210,7 @@ public class GameState {
      */
     private static List<String> getPlayerStrings(String gameString) {
         List<String> playerStrings = new ArrayList<String>();
-        int beginIndex = 1;
+        int beginIndex = 0;
         while (gameString.contains("P")) {
             playerStrings.add(gameString.substring(beginIndex, beginIndex + LENGTH_OF_PLAYER_STRING));
             gameString = gameString.substring(beginIndex + LENGTH_OF_PLAYER_STRING);
@@ -170,7 +224,7 @@ public class GameState {
      * @return the string representation for Assam
      */
     private static String getAssamString(String gameString) {
-        int beginIndex = gameString.indexOf("A") + 1;
+        int beginIndex = gameString.indexOf("A");
         return gameString.substring(beginIndex, beginIndex + LENGTH_OF_ASSAM_STRING);
     }
 
@@ -180,7 +234,7 @@ public class GameState {
      * @return the string representation for the board
      */
     private static String getBoardString(String gameString) {
-        int beginIndex = gameString.indexOf("B") + 1;
+        int beginIndex = gameString.indexOf("B");
         return gameString.substring(beginIndex);
     }
 
