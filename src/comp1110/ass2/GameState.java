@@ -64,7 +64,7 @@ public class GameState {
     /**
      * Removes current player from the list of available players in the game
      */
-    public void removeCurrentPlayer() {
+    private void removeCurrentPlayer() {
         this.availablePlayers.remove(this.currentPlayer);
     }
 
@@ -88,46 +88,90 @@ public class GameState {
     }
 
     /**
-     * Returns the player to which the rug Assam is standing on belongs, null if there is no valid rug
-     * @return owner of the valid rug on which Assam is standing
+     * Finds the player who matches the given colour
+     * @param colour a colour
+     * @return the player who matches the given colour, null if such player doesn't exist
      */
-    private Player getAssamRugOwner() {
-        Rug rug = this.board.getAssamTile().getTopRug();
-        Colour rugColour = rug == null ? null : rug.getColour();
+    private Player findPlayer(Colour colour) {
         for (Player player : this.players) {
-            if (player.getColour() == rugColour) {
+            if (player.getColour() == colour) {
                 return player;
             }
         }
         return null;
     }
 
-    public boolean isPaymentRequired() {
-        Player owner = getAssamRugOwner();
-        if (this.availablePlayers.contains(owner) && this.currentPlayer != owner) {
+    /**
+     * Finds the player whose rug Assam is currently standing on
+     * @return the owner of the rug on which Assam is standing,
+     * null if Assam is standing on an empty tile
+     */
+    private Player findAssamRugOwner() {
+        Rug assamRug = this.board.getAssamTile().getTopRug();
+        if (assamRug == null) {
+            return null;
+        }
+        return findPlayer(assamRug.getColour());
+    }
+
+    /**
+     * Checks if a payment to another player is required after moving Assam
+     * @return true if required, false if not
+     */
+    private boolean isPaymentRequired() {
+        Player otherPlayer = findAssamRugOwner();
+        if (otherPlayer != null && this.availablePlayers.contains(otherPlayer) && this.currentPlayer != otherPlayer) {
             return true;
         }
         return false;
     }
 
+    /**
+     * Calculates the amount of payment required
+     * @return the amount of payment
+     */
     public int getPaymentAmount() {
         // FIXME
         return 0;
     }
 
-    public boolean isPaymentAffordable(int amount) {
-        return currentPlayer.getDirham() >= amount;
+    /**
+     * Determines whether the payment is affordable or not
+     * @return true if affordable, false if not
+     */
+    private boolean isPaymentAffordable() {
+        if (isPaymentRequired()) {
+            return currentPlayer.getDirham() >= getPaymentAmount();
+        }
+        return true;
     }
 
-    public void makePayment(int amount) {
-        this.currentPlayer.makePayment(getAssamRugOwner(), amount);
+    /**
+     * The current player makes their payment, and gets removed if they cannot afford to pay full amount
+     */
+    public void makePayment() {
+        if (isPaymentAffordable()) {
+            this.currentPlayer.makePayment(findAssamRugOwner(), getPaymentAmount());
+        } else {
+            this.currentPlayer.makePayment(findAssamRugOwner(), this.currentPlayer.getDirham());
+            removeCurrentPlayer();
+        }
     }
 
+    /**
+     * The current player places one of their remaining rugs on the board
+     * @param rug the rug to be placed on the board
+     */
     public void makePlacement(Rug rug) {
         this.currentPlayer.placeRug();
         this.board.placeRug(rug);
     }
 
+    /**
+     * Checks the validity of the given gameString
+     * @param gameString string representation for a game state
+     * @return true if the gameString is valid, false if not
+     */
     public static boolean isGameStringValid(String gameString) {
         String playerStringsPattern = "(P[yrcp][0-9]{5}[io]){2,4}";
         String assamStringPattern = "A[0-6]{2}[NESW]";
