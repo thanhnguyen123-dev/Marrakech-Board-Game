@@ -120,12 +120,6 @@ public class Viewer extends Application {
      * @param state
      */
     public void drawBoard(String state) {
-        if (!GameState.isGameStringValid(state)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Invalid Game State");
-            alert.show();
-        }
-
         GameState gameState = new GameState(state);
         Board board = gameState.getBoard();
         double rowPixelValue = 100;
@@ -236,6 +230,12 @@ public class Viewer extends Application {
      * @param state an array of two strings, representing the current game state
      */
     void displayState(String state) {
+        if (!GameState.isGameStringValid(state)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Invalid Game State");
+            alert.show();
+            return;
+        }
         images.getChildren().clear();
         mosaicTrack.getChildren().clear();
         display.getChildren().clear();
