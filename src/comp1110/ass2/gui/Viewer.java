@@ -26,6 +26,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
 import java.util.ArrayList;
 
 public class Viewer extends Application {
@@ -36,7 +37,7 @@ public class Viewer extends Application {
     private final Group controls = new Group();
     private final Group display = new Group();
     private final Group images = new Group();
-    private final Group mosaicTrack =  new Group();
+    private final Group mosaicTrack = new Group();
     private TextField boardTextField;
     private FrontEndTile[][] frontEndTiles = new FrontEndTile[Board.NUM_OF_ROWS][Board.NUM_OF_COLS];
     private final double CIRCLE_RADIUS = 50;
@@ -124,7 +125,7 @@ public class Viewer extends Application {
             display.getChildren().addAll(vbox);
             yPixelValue += 75;
         }
-    
+
     }
 
     /**
@@ -137,7 +138,7 @@ public class Viewer extends Application {
         double rowPixelValue = 100;
         double colPixelValue = 100;
         double side = SQUARE_SIDE;
-        for (int row = 0; row < Board.NUM_OF_ROWS; row ++) {
+        for (int row = 0; row < Board.NUM_OF_ROWS; row++) {
             for (int col = 0; col < Board.NUM_OF_COLS; col++) {
 
                 // Get the Tiles matrix from Board
@@ -155,7 +156,7 @@ public class Viewer extends Application {
 
                 // Check the condition when the Tile is OCCUPIED by Assam
                 else if (backEndTile.isAssam(board)) {
-                    frontEndTile.setFill(Color.ORANGE);
+                    frontEndTile.setFill(Colour.getFrontEndColor(backEndTile.getTopRug().getColour()));
                     Direction assamDirection = board.getAssamDirection();
                     int assamAngle = assamDirection.getAngle();
 
@@ -233,7 +234,6 @@ public class Viewer extends Application {
             yRight += 150;
         }
     }
-
 
 
     /**
