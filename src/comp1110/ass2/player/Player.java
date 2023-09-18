@@ -59,10 +59,6 @@ public class Player {
         otherPlayer.dirham += amount;
     }
 
-    public static boolean isPlayerStringValid(String playerString) {
-        return true;
-    }
-
     /**
      * Constructor: creates an instance of the Player class
      * Decodes the playerString to get corresponding values for instance fields

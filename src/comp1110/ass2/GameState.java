@@ -129,57 +129,11 @@ public class GameState {
     }
 
     public static boolean isGameStringValid(String gameString) {
-        int[] possibleLengths = {168, 176, 184};
-        boolean isLengthValid = false;
-        for (int possibleLength : possibleLengths) {
-            if (gameString.length() == possibleLength) {
-                isLengthValid = true;
-            }
-        }
-        if (!isLengthValid) {
-            return false;
-        }
-
-        int[] possibleIndicesOfP = {0, 8, 16, 24};
-        int indexOfP = gameString.indexOf('P');
-        int numberOfPlayers = 0;
-        boolean isPValid = false;
-        while (indexOfP != -1) {
-            for (int possibleIndexOfP : possibleIndicesOfP) {
-                if (indexOfP == possibleIndexOfP) {
-                    isPValid = true;
-                }
-            }
-            if (!isPValid) {
-                return false;
-            }
-            numberOfPlayers++;
-            indexOfP = gameString.indexOf('P', indexOfP + 1);
-            isPValid = false;
-        }
-
-        int indexOfA = gameString.indexOf('A');
-        if (indexOfA != gameString.length() - 152) {
-            return false;
-        }
-        if (gameString.indexOf('A', indexOfA + 1) != -1) {
-            return false;
-        }
-
-        int indexOfB = gameString.indexOf('B');
-        if (indexOfB != gameString.length() - 148) {
-            return false;
-        }
-        if (gameString.indexOf('B', indexOfB + 1) != -1) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public static void main(String[] args) {
-        String a = "PcP3014iPy03015iPp03015iPr03015iA31NBn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00c00n00n00n00n00n00n00c00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00";
-        System.out.println(isGameStringValid(a));
+        String playerStringsPattern = "(P[yrcp][0-9]{5}[io]){2,4}";
+        String assamStringPattern = "A[0-6]{2}[NESW]";
+        String boardStringPattern = "B([yrcp][0-9]{2}|n00){49}";
+        String pattern = "^" + playerStringsPattern + assamStringPattern + boardStringPattern + "$";
+        return gameString.matches(pattern);
     }
 
     /**

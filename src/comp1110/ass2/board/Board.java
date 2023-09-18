@@ -189,14 +189,6 @@ public class Board {
         }
     }
 
-    public static boolean isAssamStringValid(String assamString) {
-        return true;
-    }
-
-    public static boolean isBoardStringValid(String boardString) {
-        return true;
-    }
-
     /**
      * Constructor: creates an instance of the Board class
      * Decodes the assamString and the boardString to get corresponding values for instance fields
