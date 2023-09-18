@@ -315,6 +315,14 @@ public class GameState {
         return Board.generateAssamString(gameState.board);
     }
 
+    /**
+     * Determines whether a player is currently in the game or not
+     * @param player a given player
+     * @return true or false
+     */
+    public boolean isPlayerAvailable(Player player) {
+        return this.availablePlayers.contains(player);
+    }
 }
 
 
