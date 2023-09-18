@@ -96,6 +96,12 @@ public class Viewer extends Application {
             // FrontEnd elements to represent the Player information
             String playerColourString = Colour.colourToString(playerColour);
             Color textColor = Colour.getFrontEndColor(playerColour);
+            Boolean playerState = gameState.isPlayerAvailable(player);
+            String playerStateString = "IN";
+            if (!playerState) {
+                playerStateString = "OUT";
+            }
+
             Text playerText = new Text("Player " + playerColourString);
             playerText.setFont(Font.font("Verdana", 20));
             playerText.setFill(textColor);
@@ -103,10 +109,16 @@ public class Viewer extends Application {
             Text dirhamText = new Text("Remaining Dirhams: " + remainingDirhams);
             dirhamText.setScaleX(1.25);
             dirhamText.setScaleY(1.25);
+
             Text rugText = new Text("Remaining Rugs: " + numOfRemainingRugs);
             rugText.setScaleX(1.25);
             rugText.setScaleY(1.25);
-            VBox vbox = new VBox(playerText, dirhamText, rugText);
+
+            Text playerStateText = new Text("Player State: " + playerStateString);
+            playerStateText.setScaleX(1.25);
+            playerStateText.setScaleY(1.25);
+
+            VBox vbox = new VBox(playerText, dirhamText, rugText, playerStateText);
             vbox.setLayoutX(xPixelValue);
             vbox.setLayoutY(yPixelValue);
             display.getChildren().addAll(vbox);

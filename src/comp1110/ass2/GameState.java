@@ -323,6 +323,7 @@ public class GameState {
     public boolean isPlayerAvailable(Player player) {
         return this.availablePlayers.contains(player);
     }
+
 }
 
 
