@@ -55,8 +55,10 @@ public class Player {
      * @param amount amount of dirhams to be paid
      */
     public void makePayment(Player otherPlayer, int amount) {
-        this.dirham -= amount;
-        otherPlayer.dirham += amount;
+        if (otherPlayer != null) {
+            this.dirham -= amount;
+            otherPlayer.dirham += amount;
+        }
     }
 
     /**
