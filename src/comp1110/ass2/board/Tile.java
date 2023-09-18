@@ -10,18 +10,6 @@ public class Tile {
     private final int row, col;
     private Rug topRug;
 
-
-    /**
-     * TileState enum determines whether a tile is empty or not
-     * If a rug or Assam is on the tile, it's occupied
-     */
-    private enum TileState{
-        EMPTY, OCCUPIED;
-    }
-
-    // Initialize tileState to EMPTY
-    private TileState tileState = TileState.EMPTY;
-
     /**
      * Constructor: creates an instance of the Tile class
      * @param row row index of the tile
@@ -62,11 +50,10 @@ public class Tile {
      */
     public void setTopRug(Rug rug) {
         this.topRug = rug;
-        this.tileState = TileState.OCCUPIED;
     }
 
     /**
-     * Check if two tiles are adjacent to each other
+     * Checks if two tiles are adjacent to each other
      * @param otherTile the other tile
      * @return true or false
      */
@@ -81,34 +68,20 @@ public class Tile {
     }
 
     /**
-     * Check if the TileState is EMPTY
+     * Checks if a tile has a rug on it
      * @return true or false
      */
-    public boolean isEmpty(){
-        return tileState==TileState.EMPTY;
+    public boolean isEmpty() {
+        return this.topRug == null;
     }
 
     /**
-     * Check if the tile contains a part of the rug
-     */
-    public boolean isRug() {
-        if (this.getTopRug() != null) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Check if Assam is standing on the tile
+     * Checks if Assam is standing on the tile
      * @param board the board
      * @return true or false
      */
     public boolean isAssam(Board board) {
         Tile assamTile = board.getAssamTile();
-        if (this.getRow() == assamTile.getRow() &&
-                this.getCol() == assamTile.getCol()) {
-            return true;
-        }
-        return false;
+        return this == assamTile;
     }
 }
