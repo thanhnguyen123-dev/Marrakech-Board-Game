@@ -59,15 +59,19 @@ public class Player {
         otherPlayer.dirham += amount;
     }
 
+    public static boolean isPlayerStringValid(String playerString) {
+        return true;
+    }
+
     /**
      * Constructor: creates an instance of the Player class
      * Decodes the playerString to get corresponding values for instance fields
      * @param playerString string representation for the player
      */
     public Player(String playerString) {
-        this.dirham = Integer.parseInt(playerString.substring(1, 4), 10);
-        this.numOfUnplacedRugs = Integer.parseInt(playerString.substring(4, 6), 10);
-        this.colour = Colour.charToColour(playerString.charAt(0));
+        this.dirham = Integer.parseInt(playerString.substring(2, 5), 10);
+        this.numOfUnplacedRugs = Integer.parseInt(playerString.substring(5, 7), 10);
+        this.colour = Colour.charToColour(playerString.charAt(1));
     }
 
     /**

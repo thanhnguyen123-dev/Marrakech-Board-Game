@@ -189,6 +189,14 @@ public class Board {
         }
     }
 
+    public static boolean isAssamStringValid(String assamString) {
+        return true;
+    }
+
+    public static boolean isBoardStringValid(String boardString) {
+        return true;
+    }
+
     /**
      * Constructor: creates an instance of the Board class
      * Decodes the assamString and the boardString to get corresponding values for instance fields
@@ -199,7 +207,7 @@ public class Board {
         for (int col = 0; col < NUM_OF_ROWS; col++) {
             for (int row = 0; row < NUM_OF_COLS; row++) {
                 this.tiles[row][col] = new Tile(row, col);
-                int beginIndex = (col * NUM_OF_ROWS + row) * LENGTH_OF_SHORT_RUG_STRING;
+                int beginIndex = (col * NUM_OF_ROWS + row) * LENGTH_OF_SHORT_RUG_STRING + 1;
                 String shortRugString = boardString.substring(beginIndex, beginIndex + LENGTH_OF_SHORT_RUG_STRING);
                 if (!shortRugString.equals("n00")) {
                     Rug rug = new Rug(shortRugString, this.tiles[row][col]);
@@ -209,9 +217,9 @@ public class Board {
                 }
             }
         }
-        int[] position = parse(assamString.substring(0, 2));
+        int[] position = parse(assamString.substring(1, 3));
         this.assamTile = this.tiles[position[0]][position[1]];
-        this.assamDirection = Direction.charToDirection(assamString.charAt(2));
+        this.assamDirection = Direction.charToDirection(assamString.charAt(3));
     }
 
     private static int[] parse(String coordinates) {
