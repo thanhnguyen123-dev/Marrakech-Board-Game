@@ -1,6 +1,7 @@
 package comp1110.ass2.board;
 
 import comp1110.ass2.player.Rug;
+import comp1110.ass2.utils.StringToTile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -209,15 +210,8 @@ public class Board {
                 }
             }
         }
-        int[] position = parse(assamString.substring(1, 3));
-        this.assamTile = this.tiles[position[0]][position[1]];
+        this.assamTile = StringToTile.getTileFromString(this.tiles, assamString.substring(1, 3));
         this.assamDirection = Direction.charToDirection(assamString.charAt(3));
-    }
-
-    private static int[] parse(String coordinates) {
-        int row = Integer.parseInt(coordinates.charAt(1) + "", 10);
-        int col = Integer.parseInt(coordinates.charAt(0) + "", 10);
-        return new int[]{row, col};
     }
 
     /**

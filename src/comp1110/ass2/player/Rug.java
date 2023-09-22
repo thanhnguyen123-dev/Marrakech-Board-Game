@@ -1,6 +1,7 @@
 package comp1110.ass2.player;
 
 import comp1110.ass2.board.Tile;
+import comp1110.ass2.utils.StringToTile;
 
 /**
  * Rug class contains properties of each rug
@@ -70,10 +71,8 @@ public class Rug {
     public Rug(String fullRugString, Tile[][] tiles) {
         this.colour = Colour.charToColour(fullRugString.charAt(0));
         this.id = Integer.parseInt(fullRugString.substring(1, 3), 10);
-        int[] position1 = parse(fullRugString.substring(3,5));
-        Tile tile1 = tiles[position1[0]][position1[1]];
-        int[] position2 = parse(fullRugString.substring(5,7));
-        Tile tile2 = tiles[position2[0]][position2[1]];
+        Tile tile1 = StringToTile.getTileFromString(tiles, fullRugString.substring(3, 5));
+        Tile tile2 = StringToTile.getTileFromString(tiles, fullRugString.substring(5, 7));
         this.rugTiles = new Tile[]{tile1, tile2};
     }
 
@@ -83,19 +82,11 @@ public class Rug {
      * (reserved for rug string validation only)
      * @param fullRugString string representation for the rug
      */
-    public Rug(String fullRugString){
+    public Rug(String fullRugString) {
         this.colour = Colour.charToColour(fullRugString.charAt(0));
         this.id = Integer.parseInt(fullRugString.substring(1, 3), 10);
-        int[] position1 = parse(fullRugString.substring(3,5));
-        Tile tile1 = new Tile(position1[0], position1[1]);
-        int[] position2 = parse(fullRugString.substring(5,7));
-        Tile tile2 = new Tile(position2[0], position2[1]);
+        Tile tile1 = StringToTile.getTileFromString(fullRugString.substring(3, 5));
+        Tile tile2 = StringToTile.getTileFromString(fullRugString.substring(5, 7));
         this.rugTiles = new Tile[]{tile1, tile2};
-    }
-
-    private static int[] parse(String coordinates) {
-        int row = Integer.parseInt(coordinates.charAt(1) + "", 10);
-        int col = Integer.parseInt(coordinates.charAt(0) + "", 10);
-        return new int[]{row, col};
     }
 }
