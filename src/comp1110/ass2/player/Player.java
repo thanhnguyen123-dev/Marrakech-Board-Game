@@ -76,7 +76,7 @@ public class Player {
      * Generates playerString based on data of the player
      * @return string representation for the player
      */
-    public static String generatePlayerString(Player player) {
-        return "P" + player.colour.colourChar + String.format("%03d", player.dirham) + String.format("%02d", player.numOfUnplacedRugs);
+    public String generatePlayerString() {
+        return "P" + this.colour.colourChar + String.format("%03d", this.dirham) + String.format("%02d", this.numOfUnplacedRugs);
     }
 }

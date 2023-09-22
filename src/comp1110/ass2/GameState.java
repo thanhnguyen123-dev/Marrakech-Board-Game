@@ -240,17 +240,17 @@ public class GameState {
      * Generates gameString based on data of the game state
      * @return string representation for the game state
      */
-    public static String generateGameString(GameState gameState) {
+    public String generateGameString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Player player : gameState.players) {
-            stringBuilder.append(Player.generatePlayerString(player));
-            if (gameState.availablePlayers.contains(player)) {
+        for (Player player : this.players) {
+            stringBuilder.append(player.generatePlayerString());
+            if (this.availablePlayers.contains(player)) {
                 stringBuilder.append("i");
             } else {
                 stringBuilder.append("o");
             }
         }
-        stringBuilder.append(Board.generateAssamString(gameState.board)).append(Board.generateBoardString(gameState.board));
+        stringBuilder.append(this.board.generateAssamString()).append(this.board.generateBoardString());
         return stringBuilder.toString();
     }
 
@@ -312,7 +312,7 @@ public class GameState {
     public static String moveAssam(String currentAssam, int dieResult) {
         GameState gameState = new GameState(currentAssam + EMPTY_BOARD_STRING);
         gameState.moveAssam(dieResult);
-        return Board.generateAssamString(gameState.board);
+        return gameState.board.generateAssamString();
     }
 
     /**

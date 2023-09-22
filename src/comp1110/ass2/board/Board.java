@@ -218,25 +218,22 @@ public class Board {
      * Generates assamString based on data of the board
      * @return string representation for Assam
      */
-    public static String generateAssamString(Board board) {
-        Tile assamTile = board.assamTile;
-        Direction assamDirection = board.assamDirection;
-        return "A" + assamTile.getCol() + assamTile.getRow() + assamDirection.getDirectionChar();
+    public String generateAssamString() {
+        return "A" + this.assamTile.getCol() + this.assamTile.getRow() + this.assamDirection.getDirectionChar();
     }
 
     /**
      * Generates boardString based on data of the board
      * @return string representation for the board
      */
-    public static String generateBoardString(Board board) {
+    public String generateBoardString() {
         StringBuilder stringBuilder = new StringBuilder("B");
-        Tile[][] tiles = board.tiles;
         for (int col = 0; col < NUM_OF_ROWS; col++) {
             for (int row = 0; row < NUM_OF_COLS; row++) {
-                if (tiles[row][col].getTopRug() == null) {
+                if (this.tiles[row][col].getTopRug() == null) {
                     stringBuilder.append("n00");
                 } else {
-                    Rug rug = tiles[row][col].getTopRug();
+                    Rug rug = this.tiles[row][col].getTopRug();
                     char colourChar = rug.getColour().colourChar;
                     int id = rug.getID();
                     stringBuilder.append(colourChar).append(id);
