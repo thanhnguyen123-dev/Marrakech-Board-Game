@@ -31,6 +31,7 @@ public class Board {
             }
         }
         this.assamTile = this.tiles[3][3];
+        this.assamTile.setHasAssam(true);
         this.assamDirection = Direction.NORTH;
     }
 
@@ -81,6 +82,7 @@ public class Board {
     public void moveAssam(int steps) {
         int row = this.assamTile.getRow();
         int col = this.assamTile.getCol();
+        this.assamTile.setHasAssam(false);
         switch (this.assamDirection) {
             case NORTH -> {
                 if (row - steps < 0) {
@@ -119,6 +121,7 @@ public class Board {
                 }
             }
         }
+        this.assamTile.setHasAssam(true);
     }
 
     /**
@@ -127,29 +130,29 @@ public class Board {
     private void moveAssamOutOfBounds() {
         int row = this.assamTile.getRow();
         int col = this.assamTile.getCol();
+        this.assamTile.setHasAssam(false);
         if (row == 0 && col == NUM_OF_COLS - 1) {
             switch (this.assamDirection) {
                 case NORTH -> this.assamDirection = Direction.WEST;
                 case EAST -> this.assamDirection = Direction.SOUTH;
             }
-            return;
-        }
-        if (row == NUM_OF_ROWS - 1 && col == 0) {
+        } else if (row == NUM_OF_ROWS - 1 && col == 0) {
             switch (this.assamDirection) {
                 case SOUTH -> this.assamDirection = Direction.EAST;
                 case WEST -> this.assamDirection = Direction.NORTH;
             }
-            return;
+        } else {
+            switch (this.assamDirection) {
+                case NORTH -> this.assamTile = col % 2 == 0 ? this.tiles[0][col + 1] : this.tiles[0][col - 1];
+                case EAST ->
+                        this.assamTile = row % 2 == 0 ? this.tiles[row - 1][NUM_OF_COLS - 1] : this.tiles[row + 1][NUM_OF_COLS - 1];
+                case SOUTH ->
+                        this.assamTile = col % 2 == 0 ? this.tiles[NUM_OF_ROWS - 1][col - 1] : this.tiles[NUM_OF_ROWS - 1][col + 1];
+                case WEST -> this.assamTile = row % 2 == 0 ? this.tiles[row + 1][0] : this.tiles[row - 1][0];
+            }
+            this.assamDirection = this.assamDirection.rotate(180);
         }
-        switch (this.assamDirection) {
-            case NORTH -> this.assamTile = col % 2 == 0 ? this.tiles[0][col + 1] : this.tiles[0][col - 1];
-            case EAST ->
-                    this.assamTile = row % 2 == 0 ? this.tiles[row - 1][NUM_OF_COLS - 1] : this.tiles[row + 1][NUM_OF_COLS - 1];
-            case SOUTH ->
-                    this.assamTile = col % 2 == 0 ? this.tiles[NUM_OF_ROWS - 1][col - 1] : this.tiles[NUM_OF_ROWS - 1][col + 1];
-            case WEST -> this.assamTile = row % 2 == 0 ? this.tiles[row + 1][0] : this.tiles[row - 1][0];
-        }
-        this.assamDirection = this.assamDirection.rotate(180);
+        this.assamTile.setHasAssam(true);
     }
 
     /**
@@ -211,6 +214,7 @@ public class Board {
             }
         }
         this.assamTile = StringToTile.getTileFromString(this.tiles, assamString.substring(1, 3));
+        this.assamTile.setHasAssam(true);
         this.assamDirection = Direction.charToDirection(assamString.charAt(3));
     }
 

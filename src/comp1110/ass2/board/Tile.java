@@ -9,6 +9,7 @@ public class Tile {
     // Position of each tile on the board
     private final int row, col;
     private Rug topRug;
+    private boolean hasAssam;
 
     /**
      * Constructor: creates an instance of the Tile class
@@ -18,6 +19,7 @@ public class Tile {
     public Tile(int row, int col) {
         this.row = row;
         this.col = col;
+        this.hasAssam = false;
     }
 
     /**
@@ -53,6 +55,22 @@ public class Tile {
     }
 
     /**
+     * getter method for hasAssam
+     * @return true of false
+     */
+    public boolean getHasAssam() {
+        return this.hasAssam;
+    }
+
+    /**
+     * setter method for hasAssam
+     * @param hasAssam if Assam is standing on the tile or not
+     */
+    public void setHasAssam(boolean hasAssam) {
+        this.hasAssam = hasAssam;
+    }
+
+    /**
      * Checks if two tiles are adjacent to each other
      * @param otherTile the other tile
      * @return true or false
@@ -73,15 +91,5 @@ public class Tile {
      */
     public boolean isEmpty() {
         return this.topRug == null;
-    }
-
-    /**
-     * Checks if Assam is standing on the tile
-     * @param board the board
-     * @return true or false
-     */
-    public boolean isAssam(Board board) {
-        Tile assamTile = board.getAssamTile();
-        return this == assamTile;
     }
 }

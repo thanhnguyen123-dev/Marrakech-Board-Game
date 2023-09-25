@@ -148,15 +148,10 @@ public class Viewer extends Application {
                 // Instantiate the FrontEndTile class
                 FrontEndTile frontEndTile = new FrontEndTile(rowPixelValue, colPixelValue, side, backEndTile);
 
-                // Check the condition when the Tile is EMPTY
-                if (backEndTile.isEmpty()) {
-                    frontEndTile.setFill(Color.ORANGE);
-
-                }
 
                 // Check the condition when the Tile is OCCUPIED by Assam
-                else if (backEndTile.isAssam(board)) {
-                    frontEndTile.setFill(Colour.getFrontEndColor(backEndTile.getTopRug().getColour()));
+                if (backEndTile.getHasAssam()) {
+                    frontEndTile.setFill(backEndTile.isEmpty() ? Color.ORANGE : Colour.getFrontEndColor(backEndTile.getTopRug().getColour()));
                     Direction assamDirection = board.getAssamDirection();
                     int assamAngle = assamDirection.getAngle();
 
@@ -170,6 +165,12 @@ public class Viewer extends Application {
                     Text assamIndicator = new Text("Assam");
 
                     images.getChildren().addAll(assamImageView, assamIndicator);
+                }
+
+                // Check the condition when the Tile is EMPTY
+                else if (backEndTile.isEmpty()) {
+                    frontEndTile.setFill(Color.ORANGE);
+
                 }
 
                 // Check the condition when the Tile is OCCUPIED by a Rug piece
