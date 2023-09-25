@@ -54,6 +54,14 @@ public class GameState {
     }
 
     /**
+     * getter method for currentPlayer
+     * @return the current player
+     */
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    /**
      * Changes current player to the next available player in the game
      */
     public void nextPlayer() {
