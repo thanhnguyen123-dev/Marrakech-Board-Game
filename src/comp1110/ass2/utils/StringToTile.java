@@ -4,12 +4,12 @@ import comp1110.ass2.board.Tile;
 
 public class StringToTile {
     public static Tile getTileFromString(Tile[][] tiles, String coordinates) {
-        int[] indices = StringToTile.getIndicesFromString(coordinates);
-        return StringToTile.getTileFromIndices(tiles, indices);
+        int[] indices = getIndicesFromString(coordinates);
+        return getTileFromIndices(tiles, indices);
     }
 
     public static Tile getTileFromString(String coordinates) {
-        int[] indices = StringToTile.getIndicesFromString(coordinates);
+        int[] indices = getIndicesFromString(coordinates);
         return new Tile(indices[0], indices[1]);
     }
 
