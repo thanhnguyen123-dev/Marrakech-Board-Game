@@ -76,6 +76,15 @@ public class GameState {
         this.availablePlayers.remove(this.currentPlayer);
     }
 
+    /**
+     * Determines whether a player is currently in the game or not
+     * @param player a given player
+     * @return true or false
+     */
+    public boolean isPlayerAvailable(Player player) {
+        return this.availablePlayers.contains(player);
+    }
+
     public boolean isGameOver() {
         return this.currentPlayer.getNumOfUnplacedRugs() == 0;
     }
@@ -322,16 +331,4 @@ public class GameState {
         gameState.moveAssam(dieResult);
         return gameState.board.generateAssamString();
     }
-
-    /**
-     * Determines whether a player is currently in the game or not
-     * @param player a given player
-     * @return true or false
-     */
-    public boolean isPlayerAvailable(Player player) {
-        return this.availablePlayers.contains(player);
-    }
-
 }
-
-
