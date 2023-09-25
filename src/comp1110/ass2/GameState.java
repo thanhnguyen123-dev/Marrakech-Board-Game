@@ -168,9 +168,9 @@ public class GameState {
      */
     public void makePayment() {
         if (isPaymentAffordable()) {
-            this.currentPlayer.makePayment(findAssamRugOwner(), getPaymentAmount());
+            this.currentPlayer.pay(findAssamRugOwner(), getPaymentAmount());
         } else {
-            this.currentPlayer.makePayment(findAssamRugOwner(), this.currentPlayer.getDirham());
+            this.currentPlayer.pay(findAssamRugOwner(), this.currentPlayer.getDirham());
             removeCurrentPlayer();
         }
     }
