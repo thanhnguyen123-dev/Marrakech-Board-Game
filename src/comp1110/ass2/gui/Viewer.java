@@ -150,8 +150,8 @@ public class Viewer extends Application {
 
 
                 // Check the condition when the Tile is OCCUPIED by Assam
-                if (backEndTile.getHasAssam()) {
-                    frontEndTile.setFill(backEndTile.isEmpty() ? Color.ORANGE : Colour.getFrontEndColor(backEndTile.getTopRug().getColour()));
+                if (backEndTile.hasAssam()) {
+                    frontEndTile.setFill(backEndTile.hasRug() ? Colour.getFrontEndColor(backEndTile.getTopRug().getColour()) : Color.ORANGE);
                     Direction assamDirection = board.getAssamDirection();
                     int assamAngle = assamDirection.getAngle();
 
@@ -168,7 +168,7 @@ public class Viewer extends Application {
                 }
 
                 // Check the condition when the Tile is EMPTY
-                else if (backEndTile.isEmpty()) {
+                else if (!backEndTile.hasRug()) {
                     frontEndTile.setFill(Color.ORANGE);
 
                 }

@@ -58,7 +58,7 @@ public class Tile {
      * getter method for hasAssam
      * @return true of false
      */
-    public boolean getHasAssam() {
+    public boolean hasAssam() {
         return this.hasAssam;
     }
 
@@ -72,14 +72,14 @@ public class Tile {
 
     /**
      * Checks if two tiles are adjacent to each other
-     * @param otherTile the other tile
+     * @param that the other tile
      * @return true or false
      */
-    public boolean isAdjacent(Tile otherTile) {
-        if (this.row == otherTile.row && Math.abs(this.col - otherTile.col) == 1) {
+    public boolean isAdjacent(Tile that) {
+        if (this.row == that.row && Math.abs(this.col - that.col) == 1) {
             return true;
         }
-        if (this.col == otherTile.col && Math.abs(this.row - otherTile.row) == 1) {
+        if (this.col == that.col && Math.abs(this.row - that.row) == 1) {
             return true;
         }
         return false;
@@ -89,7 +89,7 @@ public class Tile {
      * Checks if a tile has a rug on it
      * @return true or false
      */
-    public boolean isEmpty() {
-        return this.topRug == null;
+    public boolean hasRug() {
+        return this.topRug != null;
     }
 }
