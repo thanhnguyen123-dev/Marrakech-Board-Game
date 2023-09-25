@@ -51,13 +51,13 @@ public class Player {
 
     /**
      * Pays a certain amount of dirhams to the other player
-     * @param otherPlayer the other player
+     * @param that the other player
      * @param amount amount of dirhams to be paid
      */
-    public void pay(Player otherPlayer, int amount) {
-        if (otherPlayer != null) {
+    public void pay(Player that, int amount) {
+        if (that != null) {
             this.dirham -= amount;
-            otherPlayer.dirham += amount;
+            that.dirham += amount;
         }
     }
 
