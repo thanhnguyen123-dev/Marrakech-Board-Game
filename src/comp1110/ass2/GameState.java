@@ -65,8 +65,13 @@ public class GameState {
      * Changes current player to the next available player in the game
      */
     public void nextPlayer() {
-        int index = this.availablePlayers.indexOf(this.currentPlayer);
-        this.currentPlayer = this.availablePlayers.get((index + 1) % this.availablePlayers.size());
+        int index = Arrays.asList(this.players).indexOf(this.currentPlayer);
+        for (int i = index + 1; i < index + this.players.length; i++) {
+            if (this.availablePlayers.contains(this.players[i % this.players.length])) {
+                this.currentPlayer = this.players[i % this.players.length];
+                break;
+            }
+        }
     }
 
     /**
