@@ -127,7 +127,7 @@ public class Board {
     /**
      * Moves Assam off and back onto the board following the mosaic track
      */
-    private void moveAssamOutOfBounds() {
+    public void moveAssamOutOfBounds() {
         int row = this.assamTile.getRow();
         int col = this.assamTile.getCol();
         this.assamTile.setHasAssam(false);

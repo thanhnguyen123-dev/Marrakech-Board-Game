@@ -72,7 +72,7 @@ public class GameState {
     /**
      * Removes current player from the list of available players in the game
      */
-    private void removeCurrentPlayer() {
+    public void removeCurrentPlayer() {
         this.availablePlayers.remove(this.currentPlayer);
     }
 
@@ -109,7 +109,7 @@ public class GameState {
      * @param colour a colour
      * @return the player who matches the given colour, null if such player doesn't exist
      */
-    private Player findPlayer(Colour colour) {
+    public Player findPlayer(Colour colour) {
         for (Player player : this.players) {
             if (player.getColour() == colour) {
                 return player;
@@ -123,7 +123,7 @@ public class GameState {
      * @return the owner of the rug on which Assam is standing,
      * null if Assam is standing on an empty tile
      */
-    private Player findAssamRugOwner() {
+    public Player findAssamRugOwner() {
         Rug assamRug = this.board.getAssamTile().getTopRug();
         if (assamRug == null) {
             return null;
@@ -135,7 +135,7 @@ public class GameState {
      * Checks if a payment to another player is required after moving Assam
      * @return true if required, false if not
      */
-    private boolean isPaymentRequired() {
+    public boolean isPaymentRequired() {
         Player otherPlayer = findAssamRugOwner();
         if (otherPlayer != null && this.availablePlayers.contains(otherPlayer) && this.currentPlayer != otherPlayer) {
             return true;
@@ -156,7 +156,7 @@ public class GameState {
      * Determines whether the payment is affordable or not
      * @return true if affordable, false if not
      */
-    private boolean isPaymentAffordable() {
+    public boolean isPaymentAffordable() {
         if (isPaymentRequired()) {
             return currentPlayer.getDirham() >= getPaymentAmount();
         }
@@ -223,7 +223,7 @@ public class GameState {
      * @param gameString string representation for game state
      * @return a list of string representations for each player;
      */
-    private static List<String> getPlayerStrings(String gameString) {
+    public static List<String> getPlayerStrings(String gameString) {
         List<String> playerStrings = new ArrayList<String>();
         int beginIndex = 0;
         while (gameString.contains("P")) {
@@ -238,7 +238,7 @@ public class GameState {
      * @param gameString string representation for game state
      * @return the string representation for Assam
      */
-    private static String getAssamString(String gameString) {
+    public static String getAssamString(String gameString) {
         int beginIndex = gameString.indexOf("A");
         return gameString.substring(beginIndex, beginIndex + LENGTH_OF_ASSAM_STRING);
     }
@@ -248,7 +248,7 @@ public class GameState {
      * @param gameString string representation for game state
      * @return the string representation for the board
      */
-    private static String getBoardString(String gameString) {
+    public static String getBoardString(String gameString) {
         int beginIndex = gameString.indexOf("B");
         return gameString.substring(beginIndex);
     }

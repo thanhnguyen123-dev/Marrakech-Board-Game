@@ -28,7 +28,7 @@ public class StringToTile {
      * @param coordinates string representation of coordinates on the board
      * @return the corresponding row and column indices of a 2D array
      */
-    private static int[] getIndicesFromString(String coordinates) {
+    public static int[] getIndicesFromString(String coordinates) {
         int row = Integer.parseInt(coordinates.charAt(1) + "", 10);
         int col = Integer.parseInt(coordinates.charAt(0) + "", 10);
         return new int[]{row, col};
@@ -39,7 +39,7 @@ public class StringToTile {
      * @param indices row and column indices of the tile
      * @return the tile corresponding to the provided indices
      */
-    private static Tile getTileFromIndices(Tile[][] tiles, int[] indices) {
+    public static Tile getTileFromIndices(Tile[][] tiles, int[] indices) {
         return tiles[indices[0]][indices[1]];
     }
 }
