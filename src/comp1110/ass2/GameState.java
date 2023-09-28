@@ -338,6 +338,13 @@ public class GameState {
         return gameState.board.generateAssamString();
     }
 
+
+    /**
+     * Get the winner if the game is over (eg. if Red wins then return 'r')
+     * If more than one player score the highest score, return 't'
+     * If the game is not over, return 'n'
+     * @return char representation of a winner if someone actually wins
+     */
     public char getWinner() {
         if (this.isGameOver()) {
             List<Integer> playerScores = new ArrayList<>();
@@ -359,6 +366,12 @@ public class GameState {
         return 'n';
     }
 
+
+    /**
+     * Calculate the player score of a Player at the current state
+     * @param player
+     * @return a number representation of the score
+     */
     public int getPlayerScore(Player player) {
         int dirhamsValue = player.getDirham();
         int numOfVisibleSquares = this.getNumOfVisibleSquares(player);
@@ -366,6 +379,11 @@ public class GameState {
     }
 
 
+    /**
+     * Count the number of visible squares of a Player at the current state
+     * @param player
+     * @return a number representation of the visible squares
+     */
     public int getNumOfVisibleSquares(Player player) {
         Board board = this.getBoard();
         Tile[][] tiles = board.getTiles();
