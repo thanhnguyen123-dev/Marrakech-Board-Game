@@ -79,4 +79,6 @@ public class Player {
     public String generatePlayerString() {
         return "P" + this.colour.colourChar + String.format("%03d", this.dirham) + String.format("%02d", this.numOfUnplacedRugs);
     }
+
+
 }

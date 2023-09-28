@@ -336,4 +336,38 @@ public class GameState {
         gameState.moveAssam(dieResult);
         return gameState.board.generateAssamString();
     }
+
+    public int getPlayerScore(Player player) {
+        int dirhamsValue = player.getDirham();
+        int numOfVisibleSquares = this.getNumOfVisibleSquares(player);
+        return dirhamsValue + numOfVisibleSquares;
+    }
+
+
+    public int getNumOfVisibleSquares(Player player) {
+        Board board = this.getBoard();
+        Tile[][] tiles = board.getTiles();
+        Colour playerColour = player.getColour();
+        int count = 0;
+        for (int row = 0; row < Board.NUM_OF_ROWS; row++) {
+            for (int col = 0; col < Board.NUM_OF_COLS; col++) {
+                Tile tile = tiles[row][col];
+                if (tile.hasRug()) {
+                    if (playerColour == tile.getTopRug().getColour()) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    public char getWinner() {
+
+
+
+
+
+        return 'a';
+    }
 }
