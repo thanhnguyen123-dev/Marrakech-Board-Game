@@ -123,9 +123,8 @@ public class Marrakech {
      */
     public static char getWinner(String gameState) {
         // FIXME: Task 12
-
-
-        return '\0';
+        GameState state = new GameState(gameState);
+        return state.getWinner();
     }
 
     /**

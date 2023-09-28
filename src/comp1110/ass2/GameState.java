@@ -6,9 +6,7 @@ import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * GameState class determines the state of each player
@@ -91,7 +89,10 @@ public class GameState {
     }
 
     public boolean isGameOver() {
-        return this.currentPlayer.getNumOfUnplacedRugs() == 0;
+        if (this.currentPlayer != null) {
+            return this.currentPlayer.getNumOfUnplacedRugs() == 0;
+        }
+        return true;
     }
 
     /**
@@ -337,6 +338,27 @@ public class GameState {
         return gameState.board.generateAssamString();
     }
 
+    public char getWinner() {
+        if (this.isGameOver()) {
+            List<Integer> playerScores = new ArrayList<>();
+            for (Player player : this.availablePlayers) {
+                playerScores.add(this.getPlayerScore(player));
+            }
+            int maxScore = Collections.max(playerScores);
+            if (Collections.frequency(playerScores, maxScore) > 1) {
+                return 't';
+            }
+            else {
+                for (Player player : this.availablePlayers) {
+                    if (maxScore == this.getPlayerScore(player)) {
+                        return player.getColour().colourChar;
+                    }
+                }
+            }
+        }
+        return 'n';
+    }
+
     public int getPlayerScore(Player player) {
         int dirhamsValue = player.getDirham();
         int numOfVisibleSquares = this.getNumOfVisibleSquares(player);
@@ -362,12 +384,4 @@ public class GameState {
         return count;
     }
 
-    public char getWinner() {
-
-
-
-
-
-        return 'a';
-    }
 }
