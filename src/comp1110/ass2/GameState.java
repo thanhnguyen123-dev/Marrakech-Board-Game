@@ -320,12 +320,7 @@ public class GameState {
      */
     public static boolean isGameOver(String currentGame) {
         GameState gameState = new GameState(currentGame);
-        for (Player player : gameState.availablePlayers) {
-            if (player.getNumOfUnplacedRugs() != 0) {
-                return false;
-            }
-        }
-        return true;
+        return gameState.isGameOver();
     }
 
     /**
@@ -356,8 +351,7 @@ public class GameState {
             int maxScore = Collections.max(playerScores);
             if (Collections.frequency(playerScores, maxScore) > 1) {
                 return 't';
-            }
-            else {
+            } else {
                 for (Player player : this.availablePlayers) {
                     if (maxScore == this.getPlayerScore(player)) {
                         return player.getColour().colourChar;
