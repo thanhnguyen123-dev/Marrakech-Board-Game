@@ -89,8 +89,10 @@ public class GameState {
     }
 
     public boolean isGameOver() {
-        if (this.currentPlayer != null) {
-            return this.currentPlayer.getNumOfUnplacedRugs() == 0;
+        for (Player player : this.availablePlayers) {
+            if (player.getNumOfUnplacedRugs() != 0) {
+                return false;
+            }
         }
         return true;
     }
@@ -401,5 +403,6 @@ public class GameState {
         }
         return count;
     }
+
 
 }

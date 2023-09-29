@@ -122,9 +122,7 @@ public class Marrakech {
      * @return A char representing the winner of the game as described above.
      */
     public static char getWinner(String gameState) {
-        // FIXME: Task 12
-        GameState state = new GameState(gameState);
-        return state.getWinner();
+        return (new GameState(gameState).getWinner());
     }
 
     /**
