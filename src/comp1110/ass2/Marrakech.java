@@ -76,8 +76,7 @@ public class Marrakech {
      * rotation is illegal.
      */
     public static String rotateAssam(String currentAssam, int rotation) {
-        // FIXME: Task 9
-        return "";
+        return GameState.rotateAssam(currentAssam, rotation);
     }
 
     /**

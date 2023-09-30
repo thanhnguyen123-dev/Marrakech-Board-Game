@@ -1,6 +1,7 @@
 package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
+import comp1110.ass2.board.Direction;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;
@@ -102,6 +103,30 @@ public class GameState {
      */
     public void rotateAssam(int rotation) {
         this.board.rotateAssam(rotation);
+    }
+
+    /**
+     * Rotates Assam then return an Assam String
+     * @param currentAssam a String representing Assam's current state
+     * @param rotation the rotation in degrees
+     * @return
+     */
+    public static String rotateAssam(String currentAssam, int rotation) {
+        List<Integer> legalRotations = new ArrayList<>();
+        legalRotations.add(-90);
+        for (Direction direction : Direction.values()) {
+            Integer angleDirection = direction.getAngle();
+            if (angleDirection != 180) {
+                legalRotations.add(angleDirection);
+            }
+        }
+        if (legalRotations.contains(rotation)) {
+            char assamDirectionChar = currentAssam.charAt(currentAssam.length() - 1);
+            Direction assamDirection = Direction.charToDirection(assamDirectionChar);
+            Direction newAssamDirection = assamDirection.rotate(rotation);
+            return currentAssam.substring(0, currentAssam.length() - 1) + newAssamDirection.getDirectionChar();
+        }
+        return currentAssam;
     }
 
     /**
@@ -250,6 +275,8 @@ public class GameState {
         int beginIndex = gameString.indexOf("A");
         return gameString.substring(beginIndex, beginIndex + LENGTH_OF_ASSAM_STRING);
     }
+
+
 
     /**
      * Obtains boardString from a given gameString
