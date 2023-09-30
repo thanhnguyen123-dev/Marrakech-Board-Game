@@ -344,19 +344,37 @@ public class GameState {
      */
     public char getWinner() {
         if (this.isGameOver()) {
-            List<Integer> playerScores = new ArrayList<>();
+            List<Integer> playersScores = new ArrayList<>();
             for (Player player : this.availablePlayers) {
-                playerScores.add(this.getPlayerScore(player));
+                playersScores.add(this.getPlayerScore(player));
             }
-            int maxScore = Collections.max(playerScores);
-            if (Collections.frequency(playerScores, maxScore) > 1) {
-                return 't';
-            } else {
-                for (Player player : this.availablePlayers) {
-                    if (maxScore == this.getPlayerScore(player)) {
-                        return player.getColour().colourChar;
+            int maxScore = Collections.max(playersScores);
+            List<Player> highestScorePlayers = new ArrayList<>();
+            for (Player player : this.availablePlayers) {
+                if (this.getPlayerScore(player) == maxScore) {
+                    highestScorePlayers.add(player);
+                }
+            }
+
+            if (Collections.frequency(playersScores, maxScore) > 1) {
+                Map<Player, Integer> playerDirhamsMap = new HashMap<>();
+                List<Integer> dirhamsOfPlayers = new ArrayList<>();
+                for (Player highestScorePlayer : highestScorePlayers) {
+                    playerDirhamsMap.put(highestScorePlayer, highestScorePlayer.getDirham());
+                }
+                int maxDirhams = Collections.max(playerDirhamsMap.values());
+                if (Collections.frequency(dirhamsOfPlayers, maxDirhams) > 1) {
+                    return 't';
+                } else {
+                    for (Player highestScorePlayer : highestScorePlayers) {
+                        if (highestScorePlayer.getDirham() == maxDirhams) {
+                            return highestScorePlayer.getColour().colourChar;
+                        }
                     }
                 }
+            } else {
+                Player winner = highestScorePlayers.get(0);
+                return winner.getColour().colourChar;
             }
         }
         return 'n';
