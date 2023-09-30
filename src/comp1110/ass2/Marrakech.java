@@ -1,24 +1,28 @@
 package comp1110.ass2;
 
+import comp1110.ass2.board.Board;
+import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Die;
+import comp1110.ass2.player.Rug;
 
 public class Marrakech {
+    private static final String EMPTY_BOARD_STRING = "Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00";
 
     /**
      * Determine whether a rug String is valid.
      * For this method, you need to determine whether the rug String is valid, but do not need to determine whether it
      * can be placed on the board (you will determine that in Task 10 ). A rug is valid if and only if all the following
      * conditions apply:
-     *  - The String is 7 characters long
-     *  - The first character in the String corresponds to the colour character of a player present in the game
-     *  - The next two characters represent a 2-digit ID number
-     *  - The next 4 characters represent coordinates that are on the board
-     *  - The combination of that ID number and colour is unique
+     * - The String is 7 characters long
+     * - The first character in the String corresponds to the colour character of a player present in the game
+     * - The next two characters represent a 2-digit ID number
+     * - The next 4 characters represent coordinates that are on the board
+     * - The combination of that ID number and colour is unique
      * To clarify this last point, if a rug has the same ID as a rug on the board, but a different colour to that rug,
      * then it may still be valid. Obviously multiple rugs are allowed to have the same colour as well so long as they
      * do not share an ID. So, if we already have the rug c013343 on the board, then we can have the following rugs
-     *  - c023343 (Shares the colour but not the ID)
-     *  - y013343 (Shares the ID but not the colour)
+     * - c023343 (Shares the colour but not the ID)
+     * - y013343 (Shares the ID but not the colour)
      * But you cannot have c014445, because this has the same colour and ID as a rug on the board already.
      * @param gameString A String representing the current state of the game as per the README
      * @param rug A String representing the rug you are checking
@@ -33,10 +37,10 @@ public class Marrakech {
      * Note that the die in Marrakech is not a regular 6-sided die, since there
      * are no faces that show 5 or 6, and instead 2 faces that show 2 and 3. That
      * is, of the 6 faces
-     *  - One shows 1
-     *  - Two show 2
-     *  - Two show 3
-     *  - One shows 4
+     * - One shows 1
+     * - Two show 2
+     * - Two show 3
+     * - One shows 4
      * As such, in order to get full marks for this task, you will need to implement
      * a die where the distribution of results from 1 to 4 is not even, with a 2 or 3
      * being twice as likely to be returned as a 1 or 4.
@@ -55,7 +59,7 @@ public class Marrakech {
      * @return true if the game is over, or false otherwise.
      */
     public static boolean isGameOver(String currentGame) {
-        return GameState.isGameOver(currentGame);
+        return new GameState(currentGame).isGameOver();
     }
 
     /**
@@ -66,8 +70,8 @@ public class Marrakech {
      * If the requested rotation is illegal, you should return Assam's current state unchanged.
      * @param currentAssam A String representing Assam's current state
      * @param rotation The requested rotation, in degrees. This degree reading is relative to the direction Assam
-     *                 is currently facing, so a value of 0 for this argument will keep Assam facing in his
-     *                 current orientation, 90 would be turning him to the right, etc.
+     * is currently facing, so a value of 0 for this argument will keep Assam facing in his
+     * current orientation, 90 would be turning him to the right, etc.
      * @return A String representing Assam's state after the rotation, or the input currentAssam if the requested
      * rotation is illegal.
      */
@@ -80,16 +84,17 @@ public class Marrakech {
      * Determine whether a potential new placement is valid (i.e that it describes a legal way to place a rug).
      * There are a number of rules which apply to potential new placements, which are detailed in the README but to
      * reiterate here:
-     *   1. A new rug must have one edge adjacent to Assam (not counting diagonals)
-     *   2. A new rug must not completely cover another rug. It is legal to partially cover an already placed rug, but
-     *      the new rug must not cover the entirety of another rug that's already on the board.
+     * 1. A new rug must have one edge adjacent to Assam (not counting diagonals)
+     * 2. A new rug must not completely cover another rug. It is legal to partially cover an already placed rug, but
+     * the new rug must not cover the entirety of another rug that's already on the board.
      * @param gameState A game string representing the current state of the game
      * @param rug A rug string representing the candidate rug which you must check the validity of.
      * @return true if the placement is valid, and false otherwise.
      */
     public static boolean isPlacementValid(String gameState, String rug) {
-        // FIXME: Task 10
-        return false;
+        Board board = new GameState(gameState).getBoard();
+        Tile[][] tiles = board.getTiles();
+        return board.isPlacementValid(new Rug(rug, tiles));
     }
 
     /**
@@ -122,7 +127,7 @@ public class Marrakech {
      * @return A char representing the winner of the game as described above.
      */
     public static char getWinner(String gameState) {
-        return (new GameState(gameState).getWinner());
+        return new GameState(gameState).getWinner();
     }
 
     /**
@@ -136,8 +141,10 @@ public class Marrakech {
      * @param dieResult The result of the die, which determines the number of squares Assam will move.
      * @return A String representing Assam's state after the movement.
      */
-    public static String moveAssam(String currentAssam, int dieResult){
-        return GameState.moveAssam(currentAssam, dieResult);
+    public static String moveAssam(String currentAssam, int dieResult) {
+        GameState gameState = new GameState(currentAssam + EMPTY_BOARD_STRING);
+        gameState.moveAssam(dieResult);
+        return gameState.generateAssamString();
     }
 
     /**

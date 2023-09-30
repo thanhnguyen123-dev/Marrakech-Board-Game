@@ -15,7 +15,6 @@ import java.util.*;
 public class GameState {
     private static final int LENGTH_OF_PLAYER_STRING = 8;
     private static final int LENGTH_OF_ASSAM_STRING = 4;
-    private static final String EMPTY_BOARD_STRING = "Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00";
 
     private final Board board;
     // All players
@@ -279,6 +278,14 @@ public class GameState {
         return stringBuilder.toString();
     }
 
+    public String generateAssamString() {
+        return this.board.generateAssamString();
+    }
+
+    public String generateBoardString() {
+        return this.board.generateBoardString();
+    }
+
     /**
      * Determines whether a rug(string) is valid.
      * @param gameString string representation for the game state
@@ -312,29 +319,6 @@ public class GameState {
         }
         return true;
     }
-
-    /**
-     * Determines whether a game is over or not based on the gameString
-     * @param currentGame string representation for the game state
-     * @return true or false
-     */
-    public static boolean isGameOver(String currentGame) {
-        GameState gameState = new GameState(currentGame);
-        return gameState.isGameOver();
-    }
-
-    /**
-     * Calculates Assam's position and direction after movement
-     * @param currentAssam string representation for Assam before movement
-     * @param dieResult number of steps to be taken by Assam
-     * @return string representation for Assam after movement
-     */
-    public static String moveAssam(String currentAssam, int dieResult) {
-        GameState gameState = new GameState(currentAssam + EMPTY_BOARD_STRING);
-        gameState.moveAssam(dieResult);
-        return gameState.board.generateAssamString();
-    }
-
 
     /**
      * Get the winner if the game is over (eg. if Red wins then return 'r')
@@ -398,5 +382,5 @@ public class GameState {
         return count;
     }
 
-
+    
 }
