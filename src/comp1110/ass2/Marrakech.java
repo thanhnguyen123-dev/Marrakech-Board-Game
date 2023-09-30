@@ -142,9 +142,9 @@ public class Marrakech {
      * @return A String representing Assam's state after the movement.
      */
     public static String moveAssam(String currentAssam, int dieResult) {
-        GameState gameState = new GameState(currentAssam + EMPTY_BOARD_STRING);
-        gameState.moveAssam(dieResult);
-        return gameState.generateAssamString();
+        Board board = new Board(currentAssam, EMPTY_BOARD_STRING);
+        board.moveAssam(dieResult);
+        return board.generateAssamString();
     }
 
     /**
