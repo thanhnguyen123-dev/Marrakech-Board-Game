@@ -278,14 +278,6 @@ public class GameState {
         return stringBuilder.toString();
     }
 
-    public String generateAssamString() {
-        return this.board.generateAssamString();
-    }
-
-    public String generateBoardString() {
-        return this.board.generateBoardString();
-    }
-
     /**
      * Determines whether a rug(string) is valid.
      * @param gameString string representation for the game state
@@ -381,6 +373,4 @@ public class GameState {
         }
         return count;
     }
-
-    
 }
