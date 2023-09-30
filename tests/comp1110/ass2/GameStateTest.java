@@ -47,10 +47,6 @@ class GameStateTest {
     }
 
     @Test
-    void isGameOver() {
-    }
-
-    @Test
     void findPlayer() {
         Player playerRed = new Player(Colour.RED);
         Player playerCyan = new Player(Colour.CYAN);
