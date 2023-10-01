@@ -1,5 +1,6 @@
 package comp1110.ass2.board;
 
+import comp1110.ass2.Marrakech;
 import comp1110.ass2.player.Rug;
 import comp1110.ass2.utils.StringToTile;
 
@@ -160,7 +161,17 @@ public class Board {
      * @param rotation rotation in degrees
      */
     public void rotateAssam(int rotation) {
-        this.assamDirection = this.assamDirection.rotate(rotation);
+        List<Integer> legalRotations = new ArrayList<>();
+        legalRotations.add(-90);
+        for (Direction direction : Direction.values()) {
+            Integer angleDirection = direction.getAngle();
+            if (angleDirection != 180) {
+                legalRotations.add(angleDirection);
+            }
+        }
+        if (legalRotations.contains(rotation)) {
+            this.assamDirection = this.assamDirection.rotate(rotation);
+        }
     }
 
     /**

@@ -76,7 +76,9 @@ public class Marrakech {
      * rotation is illegal.
      */
     public static String rotateAssam(String currentAssam, int rotation) {
-        return GameState.rotateAssam(currentAssam, rotation);
+        Board board = new Board(currentAssam, EMPTY_BOARD_STRING);
+        board.rotateAssam(rotation);
+        return board.generateAssamString();
     }
 
     /**

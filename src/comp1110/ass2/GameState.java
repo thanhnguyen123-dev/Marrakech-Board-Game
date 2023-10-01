@@ -105,29 +105,6 @@ public class GameState {
     }
 
     /**
-     * Rotates Assam then return an Assam String
-     * @param currentAssam a String representing Assam's current state
-     * @param rotation the rotation in degrees
-     * @return
-     */
-    public static String rotateAssam(String currentAssam, int rotation) {
-        List<Integer> legalRotations = new ArrayList<>();
-        legalRotations.add(-90);
-        for (Direction direction : Direction.values()) {
-            Integer angleDirection = direction.getAngle();
-            if (angleDirection != 180) {
-                legalRotations.add(angleDirection);
-            }
-        }
-        if (legalRotations.contains(rotation)) {
-            Board currentBoard = new Board(currentAssam, Marrakech.EMPTY_BOARD_STRING);
-            currentBoard.rotateAssam(rotation);
-            return currentBoard.generateAssamString();
-        }
-        return currentAssam;
-    }
-
-    /**
      * Moves Assam
      * @param steps number of steps to be taken by Assam
      */
