@@ -1,7 +1,6 @@
 package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
-import comp1110.ass2.board.Direction;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;

@@ -1,6 +1,5 @@
 package comp1110.ass2.board;
 
-import comp1110.ass2.Marrakech;
 import comp1110.ass2.player.Rug;
 import comp1110.ass2.utils.StringToTile;
 
