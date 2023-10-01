@@ -120,10 +120,9 @@ public class GameState {
             }
         }
         if (legalRotations.contains(rotation)) {
-            char assamDirectionChar = currentAssam.charAt(currentAssam.length() - 1);
-            Direction assamDirection = Direction.charToDirection(assamDirectionChar);
-            Direction newAssamDirection = assamDirection.rotate(rotation);
-            return currentAssam.substring(0, currentAssam.length() - 1) + newAssamDirection.getDirectionChar();
+            Board currentBoard = new Board(currentAssam, Marrakech.EMPTY_BOARD_STRING);
+            currentBoard.rotateAssam(rotation);
+            return currentBoard.generateAssamString();
         }
         return currentAssam;
     }
