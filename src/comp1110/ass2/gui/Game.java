@@ -3,7 +3,6 @@ package comp1110.ass2.gui;
 import comp1110.ass2.GameState;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
-import comp1110.ass2.player.Die;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 import javafx.application.Application;
@@ -14,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -64,8 +64,11 @@ public class Game extends Application {
     private Player[] players = new Player[]{player1, player2, player3, player4};
 
     private final GameState gameState = new GameState(this.players);
+    private Phase currentPhase = Phase.ROTATION;
     private int dieResult;
     private int rugID = 0;
+
+    private Text phaseText = new Text();
 
     public static void main(String[] args) {
         launch(args);
@@ -99,44 +102,63 @@ public class Game extends Application {
         statsArea.setBorder(gamePaneBorder);
         playerArea.getChildren().add(statsArea);
 
+        phaseText.setText(getCurrentPhaseText());
+        statsArea.getChildren().add(phaseText);
+
         final Pane controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
         controlArea.setBorder(gamePaneBorder);
         controlArea.relocate(0, STATS_AREA_HEIGHT + MARGIN);
         playerArea.getChildren().add(controlArea);
 
         Button rotateAssamBtn = makeRotateAssamBtn();
-        controlArea.getChildren().add(rotateAssamBtn);
         rotateAssamBtn.relocate(240, 30);
+        controlArea.getChildren().add(rotateAssamBtn);
 
         Button rollDieBtn = makeRollDieBtn();
-        controlArea.getChildren().add(rollDieBtn);
         rollDieBtn.relocate(240, 60);
+        controlArea.getChildren().add(rollDieBtn);
 
         Button moveAssamBtn = makeMoveAssamBtn();
-        controlArea.getChildren().add(moveAssamBtn);
         moveAssamBtn.relocate(240, 90);
+        controlArea.getChildren().add(moveAssamBtn);
 
         Button rotateRugBtn = makeRotateRugBtn();
-        controlArea.getChildren().add(rotateRugBtn);
         rotateRugBtn.relocate(240, 120);
+        controlArea.getChildren().add(rotateRugBtn);
 
         Button placeRugBtn = makePlaceRugBtn();
-        controlArea.getChildren().add(placeRugBtn);
         placeRugBtn.relocate(240, 150);
+        controlArea.getChildren().add(placeRugBtn);
+
+        Button nextPhaseBtn = makeNextPhaseBtn();
+        nextPhaseBtn.relocate(240, 180);
+        controlArea.getChildren().add(nextPhaseBtn);
 
         this.draggableGameRug = new DraggableGameRug(750, 500, this, Colour.RED);
         this.root.getChildren().add(this.draggableGameRug);
 
-        Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.Q || event.getCode() == KeyCode.E) {
-                this.draggableGameRug.toggleOrientation();
-            }
-        });
+        Scene scene = makeScene();
 
         primaryStage.setTitle("Game");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private Scene makeScene() {
+        Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.Q || event.getCode() == KeyCode.E) {
+                if (this.currentPhase == Phase.PLACEMENT) {
+                    toggleRugOrientation();
+                }
+            }
+            if (event.getCode() == KeyCode.ENTER) {
+                if (this.currentPhase == Phase.PLACEMENT) {
+                    placeRug();
+                }
+            }
+        });
+        return scene;
     }
 
     private Button makeRotateAssamBtn() {
@@ -169,25 +191,53 @@ public class Game extends Application {
     private Button makeRotateRugBtn() {
         Button rotateRugBtn = new Button("Rotate Rug");
         rotateRugBtn.setOnMouseClicked(event -> {
-            this.draggableGameRug.toggleOrientation();
+            if (this.currentPhase == Phase.PLACEMENT) {
+                toggleRugOrientation();
+            }
         });
         return rotateRugBtn;
+    }
+
+    private void toggleRugOrientation() {
+        if (this.draggableGameRug != null) {
+            this.draggableGameRug.setRotate(this.draggableGameRug.getRotate() + 90);
+            this.draggableGameRug.orientation = this.draggableGameRug.orientation == Orientation.VERTICAL ? Orientation.HORIZONTAL : Orientation.VERTICAL;
+            if (this.highlighted != null) {
+                this.highlighted.setOpacity(0);
+                this.highlighted = null;
+            }
+        }
     }
 
     private Button makePlaceRugBtn() {
         Button placeRugBtn = new Button("Place Rug");
         placeRugBtn.setOnMouseClicked(event -> {
-            //FIXME
-            if (this.highlighted != null) {
-                this.rugID++;
-                Rug rug = new Rug(this.draggableGameRug.colour, this.rugID, getTilesFromHighlighted());
-                this.gameState.makePlacement(rug);
-                GameRug gameRug = new GameRug(this.highlighted.getLayoutX(), this.highlighted.getLayoutY(), this.draggableGameRug.orientation, this.draggableGameRug.colour);
-                this.placedRugs.getChildren().add(gameRug);
-                this.gameRugs.add(gameRug);
+            if (this.currentPhase == Phase.PLACEMENT) {
+                placeRug();
             }
         });
         return placeRugBtn;
+    }
+
+    private void placeRug() {
+        //FIXME
+        if (this.highlighted != null) {
+            this.rugID++;
+            Rug rug = new Rug(this.draggableGameRug.colour, this.rugID, getTilesFromHighlighted());
+            this.gameState.makePlacement(rug);
+            GameRug gameRug = new GameRug(this.highlighted.getLayoutX(), this.highlighted.getLayoutY(), this.draggableGameRug.orientation, this.draggableGameRug.colour);
+            this.placedRugs.getChildren().add(gameRug);
+            this.gameRugs.add(gameRug);
+        }
+    }
+
+    private Button makeNextPhaseBtn() {
+        Button nextPhaseBtn = new Button("Next Phase (testing only)");
+        nextPhaseBtn.setOnMouseClicked(event -> {
+            nextPhase();
+            phaseText.setText(getCurrentPhaseText());
+        });
+        return nextPhaseBtn;
     }
 
     private class GamePane extends Pane {
@@ -329,20 +379,6 @@ public class Game extends Application {
                 this.setLayoutY(nearestInvisibleRug.getLayoutY() + TILE_RELOCATION_Y + MARGIN);
             });
         }
-
-        public void toggleOrientation() {
-            this.setRotate(this.getRotate() + 90);
-            this.orientation = this.orientation == Orientation.VERTICAL ? Orientation.HORIZONTAL : Orientation.VERTICAL;
-            if (highlighted != null) {
-                highlighted.setOpacity(0);
-                highlighted = null;
-            }
-        }
-    }
-
-    private enum Orientation {
-        VERTICAL,
-        HORIZONTAL;
     }
 
     private static class GameTile extends Rectangle {
@@ -362,14 +398,48 @@ public class Game extends Application {
         }
     }
 
+    private enum Phase {
+        ROTATION,
+        MOVEMENT,
+        PLACEMENT;
+    }
+
+    private void nextPhase() {
+        switch (this.currentPhase) {
+            case ROTATION -> this.currentPhase = Phase.MOVEMENT;
+            case MOVEMENT -> this.currentPhase = Phase.PLACEMENT;
+            case PLACEMENT -> this.currentPhase = Phase.ROTATION;
+        }
+    }
+
+    private String getCurrentPhaseText() {
+        switch (this.currentPhase) {
+            case ROTATION -> {
+                return "Current Phase: Rotation Phase";
+            }
+            case MOVEMENT -> {
+                return "Current Phase: Movement Phase";
+            }
+            case PLACEMENT -> {
+                return "Current Phase: Placement Phase";
+            }
+        }
+        return null;
+    }
+
+    private enum Orientation {
+        VERTICAL,
+        HORIZONTAL;
+    }
+
     private Tile[] getTilesFromHighlighted() {
-        if (highlighted != null) {
-            return new Tile[]{getTileFromGameTile(highlighted.gameTiles[0]), getTileFromGameTile(highlighted.gameTiles[1])};
+        if (this.highlighted != null) {
+            return new Tile[]{getTileFromGameTile(this.highlighted.gameTiles[0]), getTileFromGameTile(this.highlighted.gameTiles[1])};
         }
         return null;
     }
 
     private Tile getTileFromGameTile(GameTile gameTile) {
-        return gameState.getBoard().getTiles()[gameTile.row][gameTile.col];
+        return this.gameState.getBoard().getTiles()[gameTile.row][gameTile.col];
     }
 }
