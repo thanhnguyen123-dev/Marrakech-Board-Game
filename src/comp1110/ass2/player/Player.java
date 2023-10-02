@@ -81,6 +81,6 @@ public class Player {
      * @author u7620014 Haobo Zou
      */
     public String generatePlayerString() {
-        return "P" + this.colour.colourChar + String.format("%03d", this.dirham) + String.format("%02d", this.numOfUnplacedRugs);
+        return "P" + this.colour.getColourChar() + String.format("%03d", this.dirham) + String.format("%02d", this.numOfUnplacedRugs);
     }
 }

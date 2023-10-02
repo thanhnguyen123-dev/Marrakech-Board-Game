@@ -246,7 +246,7 @@ public class Board {
                     stringBuilder.append("n00");
                 } else {
                     Rug rug = this.tiles[row][col].getTopRug();
-                    char colourChar = rug.getColour().colourChar;
+                    char colourChar = rug.getColour().getColourChar();
                     int id = rug.getID();
                     stringBuilder.append(colourChar).append(String.format("%02d", id));
                 }

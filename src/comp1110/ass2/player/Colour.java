@@ -82,4 +82,12 @@ public enum Colour {
                 return null;
         }
     }
+
+    /**
+     * getter method for colourChar
+     * @return character for the colour
+     */
+    public char getColourChar() {
+        return colourChar;
+    }
 }
