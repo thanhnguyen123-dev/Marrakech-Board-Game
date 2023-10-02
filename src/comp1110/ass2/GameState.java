@@ -282,6 +282,7 @@ public class GameState {
 
     /**
      * Determines whether a rug(string) is valid.
+     * @author u7582846 Yaolin Li
      * @param gameString string representation for the game state
      * @param rugString string representation for the rug
      * @return true if the rug is valid, or false otherwise

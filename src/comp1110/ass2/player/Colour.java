@@ -38,6 +38,7 @@ public enum Colour {
 
     /**
      * Determines whether the colour of a rug is valid or not
+     * @author u7582846 Yaolin Li
      * @param colourChar character for the rug colour
      * @return true if rug colour is valid, or false otherwise
      */

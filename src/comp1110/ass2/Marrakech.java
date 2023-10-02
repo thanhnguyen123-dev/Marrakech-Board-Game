@@ -24,6 +24,7 @@ public class Marrakech {
      * - c023343 (Shares the colour but not the ID)
      * - y013343 (Shares the ID but not the colour)
      * But you cannot have c014445, because this has the same colour and ID as a rug on the board already.
+     * @author u7582846 Yaolin Li
      * @param gameString A String representing the current state of the game as per the README
      * @param rug A String representing the rug you are checking
      * @return true if the rug is valid, and false otherwise.

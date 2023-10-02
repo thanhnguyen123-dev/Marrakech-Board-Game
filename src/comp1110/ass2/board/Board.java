@@ -44,6 +44,7 @@ public class Board {
 
     /**
      * getter method for visibleRugs
+     * @author u7582846 Yaolin Li
      * @return the list containing all the visible rugs on the board
      */
     public List<Rug> getVisibleRugs() {
@@ -249,6 +250,7 @@ public class Board {
 
     /**
      * Determines whether the coordinate of the tile on which a rug is placed is valid
+     * @author u7582846 Yaolin Li
      * @param tile the tile to be validated
      * @return true if the coordinate of tile is valid, or false otherwise
      */

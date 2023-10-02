@@ -80,6 +80,7 @@ public class Rug {
      * Constructor: creates an instance of the Rug class
      * Decodes the fullRugString to get corresponding values for instance fields
      * (reserved for rug string validation only)
+     * @author u7582846 Yaolin Li
      * @param fullRugString string representation for the rug
      */
     public Rug(String fullRugString) {
