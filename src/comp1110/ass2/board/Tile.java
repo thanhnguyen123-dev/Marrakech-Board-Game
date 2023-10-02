@@ -74,6 +74,7 @@ public class Tile {
      * Checks if two tiles are adjacent to each other
      * @param that the other tile
      * @return true or false
+     * @author u7620014 Haobo Zou
      */
     public boolean isAdjacent(Tile that) {
         if (this.row == that.row && Math.abs(this.col - that.col) == 1) {

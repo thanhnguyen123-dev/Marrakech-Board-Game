@@ -44,6 +44,7 @@ public class Player {
 
     /**
      * Places a rug on the board, number of unplaced rugs decreases by 1
+     * @author u7620014 Haobo Zou
      */
     public void placeRug() {
         this.numOfUnplacedRugs--;
@@ -53,6 +54,7 @@ public class Player {
      * Pays a certain amount of dirhams to the other player
      * @param that the other player
      * @param amount amount of dirhams to be paid
+     * @author u7620014 Haobo Zou
      */
     public void pay(Player that, int amount) {
         if (that != null) {
@@ -65,6 +67,7 @@ public class Player {
      * Constructor: creates an instance of the Player class
      * Decodes the playerString to get corresponding values for instance fields
      * @param playerString string representation for the player
+     * @author u7620014 Haobo Zou
      */
     public Player(String playerString) {
         this.dirham = Integer.parseInt(playerString.substring(2, 5), 10);
@@ -75,10 +78,9 @@ public class Player {
     /**
      * Generates playerString based on data of the player
      * @return string representation for the player
+     * @author u7620014 Haobo Zou
      */
     public String generatePlayerString() {
         return "P" + this.colour.colourChar + String.format("%03d", this.dirham) + String.format("%02d", this.numOfUnplacedRugs);
     }
-
-
 }

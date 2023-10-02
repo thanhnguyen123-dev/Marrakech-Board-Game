@@ -239,7 +239,6 @@ public class Viewer extends Application {
 
     /**
      * Draw a placement in the window, removing any previously drawn placements
-     *
      * @param state an array of two strings, representing the current game state
      */
     void displayState(String state) {

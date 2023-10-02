@@ -25,6 +25,7 @@ public enum Direction {
     /**
      * Applies the desired rotation to the current angle
      * @param rotation rotation in degrees
+     * @author u7620014 Haobo Zou
      */
     public Direction rotate(int rotation) {
         return angleToDirection(this.angle + rotation);
@@ -34,6 +35,7 @@ public enum Direction {
      * Converts angle to the corresponding direction
      * @param angle angle in degrees
      * @return the corresponding direction
+     * @author u7620014 Haobo Zou
      */
     public static Direction angleToDirection(int angle) {
         angle = (angle + 360) % 360;
@@ -49,6 +51,7 @@ public enum Direction {
      * Converts character to the corresponding direction
      * @param directionChar character for the direction
      * @return the corresponding direction
+     * @author u7620014 Haobo Zou
      */
     public static Direction charToDirection(char directionChar) {
         for (Direction direction : Direction.values()) {

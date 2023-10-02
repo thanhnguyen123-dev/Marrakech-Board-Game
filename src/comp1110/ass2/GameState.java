@@ -60,6 +60,7 @@ public class GameState {
 
     /**
      * Changes current player to the next available player in the game
+     * @author u7620014 Haobo Zou
      */
     public void nextPlayer() {
         int index = Arrays.asList(this.players).indexOf(this.currentPlayer);
@@ -73,6 +74,7 @@ public class GameState {
 
     /**
      * Removes current player from the list of available players in the game
+     * @author u7620014 Haobo Zou
      */
     public void removeCurrentPlayer() {
         this.availablePlayers.remove(this.currentPlayer);
@@ -82,6 +84,7 @@ public class GameState {
      * Determines whether a player is currently in the game or not
      * @param player a given player
      * @return true or false
+     * @author u7620014 Haobo Zou
      */
     public boolean isPlayerAvailable(Player player) {
         return this.availablePlayers.contains(player);
@@ -115,6 +118,7 @@ public class GameState {
      * Finds the player who matches the given colour
      * @param colour a colour
      * @return the player who matches the given colour, null if such player doesn't exist
+     * @author u7620014 Haobo Zou
      */
     public Player findPlayer(Colour colour) {
         for (Player player : this.players) {
@@ -129,6 +133,7 @@ public class GameState {
      * Finds the player whose rug Assam is currently standing on
      * @return the owner of the rug on which Assam is standing,
      * null if Assam is standing on an empty tile
+     * @author u7620014 Haobo Zou
      */
     public Player findAssamRugOwner() {
         Rug assamRug = this.board.getAssamTile().getTopRug();
@@ -141,6 +146,7 @@ public class GameState {
     /**
      * Checks if a payment to another player is required after moving Assam
      * @return true if required, false if not
+     * @author u7620014 Haobo Zou
      */
     public boolean isPaymentRequired() {
         Player otherPlayer = findAssamRugOwner();
@@ -162,6 +168,7 @@ public class GameState {
     /**
      * Determines whether the payment is affordable or not
      * @return true if affordable, false if not
+     * @author u7620014 Haobo Zou
      */
     public boolean isPaymentAffordable() {
         if (isPaymentRequired()) {
@@ -172,6 +179,7 @@ public class GameState {
 
     /**
      * The current player makes their payment, and gets removed if they cannot afford to pay full amount
+     * @author u7620014 Haobo Zou
      */
     public void makePayment() {
         if (isPaymentAffordable()) {
@@ -185,6 +193,7 @@ public class GameState {
     /**
      * The current player places one of their remaining rugs on the board
      * @param rug the rug to be placed on the board
+     * @author u7620014 Haobo Zou
      */
     public void makePlacement(Rug rug) {
         this.currentPlayer.placeRug();
@@ -195,6 +204,7 @@ public class GameState {
      * Checks the validity of the given gameString
      * @param gameString string representation for a game state
      * @return true if the gameString is valid, false if not
+     * @author u7620014 Haobo Zou
      */
     public static boolean isGameStringValid(String gameString) {
         String playerStringsPattern = "(P[yrcp][0-9]{5}[io]){2,4}";
@@ -208,6 +218,7 @@ public class GameState {
      * Constructor: creates an instance of the GameState class
      * Decodes the gameString to get corresponding values for instance fields
      * @param gameString string representation for the game state
+     * @author u7620014 Haobo Zou
      */
     public GameState(String gameString) {
         List<String> playerStrings = getPlayerStrings(gameString);
@@ -229,6 +240,7 @@ public class GameState {
      * Obtains playerStrings from a given gameString
      * @param gameString string representation for game state
      * @return a list of string representations for each player;
+     * @author u7620014 Haobo Zou
      */
     public static List<String> getPlayerStrings(String gameString) {
         List<String> playerStrings = new ArrayList<String>();
@@ -244,6 +256,7 @@ public class GameState {
      * Obtains assamString from a given gameString
      * @param gameString string representation for game state
      * @return the string representation for Assam
+     * @author u7620014 Haobo Zou
      */
     public static String getAssamString(String gameString) {
         int beginIndex = gameString.indexOf("A");
@@ -251,11 +264,11 @@ public class GameState {
     }
 
 
-
     /**
      * Obtains boardString from a given gameString
      * @param gameString string representation for game state
      * @return the string representation for the board
+     * @author u7620014 Haobo Zou
      */
     public static String getBoardString(String gameString) {
         int beginIndex = gameString.indexOf("B");
@@ -265,6 +278,7 @@ public class GameState {
     /**
      * Generates gameString based on data of the game state
      * @return string representation for the game state
+     * @author u7620014 Haobo Zou
      */
     public String generateGameString() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -282,10 +296,10 @@ public class GameState {
 
     /**
      * Determines whether a rug(string) is valid.
-     * @author u7582846 Yaolin Li
      * @param gameString string representation for the game state
      * @param rugString string representation for the rug
      * @return true if the rug is valid, or false otherwise
+     * @author u7582846 Yaolin Li
      */
     public static boolean isRugValid(String gameString, String rugString) {
         GameState gameState = new GameState(gameString);

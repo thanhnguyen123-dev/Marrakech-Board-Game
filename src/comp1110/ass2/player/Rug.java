@@ -55,6 +55,7 @@ public class Rug {
      * Decodes the shortRugString to get corresponding values for instance fields
      * (reserved for board generation only)
      * @param shortRugString string representation for the rug
+     * @author u7620014 Haobo Zou
      */
     public Rug(String shortRugString, Tile tile) {
         this.colour = Colour.charToColour(shortRugString.charAt(0));
@@ -67,6 +68,7 @@ public class Rug {
      * Decodes the fullRugString to get corresponding values for instance fields
      * (reserved for rug placement validation only)
      * @param fullRugString string representation for the rug
+     * @author u7620014 Haobo Zou
      */
     public Rug(String fullRugString, Tile[][] tiles) {
         this.colour = Colour.charToColour(fullRugString.charAt(0));
@@ -80,8 +82,8 @@ public class Rug {
      * Constructor: creates an instance of the Rug class
      * Decodes the fullRugString to get corresponding values for instance fields
      * (reserved for rug string validation only)
-     * @author u7582846 Yaolin Li
      * @param fullRugString string representation for the rug
+     * @author u7582846 Yaolin Li
      */
     public Rug(String fullRugString) {
         this.colour = Colour.charToColour(fullRugString.charAt(0));

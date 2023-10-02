@@ -44,8 +44,8 @@ public class Board {
 
     /**
      * getter method for visibleRugs
-     * @author u7582846 Yaolin Li
      * @return the list containing all the visible rugs on the board
+     * @author u7582846 Yaolin Li
      */
     public List<Rug> getVisibleRugs() {
         return this.visibleRugs;
@@ -70,6 +70,7 @@ public class Board {
     /**
      * Moves Assam by a given number of steps from rolling the die
      * @param steps number of steps to be taken by Assam
+     * @author u7620014 Haobo Zou
      */
     public void moveAssam(int steps) {
         int row = this.assamTile.getRow();
@@ -118,6 +119,7 @@ public class Board {
 
     /**
      * Moves Assam off and back onto the board following the mosaic track
+     * @author u7620014 Haobo Zou
      */
     public void moveAssamOutOfBounds() {
         int row = this.assamTile.getRow();
@@ -169,6 +171,7 @@ public class Board {
      * Checks if a rug placement is valid according to the game rules
      * @param rug the rug to be validated
      * @return true or false
+     * @author u7620014 Haobo Zou
      */
     public boolean isPlacementValid(Rug rug) {
         Tile[] rugTiles = rug.getRugTiles();
@@ -187,6 +190,7 @@ public class Board {
     /**
      * Places a rug on the board
      * @param rug the rug to be placed
+     * @author u7620014 Haobo Zou
      */
     public void placeRug(Rug rug) {
         for (Tile tile : rug.getRugTiles()) {
@@ -199,6 +203,7 @@ public class Board {
      * Decodes the assamString and the boardString to get corresponding values for instance fields
      * @param assamString string representation for Assam
      * @param boardString string representation for the board
+     * @author u7620014 Haobo Zou
      */
     public Board(String assamString, String boardString) {
         for (int col = 0; col < NUM_OF_ROWS; col++) {
@@ -222,6 +227,7 @@ public class Board {
     /**
      * Generates assamString based on data of the board
      * @return string representation for Assam
+     * @author u7620014 Haobo Zou
      */
     public String generateAssamString() {
         return "A" + this.assamTile.getCol() + this.assamTile.getRow() + this.assamDirection.getDirectionChar();
@@ -230,6 +236,7 @@ public class Board {
     /**
      * Generates boardString based on data of the board
      * @return string representation for the board
+     * @author u7620014 Haobo Zou
      */
     public String generateBoardString() {
         StringBuilder stringBuilder = new StringBuilder("B");
@@ -250,9 +257,9 @@ public class Board {
 
     /**
      * Determines whether the coordinate of the tile on which a rug is placed is valid
-     * @author u7582846 Yaolin Li
      * @param tile the tile to be validated
      * @return true if the coordinate of tile is valid, or false otherwise
+     * @author u7582846 Yaolin Li
      */
     public static boolean isTileValid(Tile tile) {
         int row = tile.getRow();

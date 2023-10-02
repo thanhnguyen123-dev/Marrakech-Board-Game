@@ -38,14 +38,14 @@ public enum Colour {
 
     /**
      * Determines whether the colour of a rug is valid or not
-     * @author u7582846 Yaolin Li
      * @param colourChar character for the rug colour
      * @return true if rug colour is valid, or false otherwise
+     * @author u7582846 Yaolin Li
      */
-    public static boolean isColourValid(char colourChar){
-        if (charToColour(colourChar)!=null){
+    public static boolean isColourValid(char colourChar) {
+        if (charToColour(colourChar) != null) {
             return true;
-        }else return false;
+        } else return false;
     }
 
     /**
@@ -55,21 +55,31 @@ public enum Colour {
      */
     public static String colourToString(Colour colour) {
         switch (colour) {
-            case YELLOW: return "Yellow";
-            case RED: return "Red";
-            case CYAN: return "Cyan";
-            case PURPLE: return "Purple";
-            default: return null;
+            case YELLOW:
+                return "Yellow";
+            case RED:
+                return "Red";
+            case CYAN:
+                return "Cyan";
+            case PURPLE:
+                return "Purple";
+            default:
+                return null;
         }
     }
 
     public static Color getFrontEndColor(Colour colour) {
         switch (colour) {
-            case YELLOW: return Color.YELLOW;
-            case RED: return Color.RED;
-            case CYAN: return Color.CYAN;
-            case PURPLE: return Color.PURPLE;
-            default: return null;
+            case YELLOW:
+                return Color.YELLOW;
+            case RED:
+                return Color.RED;
+            case CYAN:
+                return Color.CYAN;
+            case PURPLE:
+                return Color.PURPLE;
+            default:
+                return null;
         }
     }
 }
