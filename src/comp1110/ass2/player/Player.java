@@ -22,6 +22,7 @@ public class Player {
     /**
      * getter method for dirham
      * @return the amount of dirhams that the player has
+     * @author Le Thanh Nguyen u7594144
      */
     public int getDirham() {
         return dirham;
@@ -30,6 +31,7 @@ public class Player {
     /**
      * getter method for numOfUnplacedRugs
      * @return the number of unplaced rugs that the player has
+     * @author Le Thanh Nguyen u7594144
      */
     public int getNumOfUnplacedRugs() {
         return numOfUnplacedRugs;
@@ -38,6 +40,7 @@ public class Player {
     /**
      * getter method for colour
      * @return the colour of the player's rugs
+     * @author u7620014 Haobo Zou
      */
     public Colour getColour() {
         return this.colour;

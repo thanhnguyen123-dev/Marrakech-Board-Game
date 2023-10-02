@@ -19,6 +19,7 @@ public class Rug {
      * @param colour the colour of the rug
      * @param id the id of the rug
      * @param rugTiles the tiles occupied by the rug
+     * @author u7620014 Haobo Zou
      */
     public Rug(Colour colour, int id, Tile[] rugTiles) {
         this.colour = colour;
@@ -29,6 +30,7 @@ public class Rug {
     /**
      * getter method for colour
      * @return the colour of the rug
+     * @author u7620014 Haobo Zou
      */
     public Colour getColour() {
         return this.colour;
@@ -37,6 +39,7 @@ public class Rug {
     /**
      * getter method for id
      * @return the id of the rug
+     * @author u7620014 Haobo Zou
      */
     public int getID() {
         return this.id;
@@ -45,6 +48,7 @@ public class Rug {
     /**
      * getter method for rugTiles
      * @return an array of tiles occupied by the rug
+     * @author u7620014 Haobo Zou
      */
     public Tile[] getRugTiles() {
         return this.rugTiles;

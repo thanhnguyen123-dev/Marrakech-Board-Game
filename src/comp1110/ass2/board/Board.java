@@ -22,6 +22,7 @@ public class Board {
 
     /**
      * Constructor: creates an instance of the Board class
+     * @author u7620014 Haobo Zou
      */
     public Board() {
         for (int row = 0; row < NUM_OF_ROWS; row++) {
@@ -37,6 +38,7 @@ public class Board {
     /**
      * getter method for tiles
      * @return the 2D array containing all the tiles of the board
+     * @author u7620014 Haobo Zou
      */
     public Tile[][] getTiles() {
         return tiles;
@@ -54,6 +56,7 @@ public class Board {
     /**
      * getter method for assamTile
      * @return the tile on which Assam is standing
+     * @author u7620014 Haobo Zou
      */
     public Tile getAssamTile() {
         return this.assamTile;
@@ -62,6 +65,7 @@ public class Board {
     /**
      * getter method for assamDirection
      * @return the direction which Assam is facing
+     * @author u7620014 Haobo Zou
      */
     public Direction getAssamDirection() {
         return this.assamDirection;
