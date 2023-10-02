@@ -42,7 +42,7 @@ public class Game extends Application {
     private static final double TILE_RELOCATION_Y = (BOARD_AREA_SIDE - NUM_OF_ROWS * TILE_SIDE) / 2;
     private static final Color TILE_COLOR = Color.SANDYBROWN;
     private static final int TILE_BORDER_WIDTH = 4;
-
+    private static final int RUG_BORDER_WIDTH = 4;
 
     private final Group root = new Group();
     private final Pane allTiles = new Pane();
@@ -55,7 +55,6 @@ public class Game extends Application {
 
     private InvisibleRug highlighted;
     private DraggableGameRug draggableGameRug;
-    private static final int RUG_BORDER_WIDTH = 4;
 
     private Player player1 = new Player(Colour.YELLOW);
     private Player player2 = new Player(Colour.RED);
@@ -94,18 +93,18 @@ public class Game extends Application {
         this.invisibleRugs.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
         boardArea.getChildren().add(this.invisibleRugs);
 
-        final Pane playerArea = new GamePane(PLAYER_AREA_WIDTH, PLAYER_AREA_HEIGHT);
+        final GamePane playerArea = new GamePane(PLAYER_AREA_WIDTH, PLAYER_AREA_HEIGHT);
         playerArea.relocate(WINDOW_HEIGHT, MARGIN);
         gameArea.getChildren().add(playerArea);
 
-        final Pane statsArea = new GamePane(STATS_AREA_WIDTH, STATS_AREA_HEIGHT);
+        final GamePane statsArea = new GamePane(STATS_AREA_WIDTH, STATS_AREA_HEIGHT);
         statsArea.setBorder(gamePaneBorder);
         playerArea.getChildren().add(statsArea);
 
         phaseText.setText(getCurrentPhaseText());
         statsArea.getChildren().add(phaseText);
 
-        final Pane controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
+        final GamePane controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
         controlArea.setBorder(gamePaneBorder);
         controlArea.relocate(0, STATS_AREA_HEIGHT + MARGIN);
         playerArea.getChildren().add(controlArea);
@@ -320,6 +319,8 @@ public class Game extends Application {
                 this.setRotate(90);
             }
             this.setFill(Color.WHITE);
+            this.setStroke(Color.WHITE.darker());
+            this.setStrokeWidth(RUG_BORDER_WIDTH);
             this.setOpacity(0);
         }
 
