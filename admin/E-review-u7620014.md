@@ -11,7 +11,7 @@ Component: `public char getWinner()` and `public int getNumOfVisibleSquares(Play
 Pros:
 - conforms with the rules of the game and passes GetWinnerTest
 - Javadoc is appropriately written for both methods
-- follow Java code conventions, methods and variables are clearly named, the style is consistent throughout
+- follows Java code conventions, methods and variables are clearly named, the style is consistent throughout
 
 Cons:
 - implementation for getWinner() has a lot of lines (37 lines) and lacks inline comments, could be hard to read
