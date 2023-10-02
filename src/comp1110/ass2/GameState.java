@@ -334,6 +334,7 @@ public class GameState {
      * If more than one player score the highest score, return 't'
      * If the game is not over, return 'n'
      * @return char representation of a winner if someone actually wins
+     * @author Le Thanh Nguyen u7594144
      */
     public char getWinner() {
         if (this.isGameOver()) {
@@ -378,6 +379,7 @@ public class GameState {
      * Calculate the player score of a Player at the current state
      * @param player
      * @return a number representation of the score
+     * @author Le Thanh Nguyen u7594144
      */
     public int getPlayerScore(Player player) {
         int dirhamsValue = player.getDirham();
@@ -390,6 +392,7 @@ public class GameState {
      * Count the number of visible squares of a Player at the current state
      * @param player
      * @return a number representation of the visible squares
+     * @author Le Thanh Nguyen u7594144
      */
     public int getNumOfVisibleSquares(Player player) {
         Board board = this.getBoard();

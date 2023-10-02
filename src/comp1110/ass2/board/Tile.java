@@ -89,6 +89,7 @@ public class Tile {
     /**
      * Checks if a tile has a rug on it
      * @return true or false
+     * @author Le Thanh Nguyen u7594144
      */
     public boolean hasRug() {
         return this.topRug != null;

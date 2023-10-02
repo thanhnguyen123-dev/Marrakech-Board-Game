@@ -2,6 +2,10 @@ package comp1110.ass2.player;
 
 import java.util.Random;
 
+/**
+ * Representation of Die
+ * @author Le Thanh Nguyen u7594144
+ */
 public class Die {
     private static final int[] SIDES = {1, 2, 2, 3, 3, 4};
 

@@ -2,6 +2,7 @@ package comp1110.ass2.board;
 
 /**
  * Possible rotation direction for Assam
+ * @author Le Thanh Nguyen u7594144
  */
 public enum Direction {
     EAST(0, 'E'),
@@ -16,6 +17,7 @@ public enum Direction {
      * Constructor: creates a new instance for the Direction enum
      * @param angle angle of the direction in degrees
      * @param directionChar character for the direction
+     * @author Le Thanh Nguyen u7594144
      */
     Direction(int angle, char directionChar) {
         this.angle = angle;
@@ -65,6 +67,7 @@ public enum Direction {
     /**
      * getter method for directionChar
      * @return character for the direction
+     * @author Le Thanh Nguyen u7594144
      */
     public char getDirectionChar() {
         return directionChar;
@@ -73,6 +76,7 @@ public enum Direction {
     /**
      * getter method for angle
      * @return angle of the direction in degrees
+     * @author Le Thanh Nguyen u7594144
      */
     public int getAngle() {
         return angle;

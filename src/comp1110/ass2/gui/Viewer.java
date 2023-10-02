@@ -30,7 +30,10 @@ import javafx.scene.image.ImageView;
 import java.util.ArrayList;
 
 public class Viewer extends Application {
-
+    /**
+     * Display the game state on the screen
+     * @author Le Thanh Nguyen u7594144
+     */
     private static final int VIEWER_WIDTH = 1200;
     private static final int VIEWER_HEIGHT = 700;
     private final Group root = new Group();

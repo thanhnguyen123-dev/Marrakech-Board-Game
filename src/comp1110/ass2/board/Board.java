@@ -152,6 +152,7 @@ public class Board {
     /**
      * Rotates Assam by a given angle of rotation
      * @param rotation rotation in degrees
+     * @author Le Thanh Nguyen u7594144
      */
     public void rotateAssam(int rotation) {
         List<Integer> legalRotations = new ArrayList<>();

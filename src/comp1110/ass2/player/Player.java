@@ -11,6 +11,7 @@ public class Player {
     /**
      * Constructor: creates an instance of the Player class
      * @param colour the colour of the player's rugs
+     * @author Le Thanh Nguyen u7594144
      */
     public Player(Colour colour) {
         this.dirham = 30;

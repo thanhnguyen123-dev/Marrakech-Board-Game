@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 
 /**
  * Colour enum represents the colour of each player's rug
+ * @author Le Thanh Nguyen u7594144
  */
 public enum Colour {
     YELLOW('y'),
