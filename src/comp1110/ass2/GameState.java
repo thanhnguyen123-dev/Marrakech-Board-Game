@@ -306,8 +306,8 @@ public class GameState {
         }
         // The combination of that ID number and colour is unique
         List<Rug> visibleRugs = board.getVisibleRugs();
-        for (Rug placedRug : visibleRugs) {
-            if (rug.getColour() == placedRug.getColour() && rug.getID() == placedRug.getID()) {
+        for (Rug visibleRug : visibleRugs) {
+            if (rug.getColour() == visibleRug.getColour() && rug.getID() == visibleRug.getID()) {
                 return false;
             }
         }

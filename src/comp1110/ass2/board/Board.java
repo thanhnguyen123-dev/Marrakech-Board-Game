@@ -16,7 +16,6 @@ public class Board {
     private static final int LENGTH_OF_SHORT_RUG_STRING = 3;
 
     private final Tile[][] tiles = new Tile[NUM_OF_ROWS][NUM_OF_COLS];
-    private final List<Rug> placedRugs = new ArrayList<Rug>();
     private final List<Rug> visibleRugs = new ArrayList<Rug>(); // All visible Rugs on the board
     private Tile assamTile;
     private Direction assamDirection;
@@ -41,14 +40,6 @@ public class Board {
      */
     public Tile[][] getTiles() {
         return tiles;
-    }
-
-    /**
-     * getter method for placedRugs
-     * @return the list containing all the placed rugs on the board
-     */
-    public List<Rug> getPlacedRugs() {
-        return this.placedRugs;
     }
 
     /**
@@ -197,7 +188,6 @@ public class Board {
      * @param rug the rug to be placed
      */
     public void placeRug(Rug rug) {
-        placedRugs.add(rug);
         for (Tile tile : rug.getRugTiles()) {
             tile.setTopRug(rug);
         }
