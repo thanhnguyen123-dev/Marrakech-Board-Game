@@ -196,8 +196,11 @@ public class GameState {
      * @author u7620014 Haobo Zou
      */
     public void makePlacement(Rug rug) {
-        this.currentPlayer.placeRug();
-        this.board.placeRug(rug);
+        Player player = findPlayer(rug.getColour());
+        if (player != null) {
+            player.placeRug();
+            this.board.placeRug(rug);
+        }
     }
 
     /**
