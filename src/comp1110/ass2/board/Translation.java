@@ -11,6 +11,7 @@ public class Translation {
     /**
      * Constructor: creates an instance of the Translation class
      * @param translation
+     * @author Le Thanh Nguyen u7594144
      */
     public Translation(Coordinate translation) {
         this.translation = translation;
@@ -20,6 +21,7 @@ public class Translation {
      * calculate the new coordinate after translation
      * @param location
      * @return
+     * @author Le Thanh Nguyen u7594144
      */
     public Coordinate applyTranslation(Coordinate location) {
         int newX = location.getX() + translation.getX();
