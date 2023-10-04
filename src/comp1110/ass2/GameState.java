@@ -156,14 +156,6 @@ public class GameState {
         return false;
     }
 
-    /**
-     * Calculates the amount of payment required
-     * @return the amount of payment
-     */
-    public int getPaymentAmount() {
-        // FIXME
-        return 0;
-    }
 
     /**
      * Determines whether the payment is affordable or not
@@ -414,6 +406,17 @@ public class GameState {
         }
         return count;
     }
+
+    /**
+     * Calculates the amount of payment required
+     * @return the amount of payment
+     */
+    public int getPaymentAmount(Tile currentTile, List<Tile> adjacentTiles, Set<Tile> visitedTiles) {
+        visitedTiles.add(currentTile);
+        int payment = 0;
+        return 0;
+    }
+
 
 
 

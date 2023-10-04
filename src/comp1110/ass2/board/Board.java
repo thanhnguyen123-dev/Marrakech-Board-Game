@@ -282,10 +282,10 @@ public class Board {
         List<Tile> adjacentTiles = new ArrayList<>();
         int currentTileX = tile.getRow();
         int currentTileY = tile.getCol();
-        Tile tile1 = new Tile(currentTileX - 1, currentTileY);
-        Tile tile2 = new Tile(currentTileX + 1, currentTileY);
-        Tile tile3 = new Tile(currentTileX, currentTileY - 1);
-        Tile tile4 = new Tile(currentTileX, currentTileY + 1);
+        Tile tile1 = tiles[currentTileX - 1][currentTileY];
+        Tile tile2 = tiles[currentTileX + 1][currentTileY];
+        Tile tile3 = tiles[currentTileX][currentTileY - 1];
+        Tile tile4 = tiles[currentTileX][currentTileY + 1];
 
         List<Tile> tmp = new ArrayList<>();
         tmp.add(tile1);
@@ -294,10 +294,8 @@ public class Board {
         tmp.add(tile4);
 
         for (Tile adjacentTile : tmp) {
-            if (isTileValid(adjacentTile)) {
-                int row = adjacentTile.getRow();
-                int col = adjacentTile.getCol();
-                adjacentTiles.add(this.tiles[row][col]);
+            if (tile.isAdjacent(adjacentTile) && isTileValid(adjacentTile)) {
+                adjacentTiles.add(adjacentTile);
             }
         }
 
