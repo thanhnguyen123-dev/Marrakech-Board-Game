@@ -277,5 +277,32 @@ public class Board {
         }
         return false;
     }
+
+    public List<Tile> getAdjacentTiles(Tile tile) {
+        List<Tile> adjacentTiles = new ArrayList<>();
+        int currentTileX = tile.getRow();
+        int currentTileY = tile.getCol();
+        Tile tile1 = new Tile(currentTileX - 1, currentTileY);
+        Tile tile2 = new Tile(currentTileX + 1, currentTileY);
+        Tile tile3 = new Tile(currentTileX, currentTileY - 1);
+        Tile tile4 = new Tile(currentTileX, currentTileY + 1);
+
+        List<Tile> tmp = new ArrayList<>();
+        tmp.add(tile1);
+        tmp.add(tile2);
+        tmp.add(tile3);
+        tmp.add(tile4);
+
+        for (Tile adjacentTile : tmp) {
+            if (isTileValid(adjacentTile)) {
+                int row = adjacentTile.getRow();
+                int col = adjacentTile.getCol();
+                adjacentTiles.add(this.tiles[row][col]);
+            }
+        }
+
+        return adjacentTiles;
+    }
+
     
 }
