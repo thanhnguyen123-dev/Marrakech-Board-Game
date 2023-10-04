@@ -5,6 +5,7 @@ import comp1110.ass2.utils.StringToTile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Board class represents the dimensions of the board and relevant objects on
@@ -272,4 +273,5 @@ public class Board {
         }
         return false;
     }
+    
 }

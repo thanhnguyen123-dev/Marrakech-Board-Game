@@ -17,6 +17,7 @@ public enum Colour {
     /**
      * Constructor: creates an instance of the Colour enum
      * @param colourChar character for the colour
+     * @author Le Thanh Nguyen u7594144
      */
     Colour(char colourChar) {
         this.colourChar = colourChar;
@@ -53,6 +54,7 @@ public enum Colour {
      * Converts a Colour enum to a string of its full name
      * @param colour a Colour enum
      * @return full name of the colour
+     * @author Le Thanh Nguyen u7594144
      */
     public static String colourToString(Colour colour) {
         switch (colour) {
@@ -87,6 +89,7 @@ public enum Colour {
     /**
      * getter method for colourChar
      * @return character for the colour
+     * @author Le Thanh Nguyen u7594144
      */
     public char getColourChar() {
         return colourChar;
