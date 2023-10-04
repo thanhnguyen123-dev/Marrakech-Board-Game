@@ -15,6 +15,7 @@ public class Tile {
      * Constructor: creates an instance of the Tile class
      * @param row row index of the tile
      * @param col column index of the tile
+     * @author u7620014 Haobo Zou
      */
     public Tile(int row, int col) {
         this.row = row;
@@ -25,6 +26,7 @@ public class Tile {
     /**
      * getter method for row
      * @return the row index
+     * @author u7620014 Haobo Zou
      */
     public int getRow() {
         return this.row;
@@ -33,6 +35,7 @@ public class Tile {
     /**
      * getter method for col
      * @return the column index
+     * @author u7620014 Haobo Zou
      */
     public int getCol() {
         return this.col;
@@ -41,6 +44,7 @@ public class Tile {
     /**
      * getter method for topRug
      * @return the top rug on the tile
+     * @author u7620014 Haobo Zou
      */
     public Rug getTopRug() {
         return this.topRug;
@@ -49,6 +53,7 @@ public class Tile {
     /**
      * setter method for topRug
      * @param rug the new top rug
+     * @author u7620014 Haobo Zou
      */
     public void setTopRug(Rug rug) {
         this.topRug = rug;
@@ -57,6 +62,7 @@ public class Tile {
     /**
      * getter method for hasAssam
      * @return true of false
+     * @author u7620014 Haobo Zou
      */
     public boolean hasAssam() {
         return this.hasAssam;
@@ -65,6 +71,7 @@ public class Tile {
     /**
      * setter method for hasAssam
      * @param hasAssam if Assam is standing on the tile or not
+     * @author u7620014 Haobo Zou
      */
     public void setHasAssam(boolean hasAssam) {
         this.hasAssam = hasAssam;

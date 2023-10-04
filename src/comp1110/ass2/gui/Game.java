@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
+/**
+ * @author u7620014 Haobo Zou
+ */
 public class Game extends Application {
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;

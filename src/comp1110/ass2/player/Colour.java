@@ -28,6 +28,7 @@ public enum Colour {
      * Converts the character to its corresponding colour
      * @param colourChar character for the colour
      * @return the corresponding colour
+     * @author u7620014 Haobo Zou
      */
     public static Colour charToColour(char colourChar) {
         for (Colour colour : Colour.values()) {
@@ -71,6 +72,11 @@ public enum Colour {
         }
     }
 
+    /**
+     * @param colour
+     * @return
+     * @author Le Thanh Nguyen u7594144
+     */
     public static Color getFrontEndColor(Colour colour) {
         switch (colour) {
             case YELLOW:
@@ -89,7 +95,6 @@ public enum Colour {
     /**
      * getter method for colourChar
      * @return character for the colour
-     * @author Le Thanh Nguyen u7594144
      */
     public char getColourChar() {
         return colourChar;

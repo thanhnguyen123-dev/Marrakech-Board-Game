@@ -161,8 +161,13 @@ public class Marrakech {
      * or the input currentGame unchanged otherwise.
      */
     public static String makePlacement(String currentGame, String rug) {
-        // FIXME: Task 14
-        return "";
+        if (isRugValid(currentGame, rug) && isPlacementValid(currentGame, rug)) {
+            GameState gameState = new GameState(currentGame);
+            Tile[][] tiles = gameState.getBoard().getTiles();
+            gameState.makePlacement(new Rug(rug, tiles));
+            return gameState.generateGameString();
+        }
+        return currentGame;
     }
 
 }
