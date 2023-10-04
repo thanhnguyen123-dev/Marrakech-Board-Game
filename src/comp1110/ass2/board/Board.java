@@ -278,6 +278,12 @@ public class Board {
         return false;
     }
 
+    /**
+     * Get a List of all available adjacent tiles regarding the current tile
+     * @param tile the current tile
+     * @return a List of adjacent tiles
+     * @author u7594144 Le Thanh Nguyen
+     */
     public List<Tile> getAdjacentTiles(Tile tile) {
         List<Tile> adjacentTiles = new ArrayList<>();
         int currentTileX = tile.getRow();

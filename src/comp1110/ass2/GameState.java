@@ -422,6 +422,7 @@ public class GameState {
      * @param currentTile
      * @param visitedTiles
      * @return the amount of payment
+     * @author u7594144 Le Thanh Nguyen
      */
 
     public int getPaymentAmount(Tile currentTile, Set<Tile> visitedTiles) {
