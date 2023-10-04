@@ -411,9 +411,14 @@ public class GameState {
      * Calculates the amount of payment required
      * @return the amount of payment
      */
-    public int getPaymentAmount(Tile currentTile, List<Tile> adjacentTiles, Set<Tile> visitedTiles) {
-        visitedTiles.add(currentTile);
-        int payment = 0;
+    public int getPaymentAmount() {
+        // FIXME
+        return 0;
+    }
+
+
+
+    public int getPaymentAmount(List<Tile> adjacentTiles, Set<Tile> visitedTiles) {
         return 0;
     }
 
