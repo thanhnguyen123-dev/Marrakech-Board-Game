@@ -417,14 +417,19 @@ public class GameState {
         return getPaymentAmount(this.board.getAssamTile(),visited);
     }
 
-
+    /**
+     * Calculates the amount of payment required using DFS
+     * @param currentTile
+     * @param visitedTiles
+     * @return the amount of payment
+     */
 
     public int getPaymentAmount(Tile currentTile, Set<Tile> visitedTiles) {
         if (visitedTiles.contains(currentTile)) return 0;
         visitedTiles.add(currentTile);
-        int payment = 1;
         List<Tile> adjacentTiles = this.board.getAdjacentTiles(currentTile);
         Colour currentColour = currentTile.getTopRug().getColour();
+        int payment = 1;
         for (Tile adjTile : adjacentTiles) {
             if (adjTile.getTopRug() != null && adjTile.getTopRug().getColour() == currentColour) {
                 payment += getPaymentAmount(adjTile, visitedTiles);
