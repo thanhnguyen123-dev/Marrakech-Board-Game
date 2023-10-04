@@ -5,6 +5,9 @@ import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Die;
 import comp1110.ass2.player.Rug;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Marrakech {
     private static final String EMPTY_BOARD_STRING = "Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00";
 
@@ -110,8 +113,9 @@ public class Marrakech {
      * @return The amount of payment due, as an integer.
      */
     public static int getPaymentAmount(String gameString) {
-        // FIXME: Task 11
-        return -1;
+        GameState state = new GameState(gameString);
+        Set<Tile> visited = new HashSet<>();
+        return state.getPaymentAmount(state.getBoard().getAssamTile(), visited);
     }
 
     /**

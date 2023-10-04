@@ -6,6 +6,7 @@ import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 
+import javax.swing.plaf.IconUIResource;
 import java.util.*;
 
 /**
@@ -412,14 +413,25 @@ public class GameState {
      * @return the amount of payment
      */
     public int getPaymentAmount() {
-        // FIXME
-        return 0;
+        Set<Tile> visited = new HashSet<>();
+        return getPaymentAmount(this.board.getAssamTile(),visited);
     }
 
 
 
-    public int getPaymentAmount(List<Tile> adjacentTiles, Set<Tile> visitedTiles) {
-        return 0;
+    public int getPaymentAmount(Tile currentTile, Set<Tile> visitedTiles) {
+        if (visitedTiles.contains(currentTile)) return 0;
+        visitedTiles.add(currentTile);
+        int payment = 1;
+        List<Tile> adjacentTiles = this.board.getAdjacentTiles(currentTile);
+        Colour currentColour = currentTile.getTopRug().getColour();
+        for (Tile adjTile : adjacentTiles) {
+            if (adjTile.getTopRug() != null && adjTile.getTopRug().getColour() == currentColour) {
+                payment += getPaymentAmount(adjTile, visitedTiles);
+            }
+        }
+        return payment;
+
     }
 
 
