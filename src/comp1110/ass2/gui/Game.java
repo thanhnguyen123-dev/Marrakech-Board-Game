@@ -57,10 +57,10 @@ public class Game extends Application {
     private final Pane allTiles = new Pane();
     private final GameTile[][] gameTiles = new GameTile[NUM_OF_ROWS][NUM_OF_COLS];
     private final Pane placedRugs = new Pane();
-    private final ArrayList<GameRug> gameRugs = new ArrayList<GameRug>();
+    private final ArrayList<GameRug> gameRugs = new ArrayList<>();
     private final Pane invisibleRugs = new Pane();
-    private final ArrayList<InvisibleRug> vInvisibleRugs = new ArrayList<InvisibleRug>();
-    private final ArrayList<InvisibleRug> hInvisibleRugs = new ArrayList<InvisibleRug>();
+    private final ArrayList<InvisibleRug> vInvisibleRugs = new ArrayList<>();
+    private final ArrayList<InvisibleRug> hInvisibleRugs = new ArrayList<>();
 
     private InvisibleRug highlighted;
     private DraggableGameRug draggableGameRug;
@@ -84,34 +84,36 @@ public class Game extends Application {
         Pane titlePane = new Pane();
         Scene titleScene = new Scene(titlePane, WINDOW_WIDTH, WINDOW_HEIGHT);
         Text title = new Text("Marrakech");
-        title.relocate(WINDOW_WIDTH / 2 - 135, 240);
+        title.relocate(WINDOW_WIDTH / 2.0 - 135, 240);
         title.setFont(new Font("", 60));
         GameButton btnStart = new GameButton("Start", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnStart.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 360);
+        btnStart.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
+
         titlePane.getChildren().addAll(title, btnStart);
 
         //choose number of players
         Pane numberPane = new Pane();
         Scene numberScene = new Scene(numberPane, WINDOW_WIDTH, WINDOW_HEIGHT);
         //choice box to choose the number of players
-        ChoiceBox<Integer> choiceBox = new ChoiceBox<Integer>();
+        ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.setMinWidth(BUTTON_WIDTH);
         choiceBox.setMaxWidth(BUTTON_WIDTH);
         choiceBox.getItems().addAll(2, 3, 4);
         choiceBox.setValue(2);
-        choiceBox.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 320);
-
+        choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 320);
+        //Back and Confirm buttons
         GameButton btnNumberBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnNumberBack.relocate(BUTTON_HEIGHT / 2, BUTTON_HEIGHT / 2);
+        btnNumberBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         GameButton btnNumberConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnNumberConfirm.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 360);
-        numberPane.getChildren().addAll(choiceBox, btnNumberBack, btnNumberConfirm);
+        btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
         btnNumberConfirm.requestFocus();
+
+        numberPane.getChildren().addAll(choiceBox, btnNumberBack, btnNumberConfirm);
 
         //players choose their colours
         Pane colourPane = new Pane();
         Scene colourScene = new Scene(colourPane, WINDOW_WIDTH, WINDOW_HEIGHT);
-
+        //buttons for different colours
         ColourButton btnCyan = new ColourButton(Colour.CYAN);
         btnCyan.relocate(270, 180);
         ColourButton btnYellow = new ColourButton(Colour.YELLOW);
@@ -120,22 +122,24 @@ public class Game extends Application {
         btnRed.relocate(270 + 6 * COLOUR_BUTTON_RADIUS, 180);
         ColourButton btnPurple = new ColourButton(Colour.PURPLE);
         btnPurple.relocate(270 + 9 * COLOUR_BUTTON_RADIUS, 180);
-
+        ArrayList<ColourButton> colourButtons = new ArrayList<>(List.of(btnCyan, btnYellow, btnRed, btnPurple));
+        //Back, Reset and Confirm buttons
         GameButton btnColourBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnColourBack.relocate(BUTTON_HEIGHT / 2, BUTTON_HEIGHT / 2);
+        btnColourBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         GameButton btnColourReset = new GameButton("Reset", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnColourReset.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH * 1.5, 420);
+        btnColourReset.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH * 1.5, 420);
         GameButton btnColourConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnColourConfirm.relocate(WINDOW_WIDTH / 2 + BUTTON_WIDTH * 0.5, 420);
+        btnColourConfirm.relocate(WINDOW_WIDTH / 2.0 + BUTTON_WIDTH * 0.5, 420);
         btnColourConfirm.setDisable(true);
+
         colourPane.getChildren().addAll(btnCyan, btnYellow, btnRed, btnPurple, btnColourBack, btnColourReset, btnColourConfirm);
 
-        ArrayList<Player> tmp = new ArrayList<Player>();
-        ArrayList<ColourButton> colourButtons = new ArrayList<ColourButton>(List.of(btnCyan, btnYellow, btnRed, btnPurple));
+        //keep a temporary list of players
+        ArrayList<Player> tmp = new ArrayList<>();
         for (ColourButton button : colourButtons) {
             button.setOnMouseClicked(event -> {
                 tmp.add(new Player(button.colour));
-                button.setBorder(new Border(new BorderStroke(Colour.getFrontEndColor(button.colour).darker(), COLOUR_BUTTON_BORDER_STROKE_STYLE, COLOUR_BUTTON_BORDER_RADII, COLOUR_BUTTON_BORDER_WIDTH)));
+                button.setBorder(button.border);
                 button.setDisable(true);
                 if (tmp.size() == this.numOfPlayers) {
                     colourButtons.forEach(b -> b.setDisable(true));
@@ -145,6 +149,7 @@ public class Game extends Application {
             });
         }
 
+        //main game
         Scene mainScene = makeMainScene(primaryStage);
 
         btnStart.setOnMouseClicked(event -> {
@@ -185,6 +190,7 @@ public class Game extends Application {
 
         btnColourConfirm.setOnMouseClicked(event -> {
             this.players = tmp.toArray(new Player[0]);
+            this.gameState = new GameState(this.players);
             primaryStage.setScene(mainScene);
         });
 
@@ -198,6 +204,7 @@ public class Game extends Application {
         GamePane gamePane = new GamePane(WINDOW_WIDTH, WINDOW_HEIGHT);
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
 
+        //board area to display information about the board and assam
         final Pane boardArea = new GamePane(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         boardArea.setBorder(gamePaneBorder);
         boardArea.relocate(MARGIN, MARGIN);
@@ -210,10 +217,12 @@ public class Game extends Application {
         this.invisibleRugs.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
         boardArea.getChildren().addAll(this.allTiles, this.placedRugs, this.invisibleRugs);
 
+        //player area to display stats and controls for the players, contains stats area and control area
         final GamePane playerArea = new GamePane(PLAYER_AREA_WIDTH, PLAYER_AREA_HEIGHT);
         playerArea.relocate(WINDOW_HEIGHT, MARGIN);
         gamePane.getChildren().add(playerArea);
 
+        //stats area
         final GamePane statsArea = new GamePane(STATS_AREA_WIDTH, STATS_AREA_HEIGHT);
         statsArea.setBorder(gamePaneBorder);
         playerArea.getChildren().add(statsArea);
@@ -221,6 +230,7 @@ public class Game extends Application {
         phaseText.setText(getCurrentPhaseText());
         statsArea.getChildren().add(phaseText);
 
+        //control area
         final GamePane controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
         controlArea.setBorder(gamePaneBorder);
         controlArea.relocate(0, STATS_AREA_HEIGHT + MARGIN);
@@ -249,7 +259,6 @@ public class Game extends Application {
         Button nextPhaseBtn = makeNextPhaseBtn();
         nextPhaseBtn.relocate(240, 180);
         controlArea.getChildren().add(nextPhaseBtn);
-
 
         Scene scene = new Scene(gamePane, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.setOnKeyPressed(event -> {
@@ -346,7 +355,7 @@ public class Game extends Application {
         return nextPhaseBtn;
     }
 
-    private class GamePane extends Pane {
+    private static class GamePane extends Pane {
         public GamePane(double width, double height) {
             super();
             this.setMinSize(width, height);
@@ -354,7 +363,7 @@ public class Game extends Application {
         }
     }
 
-    private class GameButton extends Button {
+    private static class GameButton extends Button {
         public GameButton(String string, double width, double height) {
             super(string);
             this.setMinSize(width, height);
@@ -362,8 +371,9 @@ public class Game extends Application {
         }
     }
 
-    private class ColourButton extends Button {
+    private static class ColourButton extends Button {
         private final Colour colour;
+        private final Border border;
 
         public ColourButton(Colour colour) {
             super();
@@ -372,6 +382,7 @@ public class Game extends Application {
             this.setMinSize(2 * COLOUR_BUTTON_RADIUS, 2 * COLOUR_BUTTON_RADIUS);
             this.setMaxSize(2 * COLOUR_BUTTON_RADIUS, 2 * COLOUR_BUTTON_RADIUS);
             this.setBackground(new Background(new BackgroundFill(Colour.getFrontEndColor(colour), CornerRadii.EMPTY, Insets.EMPTY)));
+            this.border = new Border(new BorderStroke(Colour.getFrontEndColor(colour).darker(), COLOUR_BUTTON_BORDER_STROKE_STYLE, COLOUR_BUTTON_BORDER_RADII, COLOUR_BUTTON_BORDER_WIDTH));
         }
     }
 
@@ -528,7 +539,7 @@ public class Game extends Application {
     private enum Phase {
         ROTATION,
         MOVEMENT,
-        PLACEMENT;
+        PLACEMENT
     }
 
     private void nextPhase() {
@@ -556,7 +567,7 @@ public class Game extends Application {
 
     private enum Orientation {
         VERTICAL,
-        HORIZONTAL;
+        HORIZONTAL
     }
 
     private Tile[] getTilesFromHighlighted() {
