@@ -109,7 +109,6 @@ public class Game extends Application {
         //players choose their colours
         Pane colourPane = new Pane();
         Scene colourScene = new Scene(colourPane, WINDOW_WIDTH, WINDOW_HEIGHT);
-        ArrayList<Player> tmp = new ArrayList<Player>();
 
         ColourButton btnCyan = new ColourButton(Colour.CYAN);
         btnCyan.relocate(270, 180);
@@ -120,6 +119,14 @@ public class Game extends Application {
         ColourButton btnPurple = new ColourButton(Colour.PURPLE);
         btnPurple.relocate(270 + 9 * COLOUR_BUTTON_RADIUS, 180);
 
+        GameButton btnColourReset = new GameButton("Reset", BUTTON_WIDTH, BUTTON_HEIGHT);
+        btnColourReset.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH * 1.5, 420);
+        GameButton btnColourConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
+        btnColourConfirm.relocate(WINDOW_WIDTH / 2 + BUTTON_WIDTH * 0.5, 420);
+        btnColourConfirm.setDisable(true);
+        colourPane.getChildren().addAll(btnCyan, btnYellow, btnRed, btnPurple, btnColourReset, btnColourConfirm);
+
+        ArrayList<Player> tmp = new ArrayList<Player>();
         ArrayList<ColourButton> colourButtons = new ArrayList<ColourButton>(List.of(btnCyan, btnYellow, btnRed, btnPurple));
         for (ColourButton button : colourButtons) {
             button.setOnMouseClicked(event -> {
@@ -128,14 +135,10 @@ public class Game extends Application {
                 button.setDisable(true);
                 if (tmp.size() == this.numOfPlayers) {
                     colourButtons.forEach(b -> b.setDisable(true));
+                    btnColourConfirm.setDisable(false);
                 }
             });
         }
-
-        GameButton btnColourConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnColourConfirm.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 420);
-        colourPane.getChildren().addAll(btnCyan, btnYellow, btnRed, btnPurple, btnColourConfirm);
-
 
         Scene mainScene = makeMainScene(primaryStage);
 
@@ -146,6 +149,15 @@ public class Game extends Application {
         btnNumberConfirm.setOnMouseClicked(event -> {
             this.numOfPlayers = choiceBox.getValue();
             primaryStage.setScene(colourScene);
+        });
+
+        btnColourReset.setOnMouseClicked(event -> {
+            tmp.clear();
+            btnColourConfirm.setDisable(true);
+            colourButtons.forEach(b -> {
+                b.setDisable(false);
+                b.setBorder(null);
+            });
         });
 
         btnColourConfirm.setOnMouseClicked(event -> {
