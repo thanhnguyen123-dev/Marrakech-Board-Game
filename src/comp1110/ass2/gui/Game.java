@@ -6,21 +6,23 @@ import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * @author u7620014 Haobo Zou
- */
 public class Game extends Application {
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;
@@ -46,6 +48,12 @@ public class Game extends Application {
     private static final Color TILE_COLOR = Color.SANDYBROWN;
     private static final int TILE_BORDER_WIDTH = 4;
     private static final int RUG_BORDER_WIDTH = 4;
+    private static final int BUTTON_WIDTH = 120;
+    private static final int BUTTON_HEIGHT = 60;
+    private static final int COLOUR_BUTTON_RADIUS = 60;
+    private static final BorderStrokeStyle COLOUR_BUTTON_BORDER_STROKE_STYLE = GAME_PANE_BORDER_STROKE_STYLE;
+    private static final CornerRadii COLOUR_BUTTON_BORDER_RADII = GAME_PANE_BORDER_RADII;
+    private static final BorderWidths COLOUR_BUTTON_BORDER_WIDTH = new BorderWidths(8);
 
     private final Group root = new Group();
     private final Pane allTiles = new Pane();
@@ -59,13 +67,9 @@ public class Game extends Application {
     private InvisibleRug highlighted;
     private DraggableGameRug draggableGameRug;
 
-    private Player player1 = new Player(Colour.YELLOW);
-    private Player player2 = new Player(Colour.RED);
-    private Player player3 = new Player(Colour.CYAN);
-    private Player player4 = new Player(Colour.PURPLE);
-    private Player[] players = new Player[]{player1, player2, player3, player4};
-
-    private final GameState gameState = new GameState(this.players);
+    private int numOfPlayers;
+    private Player[] players;
+    private GameState gameState;
     private Phase currentPhase = Phase.ROTATION;
     private int dieResult;
     private int rugID = 0;
@@ -78,27 +82,102 @@ public class Game extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        final Pane gameArea = new Pane();
-        this.root.getChildren().add(gameArea);
+        //title screen
+        Pane titlePane = new Pane();
+        Scene titleScene = new Scene(titlePane, WINDOW_WIDTH, WINDOW_HEIGHT);
+        Text title = new Text("Marrakech");
+        title.relocate(WINDOW_WIDTH / 2 - 135, 240);
+        title.setFont(new Font("", 60));
+        GameButton btnStart = new GameButton("Start", BUTTON_WIDTH, BUTTON_HEIGHT);
+        btnStart.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 360);
+        titlePane.getChildren().addAll(title, btnStart);
+
+        //choose number of players
+        Pane numberPane = new Pane();
+        Scene numberScene = new Scene(numberPane, WINDOW_WIDTH, WINDOW_HEIGHT);
+        //choice box to choose the number of players
+        ChoiceBox<Integer> choiceBox = new ChoiceBox<Integer>();
+        choiceBox.setMinWidth(BUTTON_WIDTH);
+        choiceBox.setMaxWidth(BUTTON_WIDTH);
+        choiceBox.getItems().addAll(2, 3, 4);
+        choiceBox.setValue(2);
+        choiceBox.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 320);
+        GameButton btnNumberConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
+        btnNumberConfirm.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 360);
+        numberPane.getChildren().addAll(choiceBox, btnNumberConfirm);
+
+        //players choose their colours
+        Pane colourPane = new Pane();
+        Scene colourScene = new Scene(colourPane, WINDOW_WIDTH, WINDOW_HEIGHT);
+        ArrayList<Player> tmp = new ArrayList<Player>();
+
+        ColourButton btnCyan = new ColourButton(Colour.CYAN);
+        btnCyan.relocate(270, 180);
+        ColourButton btnYellow = new ColourButton(Colour.YELLOW);
+        btnYellow.relocate(270 + 3 * COLOUR_BUTTON_RADIUS, 180);
+        ColourButton btnRed = new ColourButton(Colour.RED);
+        btnRed.relocate(270 + 6 * COLOUR_BUTTON_RADIUS, 180);
+        ColourButton btnPurple = new ColourButton(Colour.PURPLE);
+        btnPurple.relocate(270 + 9 * COLOUR_BUTTON_RADIUS, 180);
+
+        ArrayList<ColourButton> colourButtons = new ArrayList<ColourButton>(List.of(btnCyan, btnYellow, btnRed, btnPurple));
+        for (ColourButton button : colourButtons) {
+            button.setOnMouseClicked(event -> {
+                tmp.add(new Player(button.colour));
+                button.setBorder(new Border(new BorderStroke(Colour.getFrontEndColor(button.colour).darker(), COLOUR_BUTTON_BORDER_STROKE_STYLE, COLOUR_BUTTON_BORDER_RADII, COLOUR_BUTTON_BORDER_WIDTH)));
+                button.setDisable(true);
+                if (tmp.size() == this.numOfPlayers) {
+                    colourButtons.forEach(b -> b.setDisable(true));
+                }
+            });
+        }
+
+        GameButton btnColourConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
+        btnColourConfirm.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 420);
+        colourPane.getChildren().addAll(btnCyan, btnYellow, btnRed, btnPurple, btnColourConfirm);
+
+
+        Scene mainScene = makeMainScene(primaryStage);
+
+        btnStart.setOnMouseClicked(event -> {
+            primaryStage.setScene(numberScene);
+        });
+
+        btnNumberConfirm.setOnMouseClicked(event -> {
+            this.numOfPlayers = choiceBox.getValue();
+            primaryStage.setScene(colourScene);
+        });
+
+        btnColourConfirm.setOnMouseClicked(event -> {
+            this.players = tmp.toArray(new Player[0]);
+            primaryStage.setScene(mainScene);
+        });
+
+        primaryStage.setResizable(false);
+        primaryStage.setTitle("Game");
+        primaryStage.setScene(titleScene);
+        primaryStage.show();
+    }
+
+    private Scene makeMainScene(Stage primaryStage) {
+        GamePane gamePane = new GamePane(WINDOW_WIDTH, WINDOW_HEIGHT);
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
 
         final Pane boardArea = new GamePane(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         boardArea.setBorder(gamePaneBorder);
         boardArea.relocate(MARGIN, MARGIN);
-        gameArea.getChildren().add(boardArea);
+        gamePane.getChildren().add(boardArea);
 
         initAllTiles();
         initInvisibleRugs();
         this.allTiles.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
-        boardArea.getChildren().add(this.allTiles);
         this.placedRugs.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
-        boardArea.getChildren().add(this.placedRugs);
         this.invisibleRugs.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
-        boardArea.getChildren().add(this.invisibleRugs);
+        boardArea.getChildren().addAll(this.allTiles, this.placedRugs, this.invisibleRugs);
 
         final GamePane playerArea = new GamePane(PLAYER_AREA_WIDTH, PLAYER_AREA_HEIGHT);
         playerArea.relocate(WINDOW_HEIGHT, MARGIN);
-        gameArea.getChildren().add(playerArea);
+        gamePane.getChildren().add(playerArea);
 
         final GamePane statsArea = new GamePane(STATS_AREA_WIDTH, STATS_AREA_HEIGHT);
         statsArea.setBorder(gamePaneBorder);
@@ -136,18 +215,8 @@ public class Game extends Application {
         nextPhaseBtn.relocate(240, 180);
         controlArea.getChildren().add(nextPhaseBtn);
 
-        this.draggableGameRug = new DraggableGameRug(750, 500, this, Colour.RED);
-        this.root.getChildren().add(this.draggableGameRug);
 
-        Scene scene = makeScene();
-
-        primaryStage.setTitle("Game");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    private Scene makeScene() {
-        Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        Scene scene = new Scene(gamePane, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.Q || event.getCode() == KeyCode.E) {
                 if (this.currentPhase == Phase.PLACEMENT) {
@@ -245,10 +314,29 @@ public class Game extends Application {
     private class GamePane extends Pane {
         public GamePane(double width, double height) {
             super();
-            this.setMinWidth(width);
-            this.setMaxWidth(width);
-            this.setMinHeight(height);
-            this.setMaxHeight(height);
+            this.setMinSize(width, height);
+            this.setMaxSize(width, height);
+        }
+    }
+
+    private class GameButton extends Button {
+        public GameButton(String string, double width, double height) {
+            super(string);
+            this.setMinSize(width, height);
+            this.setMaxSize(width, height);
+        }
+    }
+
+    private class ColourButton extends Button {
+        private final Colour colour;
+
+        public ColourButton(Colour colour) {
+            super();
+            this.colour = colour;
+            this.setShape(new Circle(COLOUR_BUTTON_RADIUS));
+            this.setMinSize(2 * COLOUR_BUTTON_RADIUS, 2 * COLOUR_BUTTON_RADIUS);
+            this.setMaxSize(2 * COLOUR_BUTTON_RADIUS, 2 * COLOUR_BUTTON_RADIUS);
+            this.setBackground(new Background(new BackgroundFill(Colour.getFrontEndColor(colour), CornerRadii.EMPTY, Insets.EMPTY)));
         }
     }
 
