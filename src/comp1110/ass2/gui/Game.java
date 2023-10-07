@@ -154,6 +154,7 @@ public class Game extends Application {
 
         btnNumberBack.setOnMouseClicked(event -> {
             this.numOfPlayers = 0;
+            choiceBox.setValue(2);
             primaryStage.setScene(titleScene);
         });
 
@@ -165,6 +166,11 @@ public class Game extends Application {
 
         btnColourBack.setOnMouseClicked(event -> {
             tmp.clear();
+            btnColourConfirm.setDisable(true);
+            colourButtons.forEach(b -> {
+                b.setDisable(false);
+                b.setBorder(null);
+            });
             primaryStage.setScene(numberScene);
         });
 
