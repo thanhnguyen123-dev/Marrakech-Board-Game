@@ -6,7 +6,6 @@ import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 
-import javax.swing.plaf.IconUIResource;
 import java.util.*;
 
 /**
@@ -31,7 +30,7 @@ public class GameState {
     public GameState(Player[] players) {
         this.board = new Board();
         this.players = players;
-        this.availablePlayers = new ArrayList<Player>(Arrays.asList(this.players));
+        this.availablePlayers = new ArrayList<>(Arrays.asList(this.players));
         this.currentPlayer = this.availablePlayers.get(0);
     }
 
@@ -151,10 +150,7 @@ public class GameState {
      */
     public boolean isPaymentRequired() {
         Player otherPlayer = findAssamRugOwner();
-        if (otherPlayer != null && this.availablePlayers.contains(otherPlayer) && this.currentPlayer != otherPlayer) {
-            return true;
-        }
-        return false;
+        return otherPlayer != null && this.availablePlayers.contains(otherPlayer) && this.currentPlayer != otherPlayer;
     }
 
 
@@ -203,6 +199,7 @@ public class GameState {
      * @author u7620014 Haobo Zou
      */
     public static boolean isGameStringValid(String gameString) {
+        assert isGameStringValid(gameString) : "Invalid game string!";
         String playerStringsPattern = "(P[yrcp][0-9]{5}[io]){2,4}";
         String assamStringPattern = "A[0-6]{2}[NESW]";
         String boardStringPattern = "B([yrcp][0-9]{2}|n00){49}";
@@ -222,7 +219,7 @@ public class GameState {
         String boardString = getBoardString(gameString);
         this.board = new Board(assamString, boardString);
         this.players = new Player[playerStrings.size()];
-        this.availablePlayers = new ArrayList<Player>();
+        this.availablePlayers = new ArrayList<>();
         for (int i = 0; i < this.players.length; i++) {
             String playerString = playerStrings.get(i);
             this.players[i] = new Player(playerString);
@@ -239,7 +236,7 @@ public class GameState {
      * @author u7620014 Haobo Zou
      */
     public static List<String> getPlayerStrings(String gameString) {
-        List<String> playerStrings = new ArrayList<String>();
+        List<String> playerStrings = new ArrayList<>();
         int beginIndex = 0;
         while (gameString.contains("P")) {
             playerStrings.add(gameString.substring(beginIndex, beginIndex + LENGTH_OF_PLAYER_STRING));
@@ -326,7 +323,7 @@ public class GameState {
     }
 
     /**
-     * Get the winner if the game is over (eg. if Red wins then return 'r')
+     * Get the winner if the game is over (e.g. if Red wins then return 'r')
      * If more than one player score the highest score, return 't'
      * If the game is not over, return 'n'
      * @return char representation of a winner if someone actually wins
