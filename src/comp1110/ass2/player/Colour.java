@@ -46,9 +46,7 @@ public enum Colour {
      * @author u7582846 Yaolin Li
      */
     public static boolean isColourValid(char colourChar) {
-        if (charToColour(colourChar) != null) {
-            return true;
-        } else return false;
+        return charToColour(colourChar) != null;
     }
 
     /**
@@ -58,18 +56,12 @@ public enum Colour {
      * @author Le Thanh Nguyen u7594144
      */
     public static String colourToString(Colour colour) {
-        switch (colour) {
-            case YELLOW:
-                return "Yellow";
-            case RED:
-                return "Red";
-            case CYAN:
-                return "Cyan";
-            case PURPLE:
-                return "Purple";
-            default:
-                return null;
-        }
+        return switch (colour) {
+            case YELLOW -> "Yellow";
+            case RED -> "Red";
+            case CYAN -> "Cyan";
+            case PURPLE -> "Purple";
+        };
     }
 
     /**
@@ -78,18 +70,12 @@ public enum Colour {
      * @author Le Thanh Nguyen u7594144
      */
     public static Color getFrontEndColor(Colour colour) {
-        switch (colour) {
-            case YELLOW:
-                return Color.YELLOW;
-            case RED:
-                return Color.RED;
-            case CYAN:
-                return Color.CYAN;
-            case PURPLE:
-                return Color.PURPLE;
-            default:
-                return null;
-        }
+        return switch (colour) {
+            case YELLOW -> Color.YELLOW;
+            case RED -> Color.RED;
+            case CYAN -> Color.CYAN;
+            case PURPLE -> Color.PURPLE;
+        };
     }
 
     /**
