@@ -7,7 +7,6 @@ import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -55,7 +54,6 @@ public class Game extends Application {
     private static final CornerRadii COLOUR_BUTTON_BORDER_RADII = GAME_PANE_BORDER_RADII;
     private static final BorderWidths COLOUR_BUTTON_BORDER_WIDTH = new BorderWidths(8);
 
-    private final Group root = new Group();
     private final Pane allTiles = new Pane();
     private final GameTile[][] gameTiles = new GameTile[NUM_OF_ROWS][NUM_OF_COLS];
     private final Pane placedRugs = new Pane();
@@ -102,9 +100,12 @@ public class Game extends Application {
         choiceBox.getItems().addAll(2, 3, 4);
         choiceBox.setValue(2);
         choiceBox.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 320);
+
+        GameButton btnNumberBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
+        btnNumberBack.relocate(BUTTON_HEIGHT / 2, BUTTON_HEIGHT / 2);
         GameButton btnNumberConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnNumberConfirm.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 360);
-        numberPane.getChildren().addAll(choiceBox, btnNumberConfirm);
+        numberPane.getChildren().addAll(choiceBox, btnNumberBack, btnNumberConfirm);
 
         //players choose their colours
         Pane colourPane = new Pane();
@@ -119,12 +120,14 @@ public class Game extends Application {
         ColourButton btnPurple = new ColourButton(Colour.PURPLE);
         btnPurple.relocate(270 + 9 * COLOUR_BUTTON_RADIUS, 180);
 
+        GameButton btnColourBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
+        btnColourBack.relocate(BUTTON_HEIGHT / 2, BUTTON_HEIGHT / 2);
         GameButton btnColourReset = new GameButton("Reset", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnColourReset.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH * 1.5, 420);
         GameButton btnColourConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnColourConfirm.relocate(WINDOW_WIDTH / 2 + BUTTON_WIDTH * 0.5, 420);
         btnColourConfirm.setDisable(true);
-        colourPane.getChildren().addAll(btnCyan, btnYellow, btnRed, btnPurple, btnColourReset, btnColourConfirm);
+        colourPane.getChildren().addAll(btnCyan, btnYellow, btnRed, btnPurple, btnColourBack, btnColourReset, btnColourConfirm);
 
         ArrayList<Player> tmp = new ArrayList<Player>();
         ArrayList<ColourButton> colourButtons = new ArrayList<ColourButton>(List.of(btnCyan, btnYellow, btnRed, btnPurple));
@@ -146,9 +149,19 @@ public class Game extends Application {
             primaryStage.setScene(numberScene);
         });
 
+        btnNumberBack.setOnMouseClicked(event -> {
+            this.numOfPlayers = 0;
+            primaryStage.setScene(titleScene);
+        });
+
         btnNumberConfirm.setOnMouseClicked(event -> {
             this.numOfPlayers = choiceBox.getValue();
             primaryStage.setScene(colourScene);
+        });
+
+        btnColourBack.setOnMouseClicked(event -> {
+            tmp.clear();
+            primaryStage.setScene(numberScene);
         });
 
         btnColourReset.setOnMouseClicked(event -> {
