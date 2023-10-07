@@ -106,6 +106,7 @@ public class Game extends Application {
         GameButton btnNumberConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnNumberConfirm.relocate(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 360);
         numberPane.getChildren().addAll(choiceBox, btnNumberBack, btnNumberConfirm);
+        btnNumberConfirm.requestFocus();
 
         //players choose their colours
         Pane colourPane = new Pane();
@@ -139,6 +140,7 @@ public class Game extends Application {
                 if (tmp.size() == this.numOfPlayers) {
                     colourButtons.forEach(b -> b.setDisable(true));
                     btnColourConfirm.setDisable(false);
+                    btnColourConfirm.requestFocus();
                 }
             });
         }
@@ -147,6 +149,7 @@ public class Game extends Application {
 
         btnStart.setOnMouseClicked(event -> {
             primaryStage.setScene(numberScene);
+            btnNumberConfirm.requestFocus();
         });
 
         btnNumberBack.setOnMouseClicked(event -> {
@@ -157,6 +160,7 @@ public class Game extends Application {
         btnNumberConfirm.setOnMouseClicked(event -> {
             this.numOfPlayers = choiceBox.getValue();
             primaryStage.setScene(colourScene);
+            btnColourReset.requestFocus();
         });
 
         btnColourBack.setOnMouseClicked(event -> {
