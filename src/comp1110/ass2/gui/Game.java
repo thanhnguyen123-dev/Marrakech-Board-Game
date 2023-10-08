@@ -263,7 +263,7 @@ public class Game extends Application {
         nextPhaseBtn.relocate(240, 180);
         controlArea.getChildren().add(nextPhaseBtn);
 
-        this.draggableRug = new DraggableRug(750, 500, this, Colour.RED);
+        this.draggableRug = new DraggableRug(750, 500, Colour.RED);
         gamePane.getChildren().add(this.draggableRug);
 
         Scene scene = new Scene(gamePane, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -470,14 +470,12 @@ public class Game extends Application {
     }
 
     private class DraggableRug extends GameRug {
-        private final Game game;
         private Orientation orientation = Orientation.VERTICAL;
         private Colour colour;
         private double mouseX, mouseY;
 
-        public DraggableRug(double x, double y, Game game, Colour colour) {
+        public DraggableRug(double x, double y, Colour colour) {
             super(x, y, Orientation.VERTICAL, colour);
-            this.game = game;
             this.colour = colour;
 
             this.setOnMousePressed(event -> {
@@ -493,11 +491,11 @@ public class Game extends Application {
                 this.setLayoutY(this.getLayoutY() + movementY);
                 this.mouseX = event.getSceneX();
                 this.mouseY = event.getSceneY();
-                this.game.draggableRug.highlightNearestInvisibleRug();
+                Game.this.draggableRug.highlightNearestInvisibleRug();
             });
 
             this.setOnMouseReleased(event -> {
-                InvisibleRug nearestInvisibleRug = this.game.draggableRug.findNearestInvisibleRug();
+                InvisibleRug nearestInvisibleRug = Game.this.draggableRug.findNearestInvisibleRug();
                 this.setLayoutX(nearestInvisibleRug.getLayoutX() + TILE_RELOCATION_X + MARGIN);
                 this.setLayoutY(nearestInvisibleRug.getLayoutY() + TILE_RELOCATION_Y + MARGIN);
             });
@@ -524,11 +522,11 @@ public class Game extends Application {
         }
 
         private void highlightNearestInvisibleRug() {
-            if (this.game.highlighted != null) {
-                this.game.highlighted.setOpacity(0);
+            if (Game.this.highlighted != null) {
+                Game.this.highlighted.setOpacity(0);
             }
-            this.game.highlighted = findNearestInvisibleRug();
-            this.game.highlighted.setOpacity(HIGHLIGHTED_OPACITY);
+            Game.this.highlighted = findNearestInvisibleRug();
+            Game.this.highlighted.setOpacity(HIGHLIGHTED_OPACITY);
         }
 
         public Comparator<InvisibleRug> compareByDistance() {
