@@ -5,7 +5,6 @@ import comp1110.ass2.utils.StringToTile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Board class represents the dimensions of the board and relevant objects on
@@ -17,9 +16,10 @@ public class Board {
     private static final int LENGTH_OF_SHORT_RUG_STRING = 3;
 
     private final Tile[][] tiles = new Tile[NUM_OF_ROWS][NUM_OF_COLS];
-    private final List<Rug> visibleRugs = new ArrayList<Rug>(); // All visible Rugs on the board
+    private final List<Rug> visibleRugs = new ArrayList<>(); // All visible Rugs on the board
     private Tile assamTile;
     private Direction assamDirection;
+    private final List<Tile> assamPath = new ArrayList<>();
 
     /**
      * Constructor: creates an instance of the Board class
@@ -72,49 +72,75 @@ public class Board {
         return this.assamDirection;
     }
 
+    public List<Tile> getAssamPath() {
+        return this.assamPath;
+    }
+
+    public void clearAssamPath() {
+        this.assamPath.clear();
+    }
+
     /**
      * Moves Assam by a given number of steps from rolling the die
      * @param steps number of steps to be taken by Assam
      * @author u7620014 Haobo Zou
      */
     public void moveAssam(int steps) {
+        clearAssamPath();
+        moveAssamInBounds(steps);
+    }
+
+    /**
+     * Moves Assam within the board by a given number of steps from rolling the die
+     * @param steps number of steps to be taken by Assam
+     * @author u7620014 Haobo Zou
+     */
+    public void moveAssamInBounds(int steps) {
         int row = this.assamTile.getRow();
         int col = this.assamTile.getCol();
         this.assamTile.setHasAssam(false);
         switch (this.assamDirection) {
             case NORTH -> {
                 if (row - steps < 0) {
+                    for (int i = row - 1; i >= 0; i--) this.assamPath.add(this.tiles[i][col]);
                     this.assamTile = this.tiles[0][col];
                     moveAssamOutOfBounds();
-                    moveAssam(steps - row - 1);
+                    moveAssamInBounds(steps - row - 1);
                 } else {
+                    for (int i = row - 1; i >= row - steps; i--) this.assamPath.add(this.tiles[i][col]);
                     this.assamTile = this.tiles[row - steps][col];
                 }
             }
             case EAST -> {
                 if (col + steps > NUM_OF_COLS - 1) {
+                    for (int j = col + 1; j <= NUM_OF_COLS - 1; j++) this.assamPath.add(this.tiles[row][j]);
                     this.assamTile = this.tiles[row][NUM_OF_COLS - 1];
                     moveAssamOutOfBounds();
-                    moveAssam(col + steps - NUM_OF_COLS);
+                    moveAssamInBounds(col + steps - NUM_OF_COLS);
                 } else {
+                    for (int j = col + 1; j <= col + steps; j++) this.assamPath.add(this.tiles[row][j]);
                     this.assamTile = this.tiles[row][col + steps];
                 }
             }
             case SOUTH -> {
                 if (row + steps > NUM_OF_ROWS - 1) {
+                    for (int i = row + 1; i <= NUM_OF_ROWS - 1; i++) this.assamPath.add(this.tiles[i][col]);
                     this.assamTile = this.tiles[NUM_OF_ROWS - 1][col];
                     moveAssamOutOfBounds();
-                    moveAssam(row + steps - NUM_OF_ROWS);
+                    moveAssamInBounds(row + steps - NUM_OF_ROWS);
                 } else {
+                    for (int i = row + 1; i <= row + steps; i++) this.assamPath.add(this.tiles[i][col]);
                     this.assamTile = this.tiles[row + steps][col];
                 }
             }
             case WEST -> {
                 if (col - steps < 0) {
+                    for (int j = col - 1; j >= 0; j--) this.assamPath.add(this.tiles[row][j]);
                     this.assamTile = this.tiles[row][0];
                     moveAssamOutOfBounds();
-                    moveAssam(steps - col - 1);
+                    moveAssamInBounds(steps - col - 1);
                 } else {
+                    for (int j = col - 1; j >= col - steps; j--) this.assamPath.add(this.tiles[row][j]);
                     this.assamTile = this.tiles[row][col - steps];
                 }
             }
@@ -151,6 +177,7 @@ public class Board {
             }
             this.assamDirection = this.assamDirection.rotate(180);
         }
+        this.assamPath.add(this.assamTile);
         this.assamTile.setHasAssam(true);
     }
 
@@ -163,7 +190,7 @@ public class Board {
         List<Integer> legalRotations = new ArrayList<>();
         legalRotations.add(-90);
         for (Direction direction : Direction.values()) {
-            Integer angleDirection = direction.getAngle();
+            int angleDirection = direction.getAngle();
             if (angleDirection != 180) {
                 legalRotations.add(angleDirection);
             }
@@ -311,5 +338,5 @@ public class Board {
 
     }
 
-    
+
 }
