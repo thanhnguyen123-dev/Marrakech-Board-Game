@@ -55,6 +55,8 @@ public class Game extends Application {
     private static final CornerRadii COLOUR_BUTTON_BORDER_RADII = GAME_PANE_BORDER_RADII;
     private static final BorderWidths COLOUR_BUTTON_BORDER_WIDTH = new BorderWidths(8);
 
+    private static final double HIGHLIGHTED_OPACITY = 1 - (Math.sqrt(5) - 1) / 2;
+
     private final Pane allTiles = new Pane();
     private final GameTile[][] gameTiles = new GameTile[NUM_OF_ROWS][NUM_OF_COLS];
     private final Pane placedRugs = new Pane();
@@ -261,6 +263,9 @@ public class Game extends Application {
         nextPhaseBtn.relocate(240, 180);
         controlArea.getChildren().add(nextPhaseBtn);
 
+        this.draggableRug = new DraggableRug(750, 500, this, Colour.RED);
+        gamePane.getChildren().add(this.draggableRug);
+
         Scene scene = new Scene(gamePane, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.Q || event.getCode() == KeyCode.E) {
@@ -420,27 +425,6 @@ public class Game extends Application {
         }
     }
 
-    private InvisibleRug findNearestInvisibleRug(double x, double y, Orientation orientation) {
-        InvisibleRug nearestRug = null;
-        double min = Double.POSITIVE_INFINITY;
-        for (InvisibleRug invisibleRug : (orientation == Orientation.VERTICAL ? this.vInvisibleRugs : this.hInvisibleRugs)) {
-            double currentDistance = invisibleRug.distance(x, y);
-            if (min > currentDistance) {
-                nearestRug = invisibleRug;
-                min = currentDistance;
-            }
-        }
-        return nearestRug;
-    }
-
-    private void highlightNearestInvisibleRug(double x, double y, Orientation orientation) {
-        if (this.highlighted != null) {
-            this.highlighted.setOpacity(0);
-        }
-        this.highlighted = findNearestInvisibleRug(x, y, orientation);
-        this.highlighted.setOpacity(0.33);
-    }
-
     private static class InvisibleRug extends Rectangle {
         private final GameTile[] gameTiles = new GameTile[2];
         private final Orientation orientation;
@@ -509,17 +493,45 @@ public class Game extends Application {
                 this.setLayoutY(this.getLayoutY() + movementY);
                 this.mouseX = event.getSceneX();
                 this.mouseY = event.getSceneY();
-                this.game.highlightNearestInvisibleRug(this.getLayoutX() - TILE_RELOCATION_X - MARGIN, this.getLayoutY() - TILE_RELOCATION_Y - MARGIN, this.orientation);
+                this.game.draggableRug.highlightNearestInvisibleRug();
             });
 
             this.setOnMouseReleased(event -> {
-                InvisibleRug nearestInvisibleRug = this.game.findNearestInvisibleRug(this.getLayoutX() - TILE_RELOCATION_X - MARGIN, this.getLayoutY() - TILE_RELOCATION_Y - MARGIN, this.orientation);
+                InvisibleRug nearestInvisibleRug = this.game.draggableRug.findNearestInvisibleRug();
                 this.setLayoutX(nearestInvisibleRug.getLayoutX() + TILE_RELOCATION_X + MARGIN);
                 this.setLayoutY(nearestInvisibleRug.getLayoutY() + TILE_RELOCATION_Y + MARGIN);
             });
         }
 
-        public Comparator<InvisibleRug> distanceToDraggableRug() {
+        private InvisibleRug findNearestInvisibleRug() {
+            if (this.orientation == Orientation.VERTICAL) {
+                vInvisibleRugs.sort(compareByDistance());
+                for (InvisibleRug vInvisibleRug : vInvisibleRugs) {
+                    Rug rug = new Rug(draggableRug.colour, rugID, getTilesFromInvisibleRug(vInvisibleRug));
+                    if (gameState.getBoard().isPlacementValid(rug)) {
+                        return vInvisibleRug;
+                    }
+                }
+            }
+            hInvisibleRugs.sort(compareByDistance());
+            for (InvisibleRug hInvisibleRug : hInvisibleRugs) {
+                Rug rug = new Rug(draggableRug.colour, rugID, getTilesFromInvisibleRug(hInvisibleRug));
+                if (gameState.getBoard().isPlacementValid(rug)) {
+                    return hInvisibleRug;
+                }
+            }
+            return null;
+        }
+
+        private void highlightNearestInvisibleRug() {
+            if (this.game.highlighted != null) {
+                this.game.highlighted.setOpacity(0);
+            }
+            this.game.highlighted = findNearestInvisibleRug();
+            this.game.highlighted.setOpacity(HIGHLIGHTED_OPACITY);
+        }
+
+        public Comparator<InvisibleRug> compareByDistance() {
             return new Comparator<InvisibleRug>() {
                 @Override
                 public int compare(InvisibleRug rug1, InvisibleRug rug2) {
@@ -587,6 +599,10 @@ public class Game extends Application {
             return new Tile[]{getTileFromGameTile(this.highlighted.gameTiles[0]), getTileFromGameTile(this.highlighted.gameTiles[1])};
         }
         return null;
+    }
+
+    private Tile[] getTilesFromInvisibleRug(InvisibleRug invisibleRug) {
+        return new Tile[]{getTileFromGameTile(invisibleRug.gameTiles[0]), getTileFromGameTile(invisibleRug.gameTiles[1])};
     }
 
     private Tile getTileFromGameTile(GameTile gameTile) {
