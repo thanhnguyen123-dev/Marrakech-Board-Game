@@ -20,6 +20,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Game extends Application {
@@ -63,7 +64,7 @@ public class Game extends Application {
     private final ArrayList<InvisibleRug> hInvisibleRugs = new ArrayList<>();
 
     private InvisibleRug highlighted;
-    private DraggableGameRug draggableGameRug;
+    private DraggableRug draggableRug;
 
     private int numOfPlayers;
     private Player[] players;
@@ -314,9 +315,9 @@ public class Game extends Application {
     }
 
     private void toggleRugOrientation() {
-        if (this.draggableGameRug != null) {
-            this.draggableGameRug.setRotate(this.draggableGameRug.getRotate() + 90);
-            this.draggableGameRug.orientation = this.draggableGameRug.orientation == Orientation.VERTICAL ? Orientation.HORIZONTAL : Orientation.VERTICAL;
+        if (this.draggableRug != null) {
+            this.draggableRug.setRotate(this.draggableRug.getRotate() + 90);
+            this.draggableRug.orientation = this.draggableRug.orientation == Orientation.VERTICAL ? Orientation.HORIZONTAL : Orientation.VERTICAL;
             if (this.highlighted != null) {
                 this.highlighted.setOpacity(0);
                 this.highlighted = null;
@@ -338,9 +339,9 @@ public class Game extends Application {
         //FIXME
         if (this.highlighted != null) {
             this.rugID++;
-            Rug rug = new Rug(this.draggableGameRug.colour, this.rugID, getTilesFromHighlighted());
+            Rug rug = new Rug(this.draggableRug.colour, this.rugID, getTilesFromHighlighted());
             this.gameState.makePlacement(rug);
-            GameRug gameRug = new GameRug(this.highlighted.getLayoutX(), this.highlighted.getLayoutY(), this.draggableGameRug.orientation, this.draggableGameRug.colour);
+            GameRug gameRug = new GameRug(this.highlighted.getLayoutX(), this.highlighted.getLayoutY(), this.draggableRug.orientation, this.draggableRug.colour);
             this.placedRugs.getChildren().add(gameRug);
             this.gameRugs.add(gameRug);
         }
@@ -484,13 +485,13 @@ public class Game extends Application {
         }
     }
 
-    private class DraggableGameRug extends GameRug {
+    private class DraggableRug extends GameRug {
         private final Game game;
         private Orientation orientation = Orientation.VERTICAL;
         private Colour colour;
         private double mouseX, mouseY;
 
-        public DraggableGameRug(double x, double y, Game game, Colour colour) {
+        public DraggableRug(double x, double y, Game game, Colour colour) {
             super(x, y, Orientation.VERTICAL, colour);
             this.game = game;
             this.colour = colour;
@@ -516,6 +517,17 @@ public class Game extends Application {
                 this.setLayoutX(nearestInvisibleRug.getLayoutX() + TILE_RELOCATION_X + MARGIN);
                 this.setLayoutY(nearestInvisibleRug.getLayoutY() + TILE_RELOCATION_Y + MARGIN);
             });
+        }
+
+        public Comparator<InvisibleRug> distanceToDraggableRug() {
+            return new Comparator<InvisibleRug>() {
+                @Override
+                public int compare(InvisibleRug rug1, InvisibleRug rug2) {
+                    return Double.compare(
+                            rug1.distance(DraggableRug.this.getLayoutX() - TILE_RELOCATION_X - MARGIN, DraggableRug.this.getLayoutY() - TILE_RELOCATION_Y - MARGIN),
+                            rug2.distance(DraggableRug.this.getLayoutX() - TILE_RELOCATION_X - MARGIN, DraggableRug.this.getLayoutY() - TILE_RELOCATION_Y - MARGIN));
+                }
+            };
         }
     }
 
