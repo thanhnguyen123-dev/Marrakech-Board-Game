@@ -76,17 +76,14 @@ public class Board {
         return this.assamPath;
     }
 
-    public void clearAssamPath() {
-        this.assamPath.clear();
-    }
-
     /**
      * Moves Assam by a given number of steps from rolling the die
      * @param steps number of steps to be taken by Assam
      * @author u7620014 Haobo Zou
      */
     public void moveAssam(int steps) {
-        clearAssamPath();
+        this.assamPath.clear();
+        this.assamPath.add(this.assamTile);
         moveAssamInBounds(steps);
     }
 
