@@ -39,7 +39,8 @@ public class Game extends Application {
     private static final double STATS_AREA_HEIGHT = 400;
     private static final double CONTROL_AREA_WIDTH = PLAYER_AREA_WIDTH;
     private static final double CONTROL_AREA_HEIGHT = PLAYER_AREA_HEIGHT - STATS_AREA_HEIGHT - MARGIN;
-    private static final Color GAME_PANE_BORDER_COLOR = Color.SANDYBROWN.darker();
+    private static final Color TILE_COLOR = Color.TAN;
+    private static final Color GAME_PANE_BORDER_COLOR = TILE_COLOR.darker();
     private static final BorderStrokeStyle GAME_PANE_BORDER_STROKE_STYLE = BorderStrokeStyle.SOLID;
     private static final CornerRadii GAME_PANE_BORDER_RADII = new CornerRadii(24);
     private static final BorderWidths GAME_PANE_BORDER_WIDTH = new BorderWidths(4);
@@ -48,7 +49,6 @@ public class Game extends Application {
     private static final double TILE_SIDE = 64;
     private static final double TILE_RELOCATION_X = (BOARD_AREA_SIDE - NUM_OF_COLS * TILE_SIDE) / 2;
     private static final double TILE_RELOCATION_Y = (BOARD_AREA_SIDE - NUM_OF_ROWS * TILE_SIDE) / 2;
-    private static final Color TILE_COLOR = Color.SANDYBROWN;
     private static final int TILE_BORDER_WIDTH = 4;
     private static final int RUG_BORDER_WIDTH = 4;
     private static final int BUTTON_WIDTH = 120;
@@ -58,6 +58,9 @@ public class Game extends Application {
     private static final CornerRadii COLOUR_BUTTON_BORDER_RADII = GAME_PANE_BORDER_RADII;
     private static final BorderWidths COLOUR_BUTTON_BORDER_WIDTH = new BorderWidths(8);
     private static final double HIGHLIGHTED_OPACITY = 1 - (Math.sqrt(5) - 1) / 2;
+    private static final double ASSAM_SIDE = (Math.sqrt(5) - 1) / 2 * TILE_SIDE;
+    private static final double ASSAM_RELOCATION = (TILE_SIDE - ASSAM_SIDE) / 2;
+    private static final Color ASSAM_COLOR = Color.SPRINGGREEN.darker();
     //https://fonts.google.com/icons?selected=Material%20Symbols%20Rounded%3Anavigation%3AFILL%401%3Bwght%40400%3BGRAD%400%3Bopsz%4024
     private static final String ASSAM_SVG = "M480-240 222-130q-13 5-24.5 2.5T178-138q-8-8-10.5-20t2.5-25l273-615q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l273 615q5 13 2.5 25T782-138q-8 8-19.5 10.5T738-130L480-240Z";
 
@@ -403,10 +406,10 @@ public class Game extends Application {
         svg.setContent(ASSAM_SVG);
         this.assam = new Region();
         this.assam.setShape(svg);
-        this.assam.setMinSize(TILE_SIDE / 2, TILE_SIDE / 2);
-        this.assam.setMaxSize(TILE_SIDE / 2, TILE_SIDE / 2);
-        this.assam.setBackground(new Background(new BackgroundFill(Color.LIMEGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
-        this.assam.setBorder(new Border(new BorderStroke(Color.LIMEGREEN.darker(), GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH)));
+        this.assam.setMinSize(ASSAM_SIDE, ASSAM_SIDE);
+        this.assam.setMaxSize(ASSAM_SIDE, ASSAM_SIDE);
+        this.assam.setBackground(new Background(new BackgroundFill(ASSAM_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.assam.setBorder(new Border(new BorderStroke(ASSAM_COLOR.darker(), GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH)));
         updateAssam();
     }
 
@@ -414,7 +417,7 @@ public class Game extends Application {
         Tile assamTile = this.gameState.getBoard().getAssamTile();
         int row = assamTile.getRow();
         int col = assamTile.getCol();
-        this.assam.relocate(TILE_SIDE / 4 + col * TILE_SIDE, TILE_SIDE / 4 + row * TILE_SIDE);
+        this.assam.relocate(ASSAM_RELOCATION + col * TILE_SIDE, ASSAM_RELOCATION + row * TILE_SIDE);
         this.assam.setRotate(getAssamDirection().getAngle());
     }
 
