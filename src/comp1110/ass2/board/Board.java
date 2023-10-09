@@ -294,12 +294,7 @@ public class Board {
     public static boolean isTileValid(Tile tile) {
         int row = tile.getRow();
         int col = tile.getCol();
-        if (row >= 0 && row < NUM_OF_ROWS) {
-            if (col >= 0 && col < NUM_OF_COLS) {
-                return true;
-            }
-        }
-        return false;
+        return row >= 0 && row < NUM_OF_ROWS && col >= 0 && col < NUM_OF_COLS;
     }
 
     /**
@@ -330,10 +325,6 @@ public class Board {
                 adjacentTiles.add(this.tiles[row][col]);
             }
         }
-
         return adjacentTiles;
-
     }
-
-
 }

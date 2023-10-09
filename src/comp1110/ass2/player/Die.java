@@ -12,6 +12,7 @@ public class Die {
     /**
      * randomize die roll
      * @return a value from 1-4
+     * @author Le Thanh Nguyen u7594144
      */
     public static int getSide() {
         int index = new Random().nextInt(SIDES.length);

@@ -3,18 +3,22 @@ package comp1110.ass2.gui;
 import comp1110.ass2.GameState;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
+import comp1110.ass2.player.Die;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -57,10 +61,13 @@ public class Game extends Application {
 
     private static final double HIGHLIGHTED_OPACITY = 1 - (Math.sqrt(5) - 1) / 2;
 
+    //https://fonts.google.com/icons?selected=Material%20Symbols%20Rounded%3Anavigation%3AFILL%401%3Bwght%40400%3BGRAD%400%3Bopsz%4024
+
+    private static final String ASSAM_SVG = "M480-240 222-130q-13 5-24.5 2.5T178-138q-8-8-10.5-20t2.5-25l273-615q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l273 615q5 13 2.5 25T782-138q-8 8-19.5 10.5T738-130L480-240Z";
+
     private final Pane allTiles = new Pane();
     private final GameTile[][] gameTiles = new GameTile[NUM_OF_ROWS][NUM_OF_COLS];
     private final Pane placedRugs = new Pane();
-    private final ArrayList<GameRug> gameRugs = new ArrayList<>();
     private final Pane invisibleRugs = new Pane();
     private final ArrayList<InvisibleRug> vInvisibleRugs = new ArrayList<>();
     private final ArrayList<InvisibleRug> hInvisibleRugs = new ArrayList<>();
@@ -73,16 +80,16 @@ public class Game extends Application {
     private GameState gameState;
     private Phase currentPhase = Phase.ROTATION;
     private int dieResult;
-    private int rugID = 0;
+    private int rugID;
 
-    private Text phaseText = new Text();
+    private final Text phaseText = new Text(this.currentPhase.toString());
 
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         //title screen
         Pane titlePane = new Pane();
         Scene titleScene = new Scene(titlePane, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -139,11 +146,11 @@ public class Game extends Application {
 
         //keep a temporary list of players
         ArrayList<Player> tmp = new ArrayList<>();
-        for (ColourButton button : colourButtons) {
-            button.setOnMouseClicked(event -> {
-                tmp.add(new Player(button.colour));
-                button.setBorder(button.border);
-                button.setDisable(true);
+        for (ColourButton colourButton : colourButtons) {
+            colourButton.setOnMouseClicked(event -> {
+                tmp.add(new Player(colourButton.colour));
+                colourButton.setBorder(colourButton.border);
+                colourButton.setDisable(true);
                 if (tmp.size() == this.numOfPlayers) {
                     colourButtons.forEach(b -> b.setDisable(true));
                     btnColourConfirm.setDisable(false);
@@ -153,7 +160,7 @@ public class Game extends Application {
         }
 
         //main game
-        Scene mainScene = makeMainScene(primaryStage);
+        Scene mainScene = makeMainScene();
 
         btnStart.setOnMouseClicked(event -> {
             primaryStage.setScene(numberScene);
@@ -203,70 +210,122 @@ public class Game extends Application {
         primaryStage.show();
     }
 
-    private Scene makeMainScene(Stage primaryStage) {
-        GamePane gamePane = new GamePane(WINDOW_WIDTH, WINDOW_HEIGHT);
+    private Scene makeMainScene() {
+        GamePane gameArea = new GamePane(WINDOW_WIDTH, WINDOW_HEIGHT);
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
 
         //board area to display information about the board and assam
         final Pane boardArea = new GamePane(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         boardArea.setBorder(gamePaneBorder);
         boardArea.relocate(MARGIN, MARGIN);
-        gamePane.getChildren().add(boardArea);
+        gameArea.getChildren().add(boardArea);
 
-        initAllTiles();
+        final Pane tileArea = new GamePane(NUM_OF_COLS * TILE_SIDE, NUM_OF_ROWS * TILE_SIDE);
+        tileArea.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
+
+        initTiles();
         initInvisibleRugs();
-        this.allTiles.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
-        this.placedRugs.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
-        this.invisibleRugs.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
-        boardArea.getChildren().addAll(this.allTiles, this.placedRugs, this.invisibleRugs);
+
+        SVGPath svg = new SVGPath();
+        svg.setContent(ASSAM_SVG);
+        Region region = new Region();
+        region.setShape(svg);
+        region.setMinSize(TILE_SIDE / 2, TILE_SIDE / 2);
+        region.setMaxSize(TILE_SIDE / 2, TILE_SIDE / 2);
+        region.setBorder(new Border(new BorderStroke(Color.LIMEGREEN.darker(), GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH)));
+        region.setBackground(new Background(new BackgroundFill(Color.LIMEGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+        region.relocate(TILE_SIDE / 4, TILE_SIDE / 4);
+
+        tileArea.getChildren().addAll(this.allTiles, this.placedRugs, this.invisibleRugs, region);
+        boardArea.getChildren().add(tileArea);
 
         //player area to display stats and controls for the players, contains stats area and control area
         final GamePane playerArea = new GamePane(PLAYER_AREA_WIDTH, PLAYER_AREA_HEIGHT);
         playerArea.relocate(WINDOW_HEIGHT, MARGIN);
-        gamePane.getChildren().add(playerArea);
+        gameArea.getChildren().add(playerArea);
 
         //stats area
         final GamePane statsArea = new GamePane(STATS_AREA_WIDTH, STATS_AREA_HEIGHT);
         statsArea.setBorder(gamePaneBorder);
         playerArea.getChildren().add(statsArea);
 
-        phaseText.setText(getCurrentPhaseText());
-        statsArea.getChildren().add(phaseText);
+        this.phaseText.relocate(0, 60);
+        statsArea.getChildren().add(this.phaseText);
 
         //control area
-        final GamePane controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
+        GamePane controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
         controlArea.setBorder(gamePaneBorder);
         controlArea.relocate(0, STATS_AREA_HEIGHT + MARGIN);
         playerArea.getChildren().add(controlArea);
 
-        Button rotateAssamBtn = makeRotateAssamBtn();
-        rotateAssamBtn.relocate(240, 30);
-        controlArea.getChildren().add(rotateAssamBtn);
+        GameButton btnRotate = new GameButton("Rotate", BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        Button rollDieBtn = makeRollDieBtn();
-        rollDieBtn.relocate(240, 60);
-        controlArea.getChildren().add(rollDieBtn);
+        //buttons inside control area
+        GameButton btnRotateLeft = new GameButton("Rotate Left", BUTTON_WIDTH, BUTTON_HEIGHT);
+        GameButton btnRotateRight = new GameButton("Rotate Right", BUTTON_WIDTH, BUTTON_HEIGHT);
+        GameButton btnRotateZero = new GameButton("No Rotation", BUTTON_WIDTH, BUTTON_HEIGHT);
+        ButtonBar buttonBar = new ButtonBar();
+        buttonBar.getButtons().addAll(btnRotateLeft, btnRotateRight, btnRotateZero);
 
-        Button moveAssamBtn = makeMoveAssamBtn();
-        moveAssamBtn.relocate(240, 90);
-        controlArea.getChildren().add(moveAssamBtn);
+        GameButton btnRollDie = new GameButton("Roll Die", BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        Button rotateRugBtn = makeRotateRugBtn();
-        rotateRugBtn.relocate(240, 120);
-        controlArea.getChildren().add(rotateRugBtn);
+        Text dieResultText = new Text();
 
-        Button placeRugBtn = makePlaceRugBtn();
-        placeRugBtn.relocate(240, 150);
-        controlArea.getChildren().add(placeRugBtn);
+        GameButton btnMoveAssam = new GameButton("Move Assam", BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        Button nextPhaseBtn = makeNextPhaseBtn();
-        nextPhaseBtn.relocate(240, 180);
-        controlArea.getChildren().add(nextPhaseBtn);
+        GameButton btnMakePayment = new GameButton("Make Payment", BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        this.draggableRug = new DraggableRug(750, 500, Colour.RED);
-        gamePane.getChildren().add(this.draggableRug);
+        Button btnMakePlacement = new GameButton("Make Placement", BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        Scene scene = new Scene(gamePane, WINDOW_WIDTH, WINDOW_HEIGHT);
+        //allows player to set Assam's initial direction
+        controlArea.getChildren().add(btnRotate);
+
+        btnRotate.setOnMouseClicked(event -> {
+            nextPhase();
+            controlArea.getChildren().remove(btnRotate);
+            controlArea.getChildren().add(btnRollDie);
+        });
+
+        for (Node button : buttonBar.getButtons()) {
+            button.setOnMouseClicked(event -> {
+                nextPhase();
+                controlArea.getChildren().remove(buttonBar);
+                controlArea.getChildren().add(btnRollDie);
+            });
+        }
+
+        btnRollDie.setOnMouseClicked(event -> {
+            this.dieResult = Die.getSide();
+            dieResultText.setText("Die result is " + this.dieResult + ".");
+            controlArea.getChildren().remove(btnRollDie);
+            controlArea.getChildren().addAll(dieResultText, btnMoveAssam);
+        });
+
+        btnMoveAssam.setOnMouseClicked(event -> {
+            controlArea.getChildren().removeAll(dieResultText, btnMoveAssam);
+            controlArea.getChildren().add(btnMakePayment);
+        });
+
+        btnMakePayment.setOnMouseClicked(event -> {
+            nextPhase();
+            controlArea.getChildren().remove(btnMakePayment);
+            controlArea.getChildren().add(btnMakePlacement);
+            this.draggableRug = new DraggableRug(750, 500, this.gameState.getCurrentPlayer().getColour());
+            gameArea.getChildren().add(this.draggableRug);
+        });
+
+        btnMakePlacement.setOnMouseClicked(event -> {
+            if (this.currentPhase == Phase.PLACEMENT && this.highlighted != null) {
+                controlArea.getChildren().remove(btnMakePlacement);
+                gameArea.getChildren().remove(this.draggableRug);
+                makePlacement();
+                if (!gameState.isGameOver()) {
+                    controlArea.getChildren().add(buttonBar);
+                }
+            }
+        });
+
+        Scene scene = new Scene(gameArea, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.Q || event.getCode() == KeyCode.E) {
                 if (this.currentPhase == Phase.PLACEMENT) {
@@ -275,48 +334,11 @@ public class Game extends Application {
             }
             if (event.getCode() == KeyCode.ENTER) {
                 if (this.currentPhase == Phase.PLACEMENT) {
-                    placeRug();
+                    makePlacement();
                 }
             }
         });
         return scene;
-    }
-
-    private Button makeRotateAssamBtn() {
-        Button rotateAssamBtn = new Button("Rotate Assam");
-        rotateAssamBtn.setOnMouseClicked(event -> {
-            //FIXME
-            return;
-        });
-        return rotateAssamBtn;
-    }
-
-    private Button makeRollDieBtn() {
-        Button rollDieBtn = new Button("Roll Die");
-        rollDieBtn.setOnMouseClicked(event -> {
-            //FIXME
-            return;
-        });
-        return rollDieBtn;
-    }
-
-    private Button makeMoveAssamBtn() {
-        Button moveAssamBtn = new Button("Move Assam");
-        moveAssamBtn.setOnMouseClicked(event -> {
-            //FIXME
-            return;
-        });
-        return moveAssamBtn;
-    }
-
-    private Button makeRotateRugBtn() {
-        Button rotateRugBtn = new Button("Rotate Rug");
-        rotateRugBtn.setOnMouseClicked(event -> {
-            if (this.currentPhase == Phase.PLACEMENT) {
-                toggleRugOrientation();
-            }
-        });
-        return rotateRugBtn;
     }
 
     private void toggleRugOrientation() {
@@ -330,35 +352,22 @@ public class Game extends Application {
         }
     }
 
-    private Button makePlaceRugBtn() {
-        Button placeRugBtn = new Button("Place Rug");
-        placeRugBtn.setOnMouseClicked(event -> {
-            if (this.currentPhase == Phase.PLACEMENT) {
-                placeRug();
-            }
-        });
-        return placeRugBtn;
-    }
-
-    private void placeRug() {
-        //FIXME
+    private void makePlacement() {
         if (this.highlighted != null) {
-            this.rugID++;
-            Rug rug = new Rug(this.draggableRug.colour, this.rugID, getTilesFromHighlighted());
+            Rug rug = new Rug(this.draggableRug.colour, this.rugID++, getTilesFromHighlighted());
             this.gameState.makePlacement(rug);
             GameRug gameRug = new GameRug(this.highlighted.getLayoutX(), this.highlighted.getLayoutY(), this.draggableRug.orientation, this.draggableRug.colour);
-            this.placedRugs.getChildren().add(gameRug);
-            this.gameRugs.add(gameRug);
-        }
-    }
 
-    private Button makeNextPhaseBtn() {
-        Button nextPhaseBtn = new Button("Next Phase (testing only)");
-        nextPhaseBtn.setOnMouseClicked(event -> {
-            nextPhase();
-            phaseText.setText(getCurrentPhaseText());
-        });
-        return nextPhaseBtn;
+            this.highlighted.setOpacity(0);
+            this.highlighted = null;
+            this.placedRugs.getChildren().add(gameRug);
+            this.draggableRug = null;
+
+            if (!gameState.isGameOver()) {
+                nextPhase();
+                gameState.nextPlayer();
+            }
+        }
     }
 
     private static class GamePane extends Pane {
@@ -392,7 +401,7 @@ public class Game extends Application {
         }
     }
 
-    private void initAllTiles() {
+    private void initTiles() {
         for (int i = 0; i < NUM_OF_ROWS; i++) {
             for (int j = 0; j < NUM_OF_COLS; j++) {
                 this.gameTiles[i][j] = new GameTile(i * TILE_SIDE, j * TILE_SIDE, i, j);
@@ -427,17 +436,14 @@ public class Game extends Application {
 
     private static class InvisibleRug extends Rectangle {
         private final GameTile[] gameTiles = new GameTile[2];
-        private final Orientation orientation;
 
         public InvisibleRug(double x, double y, GameTile[] gameTiles, Orientation orientation) {
             super(0, 0, TILE_SIDE, 2 * TILE_SIDE);
             this.gameTiles[0] = gameTiles[0];
             this.gameTiles[1] = gameTiles[1];
-            this.orientation = orientation;
 
-            this.setLayoutX(x - TILE_SIDE / 2);
-            this.setLayoutY(y - TILE_SIDE);
-            if (this.orientation == Orientation.HORIZONTAL) {
+            this.relocate(x - TILE_SIDE / 2, y - TILE_SIDE);
+            if (orientation == Orientation.HORIZONTAL) {
                 this.setRotate(90);
             }
             this.setFill(Color.WHITE);
@@ -455,8 +461,7 @@ public class Game extends Application {
         public GameRug(double x, double y, Orientation orientation, Colour colour) {
             super(0, 0, TILE_SIDE, 2 * TILE_SIDE);
 
-            this.setLayoutX(x);
-            this.setLayoutY(y);
+            this.relocate(x, y);
             if (orientation == Orientation.HORIZONTAL) {
                 this.setRotate(90);
             }
@@ -471,7 +476,7 @@ public class Game extends Application {
 
     private class DraggableRug extends GameRug {
         private Orientation orientation = Orientation.VERTICAL;
-        private Colour colour;
+        private final Colour colour;
         private double mouseX, mouseY;
 
         public DraggableRug(double x, double y, Colour colour) {
@@ -495,9 +500,11 @@ public class Game extends Application {
             });
 
             this.setOnMouseReleased(event -> {
-                InvisibleRug nearestInvisibleRug = Game.this.draggableRug.findNearestInvisibleRug();
-                this.setLayoutX(nearestInvisibleRug.getLayoutX() + TILE_RELOCATION_X + MARGIN);
-                this.setLayoutY(nearestInvisibleRug.getLayoutY() + TILE_RELOCATION_Y + MARGIN);
+                InvisibleRug nearestInvisibleRug = findNearestInvisibleRug();
+                if (nearestInvisibleRug != null) {
+                    this.setLayoutX(nearestInvisibleRug.getLayoutX() + TILE_RELOCATION_X + MARGIN);
+                    this.setLayoutY(nearestInvisibleRug.getLayoutY() + TILE_RELOCATION_Y + MARGIN);
+                }
             });
         }
 
@@ -526,11 +533,13 @@ public class Game extends Application {
                 Game.this.highlighted.setOpacity(0);
             }
             Game.this.highlighted = findNearestInvisibleRug();
-            Game.this.highlighted.setOpacity(HIGHLIGHTED_OPACITY);
+            if (Game.this.highlighted != null) {
+                Game.this.highlighted.setOpacity(HIGHLIGHTED_OPACITY);
+            }
         }
 
         public Comparator<InvisibleRug> compareByDistance() {
-            return new Comparator<InvisibleRug>() {
+            return new Comparator<>() {
                 @Override
                 public int compare(InvisibleRug rug1, InvisibleRug rug2) {
                     return Double.compare(
@@ -550,8 +559,7 @@ public class Game extends Application {
             this.row = row;
             this.col = col;
 
-            this.setLayoutX(x);
-            this.setLayoutY(y);
+            this.relocate(x, y);
             this.setFill(TILE_COLOR);
             this.setStroke(TILE_COLOR.darker());
             this.setStrokeWidth(TILE_BORDER_WIDTH);
@@ -561,7 +569,24 @@ public class Game extends Application {
     private enum Phase {
         ROTATION,
         MOVEMENT,
-        PLACEMENT
+        PLACEMENT;
+
+        public String toString() {
+            switch (this) {
+                case ROTATION -> {
+                    return "ROTATION";
+                }
+                case MOVEMENT -> {
+                    return "MOVEMENT";
+                }
+                case PLACEMENT -> {
+                    return "PLACEMENT";
+                }
+                default -> {
+                    return "";
+                }
+            }
+        }
     }
 
     private void nextPhase() {
@@ -570,21 +595,7 @@ public class Game extends Application {
             case MOVEMENT -> this.currentPhase = Phase.PLACEMENT;
             case PLACEMENT -> this.currentPhase = Phase.ROTATION;
         }
-    }
-
-    private String getCurrentPhaseText() {
-        switch (this.currentPhase) {
-            case ROTATION -> {
-                return "Current Phase: Rotation Phase";
-            }
-            case MOVEMENT -> {
-                return "Current Phase: Movement Phase";
-            }
-            case PLACEMENT -> {
-                return "Current Phase: Placement Phase";
-            }
-        }
-        return null;
+        this.phaseText.setText(this.currentPhase.toString());
     }
 
     private enum Orientation {

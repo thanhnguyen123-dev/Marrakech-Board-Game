@@ -53,7 +53,7 @@ public enum Direction {
      * Converts character to the corresponding direction
      * @param directionChar character for the direction
      * @return the corresponding direction
-     * @author u7620014 Haobo Zou
+     * @author Le Thanh Nguyen u7594144
      */
     public static Direction charToDirection(char directionChar) {
         for (Direction direction : Direction.values()) {

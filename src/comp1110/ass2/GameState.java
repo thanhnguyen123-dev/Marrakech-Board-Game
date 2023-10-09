@@ -256,7 +256,6 @@ public class GameState {
         return gameString.substring(beginIndex, beginIndex + LENGTH_OF_ASSAM_STRING);
     }
 
-
     /**
      * Obtains boardString from a given gameString
      * @param gameString string representation for game state
@@ -367,7 +366,6 @@ public class GameState {
         return 'n';
     }
 
-
     /**
      * Calculate the player score of a Player at the current state
      * @param player
@@ -434,10 +432,5 @@ public class GameState {
             }
         }
         return payment;
-
     }
-
-
-
-
 }
