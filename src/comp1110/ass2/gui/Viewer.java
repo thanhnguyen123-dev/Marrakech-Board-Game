@@ -16,7 +16,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -98,7 +97,7 @@ public class Viewer extends Application {
             Colour playerColour = player.getColour();
 
             // FrontEnd elements to represent the Player information
-            String playerColourString = Colour.colourToString(playerColour);
+            String playerColourString = playerColour.toString();
             Color textColor = Colour.getFrontEndColor(playerColour);
             Boolean playerState = gameState.isPlayerAvailable(player);
             String playerStateString = "IN";

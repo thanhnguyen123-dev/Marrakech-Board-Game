@@ -51,16 +51,16 @@ public enum Colour {
 
     /**
      * Converts a Colour enum to a string of its full name
-     * @param colour a Colour enum
      * @return full name of the colour
      * @author Le Thanh Nguyen u7594144
      */
-    public static String colourToString(Colour colour) {
-        return switch (colour) {
-            case YELLOW -> "Yellow";
-            case RED -> "Red";
-            case CYAN -> "Cyan";
-            case PURPLE -> "Purple";
+    @Override
+    public String toString() {
+        return switch (this) {
+            case YELLOW -> "YELLOW";
+            case RED -> "RED";
+            case CYAN -> "CYAN";
+            case PURPLE -> "PURPLE";
         };
     }
 
