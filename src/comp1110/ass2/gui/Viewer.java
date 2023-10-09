@@ -163,7 +163,7 @@ public class Viewer extends Application {
                     ImageView assamImageView = new ImageView(assamImage);
                     assamImageView.setLayoutX(rowPixelValue - 15);
                     assamImageView.setLayoutY(colPixelValue - 15);
-                    assamImageView.setRotate(assamAngle);
+                    assamImageView.setRotate(assamAngle + 270);
 
                     Text assamIndicator = new Text("Assam");
 

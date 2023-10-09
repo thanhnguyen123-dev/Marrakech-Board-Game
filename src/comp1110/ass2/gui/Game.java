@@ -1,6 +1,7 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.GameState;
+import comp1110.ass2.board.Direction;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Die;
@@ -30,7 +31,6 @@ import java.util.List;
 public class Game extends Application {
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;
-
     private static final double MARGIN = 30;
     private static final double BOARD_AREA_SIDE = WINDOW_HEIGHT - 2 * MARGIN;
     private static final double PLAYER_AREA_WIDTH = WINDOW_WIDTH - BOARD_AREA_SIDE - 3 * MARGIN;
@@ -43,7 +43,6 @@ public class Game extends Application {
     private static final BorderStrokeStyle GAME_PANE_BORDER_STROKE_STYLE = BorderStrokeStyle.SOLID;
     private static final CornerRadii GAME_PANE_BORDER_RADII = new CornerRadii(24);
     private static final BorderWidths GAME_PANE_BORDER_WIDTH = new BorderWidths(4);
-
     private static final int NUM_OF_ROWS = 7;
     private static final int NUM_OF_COLS = 7;
     private static final double TILE_SIDE = 64;
@@ -58,31 +57,28 @@ public class Game extends Application {
     private static final BorderStrokeStyle COLOUR_BUTTON_BORDER_STROKE_STYLE = GAME_PANE_BORDER_STROKE_STYLE;
     private static final CornerRadii COLOUR_BUTTON_BORDER_RADII = GAME_PANE_BORDER_RADII;
     private static final BorderWidths COLOUR_BUTTON_BORDER_WIDTH = new BorderWidths(8);
-
     private static final double HIGHLIGHTED_OPACITY = 1 - (Math.sqrt(5) - 1) / 2;
-
     //https://fonts.google.com/icons?selected=Material%20Symbols%20Rounded%3Anavigation%3AFILL%401%3Bwght%40400%3BGRAD%400%3Bopsz%4024
-
     private static final String ASSAM_SVG = "M480-240 222-130q-13 5-24.5 2.5T178-138q-8-8-10.5-20t2.5-25l273-615q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l273 615q5 13 2.5 25T782-138q-8 8-19.5 10.5T738-130L480-240Z";
 
     private final Pane allTiles = new Pane();
-    private final GameTile[][] gameTiles = new GameTile[NUM_OF_ROWS][NUM_OF_COLS];
     private final Pane placedRugs = new Pane();
     private final Pane invisibleRugs = new Pane();
+    private final GameTile[][] gameTiles = new GameTile[NUM_OF_ROWS][NUM_OF_COLS];
     private final ArrayList<InvisibleRug> vInvisibleRugs = new ArrayList<>();
     private final ArrayList<InvisibleRug> hInvisibleRugs = new ArrayList<>();
 
+    private int numOfPlayers;
+    private Phase currentPhase;
+    private Text phaseText;
+    private Region assam;
+    private int dieResult;
     private InvisibleRug highlighted;
     private DraggableRug draggableRug;
-
-    private int numOfPlayers;
-    private Player[] players;
-    private GameState gameState;
-    private Phase currentPhase = Phase.ROTATION;
-    private int dieResult;
     private int rugID;
 
-    private final Text phaseText = new Text(this.currentPhase.toString());
+    private Player[] players;
+    private GameState gameState;
 
     public static void main(String[] args) {
         launch(args);
@@ -159,9 +155,6 @@ public class Game extends Application {
             });
         }
 
-        //main game
-        Scene mainScene = makeMainScene();
-
         btnStart.setOnMouseClicked(event -> {
             primaryStage.setScene(numberScene);
             btnNumberConfirm.requestFocus();
@@ -201,6 +194,8 @@ public class Game extends Application {
         btnColourConfirm.setOnMouseClicked(event -> {
             this.players = tmp.toArray(new Player[0]);
             this.gameState = new GameState(this.players);
+            //main game
+            Scene mainScene = makeMainScene();
             primaryStage.setScene(mainScene);
         });
 
@@ -211,6 +206,7 @@ public class Game extends Application {
     }
 
     private Scene makeMainScene() {
+        this.currentPhase = Phase.ROTATION;
         GamePane gameArea = new GamePane(WINDOW_WIDTH, WINDOW_HEIGHT);
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
 
@@ -225,18 +221,8 @@ public class Game extends Application {
 
         initTiles();
         initInvisibleRugs();
-
-        SVGPath svg = new SVGPath();
-        svg.setContent(ASSAM_SVG);
-        Region region = new Region();
-        region.setShape(svg);
-        region.setMinSize(TILE_SIDE / 2, TILE_SIDE / 2);
-        region.setMaxSize(TILE_SIDE / 2, TILE_SIDE / 2);
-        region.setBorder(new Border(new BorderStroke(Color.LIMEGREEN.darker(), GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH)));
-        region.setBackground(new Background(new BackgroundFill(Color.LIMEGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
-        region.relocate(TILE_SIDE / 4, TILE_SIDE / 4);
-
-        tileArea.getChildren().addAll(this.allTiles, this.placedRugs, this.invisibleRugs, region);
+        initAssam();
+        tileArea.getChildren().addAll(this.allTiles, this.placedRugs, this.invisibleRugs, this.assam);
         boardArea.getChildren().add(tileArea);
 
         //player area to display stats and controls for the players, contains stats area and control area
@@ -249,6 +235,7 @@ public class Game extends Application {
         statsArea.setBorder(gamePaneBorder);
         playerArea.getChildren().add(statsArea);
 
+        this.phaseText = new Text(this.currentPhase.toString());
         this.phaseText.relocate(0, 60);
         statsArea.getChildren().add(this.phaseText);
 
@@ -304,6 +291,8 @@ public class Game extends Application {
         btnMoveAssam.setOnMouseClicked(event -> {
             controlArea.getChildren().removeAll(dieResultText, btnMoveAssam);
             controlArea.getChildren().add(btnMakePayment);
+            this.gameState.moveAssam(this.dieResult);
+            updateAssam();
         });
 
         btnMakePayment.setOnMouseClicked(event -> {
@@ -325,6 +314,11 @@ public class Game extends Application {
             }
         });
 
+        Scene scene = getScene(gameArea);
+        return scene;
+    }
+
+    private Scene getScene(GamePane gameArea) {
         Scene scene = new Scene(gameArea, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.Q || event.getCode() == KeyCode.E) {
@@ -339,6 +333,63 @@ public class Game extends Application {
             }
         });
         return scene;
+    }
+
+    private void initTiles() {
+        for (int i = 0; i < NUM_OF_ROWS; i++) {
+            for (int j = 0; j < NUM_OF_COLS; j++) {
+                this.gameTiles[i][j] = new GameTile(i * TILE_SIDE, j * TILE_SIDE, i, j);
+                this.allTiles.getChildren().add(this.gameTiles[i][j]);
+            }
+        }
+    }
+
+    private void initInvisibleRugs() {
+        for (int i = 0; i < NUM_OF_ROWS - 1; i++) {
+            for (int j = 0; j < NUM_OF_COLS; j++) {
+                GameTile[] gameTiles = new GameTile[]{
+                        this.gameTiles[i][j], this.gameTiles[i + 1][j]
+                };
+                InvisibleRug rug = new InvisibleRug(j * TILE_SIDE + TILE_SIDE / 2, i * TILE_SIDE + TILE_SIDE, gameTiles, Orientation.VERTICAL);
+                this.vInvisibleRugs.add(rug);
+                this.invisibleRugs.getChildren().add(rug);
+            }
+        }
+
+        for (int i = 0; i < NUM_OF_ROWS; i++) {
+            for (int j = 0; j < NUM_OF_COLS - 1; j++) {
+                GameTile[] gameTiles = new GameTile[]{
+                        this.gameTiles[i][j], this.gameTiles[i][j + 1]
+                };
+                InvisibleRug rug = new InvisibleRug(j * TILE_SIDE + TILE_SIDE, i * TILE_SIDE + TILE_SIDE / 2, gameTiles, Orientation.HORIZONTAL);
+                this.hInvisibleRugs.add(rug);
+                this.invisibleRugs.getChildren().add(rug);
+            }
+        }
+    }
+
+    private void initAssam() {
+        SVGPath svg = new SVGPath();
+        svg.setContent(ASSAM_SVG);
+        this.assam = new Region();
+        this.assam.setShape(svg);
+        this.assam.setMinSize(TILE_SIDE / 2, TILE_SIDE / 2);
+        this.assam.setMaxSize(TILE_SIDE / 2, TILE_SIDE / 2);
+        this.assam.setBackground(new Background(new BackgroundFill(Color.LIMEGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.assam.setBorder(new Border(new BorderStroke(Color.LIMEGREEN.darker(), GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH)));
+        updateAssam();
+    }
+
+    private void updateAssam() {
+        Tile assamTile = this.gameState.getBoard().getAssamTile();
+        int row = assamTile.getRow();
+        int col = assamTile.getCol();
+        this.assam.relocate(TILE_SIDE / 4 + col * TILE_SIDE, TILE_SIDE / 4 + row * TILE_SIDE);
+        this.assam.setRotate(getAssamDirection().getAngle());
+    }
+
+    private Direction getAssamDirection() {
+        return this.gameState.getBoard().getAssamDirection();
     }
 
     private void toggleRugOrientation() {
@@ -376,6 +427,7 @@ public class Game extends Application {
             this.setMinSize(width, height);
             this.setMaxSize(width, height);
         }
+
     }
 
     private static class GameButton extends Button {
@@ -384,10 +436,12 @@ public class Game extends Application {
             this.setMinSize(width, height);
             this.setMaxSize(width, height);
         }
+
     }
 
     private static class ColourButton extends Button {
         private final Colour colour;
+
         private final Border border;
 
         public ColourButton(Colour colour) {
@@ -401,38 +455,6 @@ public class Game extends Application {
         }
     }
 
-    private void initTiles() {
-        for (int i = 0; i < NUM_OF_ROWS; i++) {
-            for (int j = 0; j < NUM_OF_COLS; j++) {
-                this.gameTiles[i][j] = new GameTile(i * TILE_SIDE, j * TILE_SIDE, i, j);
-                this.allTiles.getChildren().add(this.gameTiles[i][j]);
-            }
-        }
-    }
-
-    private void initInvisibleRugs() {
-        for (int i = 0; i < NUM_OF_ROWS - 1; i++) {
-            for (int j = 0; j < NUM_OF_COLS; j++) {
-                GameTile[] gameTiles = new GameTile[]{
-                        this.gameTiles[i][j], this.gameTiles[i + 1][j]
-                };
-                InvisibleRug rug = new InvisibleRug(j * TILE_SIDE + TILE_SIDE / 2, i * TILE_SIDE + TILE_SIDE, gameTiles, Orientation.VERTICAL);
-                this.vInvisibleRugs.add(rug);
-                this.invisibleRugs.getChildren().add(rug);
-            }
-        }
-
-        for (int i = 0; i < NUM_OF_ROWS; i++) {
-            for (int j = 0; j < NUM_OF_COLS - 1; j++) {
-                GameTile[] gameTiles = new GameTile[]{
-                        this.gameTiles[i][j], this.gameTiles[i][j + 1]
-                };
-                InvisibleRug rug = new InvisibleRug(j * TILE_SIDE + TILE_SIDE, i * TILE_SIDE + TILE_SIDE / 2, gameTiles, Orientation.HORIZONTAL);
-                this.hInvisibleRugs.add(rug);
-                this.invisibleRugs.getChildren().add(rug);
-            }
-        }
-    }
 
     private static class InvisibleRug extends Rectangle {
         private final GameTile[] gameTiles = new GameTile[2];
@@ -496,7 +518,7 @@ public class Game extends Application {
                 this.setLayoutY(this.getLayoutY() + movementY);
                 this.mouseX = event.getSceneX();
                 this.mouseY = event.getSceneY();
-                Game.this.draggableRug.highlightNearestInvisibleRug();
+                highlightNearestInvisibleRug();
             });
 
             this.setOnMouseReleased(event -> {
@@ -529,12 +551,12 @@ public class Game extends Application {
         }
 
         private void highlightNearestInvisibleRug() {
-            if (Game.this.highlighted != null) {
-                Game.this.highlighted.setOpacity(0);
+            if (highlighted != null) {
+                highlighted.setOpacity(0);
             }
-            Game.this.highlighted = findNearestInvisibleRug();
-            if (Game.this.highlighted != null) {
-                Game.this.highlighted.setOpacity(HIGHLIGHTED_OPACITY);
+            highlighted = findNearestInvisibleRug();
+            if (highlighted != null) {
+                highlighted.setOpacity(HIGHLIGHTED_OPACITY);
             }
         }
 
