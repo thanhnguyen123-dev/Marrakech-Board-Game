@@ -1,7 +1,6 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.GameState;
-import comp1110.ass2.board.Direction;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Die;
@@ -255,14 +254,14 @@ public class Game extends Application {
 
         //buttons inside control area
         GameButton btnInitialRotation = new GameButton("Rotate Right", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
-        btnInitialRotation.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT / 2);
+        btnInitialRotation.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT / 2.0);
         GameButton btnConfirmInitialRotation = new GameButton("Confirm Rotation", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         btnConfirmInitialRotation.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
         GameButton btnRotateLeft = new GameButton("Rotate Left", BUTTON_WIDTH * 0.8, BUTTON_HEIGHT);
-        btnRotateLeft.relocate(BUTTON_WIDTH, BUTTON_HEIGHT / 2);
+        btnRotateLeft.relocate(BUTTON_WIDTH, BUTTON_HEIGHT / 2.0);
         GameButton btnRotateRight = new GameButton("Rotate Right", BUTTON_WIDTH * 0.8, BUTTON_HEIGHT);
-        btnRotateRight.relocate(BUTTON_WIDTH * 2.2, BUTTON_HEIGHT / 2);
+        btnRotateRight.relocate(BUTTON_WIDTH * 2.2, BUTTON_HEIGHT / 2.0);
         this.btnRotations = new ArrayList<>(List.of(btnRotateLeft, btnRotateRight));
         this.btnConfirmRotation = new GameButton("Confirm Rotation", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         btnConfirmRotation.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
@@ -271,16 +270,18 @@ public class Game extends Application {
         btnRollDie.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
         Text movementText = new Text();
+        movementText.relocate(BUTTON_WIDTH, BUTTON_HEIGHT);
         GameButton btnMoveAssam = new GameButton("Confirm Movement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         btnMoveAssam.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
         Text paymentText = new Text();
+        paymentText.relocate(BUTTON_WIDTH, BUTTON_HEIGHT);
+        paymentText.setWrappingWidth(300);
         GameButton btnConfirmPayment = new GameButton("Confirm", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         btnConfirmPayment.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
-        Text placementText = new Text();
         this.btnRotateRug = new GameButton("Rotate Rug", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
-        this.btnRotateRug.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT / 2);
+        this.btnRotateRug.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT / 2.0);
         this.btnConfirmPlacement = new GameButton("Confirm Placement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         this.btnConfirmPlacement.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
@@ -292,10 +293,12 @@ public class Game extends Application {
         });
 
         btnConfirmInitialRotation.setOnMouseClicked(event -> {
-            nextPhase();
-            this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
-            this.controlArea.getChildren().removeAll(btnInitialRotation, btnConfirmInitialRotation);
-            this.controlArea.getChildren().add(btnRollDie);
+            if (currentPhase == Phase.ROTATION) {
+                nextPhase();
+                this.controlArea.getChildren().removeAll(btnInitialRotation, btnConfirmInitialRotation);
+                this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
+                this.controlArea.getChildren().add(btnRollDie);
+            }
         });
 
         btnRotateLeft.setOnMouseClicked(event -> {
@@ -311,33 +314,57 @@ public class Game extends Application {
         });
 
         this.btnConfirmRotation.setOnMouseClicked(event -> {
-            nextPhase();
-            this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
-            this.controlArea.getChildren().removeAll(this.btnRotations);
-            this.controlArea.getChildren().remove(this.btnConfirmRotation);
-            this.controlArea.getChildren().add(btnRollDie);
+            if (this.currentPhase == Phase.ROTATION) {
+                nextPhase();
+                this.controlArea.getChildren().removeAll(this.btnRotations);
+                this.controlArea.getChildren().remove(this.btnConfirmRotation);
+                this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
+                this.controlArea.getChildren().add(btnRollDie);
+            }
         });
 
         btnRollDie.setOnMouseClicked(event -> {
-            this.dieResult = Die.getSide();
-            movementText.setText("Die result is " + this.dieResult + ".");
             this.controlArea.getChildren().remove(btnRollDie);
+            this.dieResult = Die.getSide();
             this.controlArea.getChildren().addAll(movementText, btnMoveAssam);
+            movementText.setText("Die result is " + this.dieResult + ". Assam will now move " + this.dieResult + " steps.");
         });
 
         btnMoveAssam.setOnMouseClicked(event -> {
             this.controlArea.getChildren().removeAll(movementText, btnMoveAssam);
-            this.controlArea.getChildren().add(btnConfirmPayment);
             this.gameState.moveAssam(this.dieResult);
             updateAssam();
+            this.controlArea.getChildren().addAll(paymentText, btnConfirmPayment);
+            if (!this.gameState.isPaymentRequired()) {
+                paymentText.setText("No payment required.");
+            } else if (this.gameState.isPaymentAffordable()) {
+                paymentText.setText("You will need to pay Player " + this.gameState.findAssamRugOwner().getColour().toString() + " " + this.gameState.getPaymentAmount() + " dirhams.");
+            } else {
+                paymentText.setText("You cannot afford to pay. You will have to give all your dirhams to Player " + this.gameState.findAssamRugOwner().getColour().toString() + ". After that, You will be removed from the game");
+            }
         });
 
         btnConfirmPayment.setOnMouseClicked(event -> {
-            nextPhase();
-            this.controlArea.getChildren().remove(btnConfirmPayment);
-            this.controlArea.getChildren().addAll(this.btnRotateRug, this.btnConfirmPlacement);
-            this.draggableRug = new DraggableRug(755, 500, this.gameState.getCurrentPlayer().getColour());
-            this.gameArea.getChildren().add(this.draggableRug);
+            if (this.currentPhase == Phase.MOVEMENT) {
+                nextPhase();
+                this.controlArea.getChildren().removeAll(paymentText, btnConfirmPayment);
+                if (!this.gameState.isPaymentRequired() || this.gameState.isPaymentAffordable()) {
+                    this.gameState.makePayment();
+                    this.draggableRug = new DraggableRug(755, 500, this.gameState.getCurrentPlayer().getColour());
+                    this.gameArea.getChildren().add(this.draggableRug);
+                    this.controlArea.getChildren().addAll(this.btnRotateRug, this.btnConfirmPlacement);
+                } else {
+                    this.gameState.makePayment();
+                    if (!gameState.isGameOver()) {
+                        this.gameState.removeCurrentPlayer();
+                        this.gameState.nextPlayer();
+                        nextPhase();
+                        this.controlArea.getChildren().addAll(this.btnRotations);
+                        this.controlArea.getChildren().add(this.btnConfirmRotation);
+                    }
+                }
+            }
+            System.out.println(this.gameState.getCurrentPlayer().getColour().toString() + ": " + this.gameState.getCurrentPlayer().getDirham());
         });
 
         btnRotateRug.setOnMouseClicked(event -> rotateRug());
@@ -449,6 +476,10 @@ public class Game extends Application {
 
     private int getAssamAngle() {
         return this.gameState.getBoard().getAssamDirection().getAngle();
+    }
+
+    private void updateStats() {
+        //FIXME
     }
 
     private static class GamePane extends Pane {
@@ -623,21 +654,13 @@ public class Game extends Application {
         MOVEMENT,
         PLACEMENT;
 
+        @Override
         public String toString() {
-            switch (this) {
-                case ROTATION -> {
-                    return "ROTATION";
-                }
-                case MOVEMENT -> {
-                    return "MOVEMENT";
-                }
-                case PLACEMENT -> {
-                    return "PLACEMENT";
-                }
-                default -> {
-                    return "";
-                }
-            }
+            return switch (this) {
+                case ROTATION -> "ROTATION";
+                case MOVEMENT -> "MOVEMENT";
+                case PLACEMENT -> "PLACEMENT";
+            };
         }
     }
 

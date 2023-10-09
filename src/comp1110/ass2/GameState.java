@@ -171,11 +171,12 @@ public class GameState {
      * @author u7620014 Haobo Zou
      */
     public void makePayment() {
-        if (isPaymentAffordable()) {
-            this.currentPlayer.pay(findAssamRugOwner(), getPaymentAmount());
-        } else {
-            this.currentPlayer.pay(findAssamRugOwner(), this.currentPlayer.getDirham());
-            removeCurrentPlayer();
+        if (isPaymentRequired()) {
+            if (isPaymentAffordable()) {
+                this.currentPlayer.pay(findAssamRugOwner(), getPaymentAmount());
+            } else {
+                this.currentPlayer.pay(findAssamRugOwner(), this.currentPlayer.getDirham());
+            }
         }
     }
 
@@ -409,7 +410,7 @@ public class GameState {
      */
     public int getPaymentAmount() {
         Set<Tile> visited = new HashSet<>();
-        return getPaymentAmount(this.board.getAssamTile(),visited);
+        return getPaymentAmount(this.board.getAssamTile(), visited);
     }
 
     /**
