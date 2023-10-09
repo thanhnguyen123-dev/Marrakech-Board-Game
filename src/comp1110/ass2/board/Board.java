@@ -184,17 +184,25 @@ public class Board {
      * @author Le Thanh Nguyen u7594144
      */
     public void rotateAssam(int rotation) {
+        if (isRotationLegal(rotation)) {
+            this.assamDirection = this.assamDirection.rotate(rotation);
+        }
+    }
+
+    /**
+     * Determines if a rotation for Assam is legal
+     * @param rotation rotation in degrees
+     * @author Le Thanh Nguyen u7594144
+     */
+    public boolean isRotationLegal(int rotation) {
         List<Integer> legalRotations = new ArrayList<>();
-        legalRotations.add(-90);
         for (Direction direction : Direction.values()) {
             int angleDirection = direction.getAngle();
             if (angleDirection != 180) {
                 legalRotations.add(angleDirection);
             }
         }
-        if (legalRotations.contains(rotation)) {
-            this.assamDirection = this.assamDirection.rotate(rotation);
-        }
+        return legalRotations.contains((rotation + 360) % 360);
     }
 
     /**

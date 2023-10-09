@@ -9,10 +9,8 @@ import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
@@ -73,9 +71,10 @@ public class Game extends Application {
 
     private GamePane gameArea;
     private GamePane controlArea;
-    private ButtonBar buttonBar;
+    private ArrayList<GameButton> btnRotations;
+    private GameButton btnConfirmRotation;
     private GameButton btnRotateRug;
-    private GameButton btnMakePlacement;
+    private GameButton btnConfirmPlacement;
 
     private int numOfPlayers;
     private Phase currentPhase;
@@ -254,70 +253,96 @@ public class Game extends Application {
         this.controlArea.relocate(0, STATS_AREA_HEIGHT + MARGIN);
         playerArea.getChildren().add(this.controlArea);
 
-        GameButton btnRotate = new GameButton("Rotate", BUTTON_WIDTH, BUTTON_HEIGHT);
-
         //buttons inside control area
-        GameButton btnRotateLeft = new GameButton("Rotate Left", BUTTON_WIDTH, BUTTON_HEIGHT);
-        GameButton btnRotateRight = new GameButton("Rotate Right", BUTTON_WIDTH, BUTTON_HEIGHT);
-        GameButton btnRotateZero = new GameButton("No Rotation", BUTTON_WIDTH, BUTTON_HEIGHT);
-        this.buttonBar = new ButtonBar();
-        this.buttonBar.getButtons().addAll(btnRotateLeft, btnRotateRight, btnRotateZero);
+        GameButton btnInitialRotation = new GameButton("Rotate Right", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+        btnInitialRotation.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT / 2);
+        GameButton btnConfirmInitialRotation = new GameButton("Confirm Rotation", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+        btnConfirmInitialRotation.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
-        GameButton btnRollDie = new GameButton("Roll Die", BUTTON_WIDTH, BUTTON_HEIGHT);
+        GameButton btnRotateLeft = new GameButton("Rotate Left", BUTTON_WIDTH * 0.8, BUTTON_HEIGHT);
+        btnRotateLeft.relocate(BUTTON_WIDTH, BUTTON_HEIGHT / 2);
+        GameButton btnRotateRight = new GameButton("Rotate Right", BUTTON_WIDTH * 0.8, BUTTON_HEIGHT);
+        btnRotateRight.relocate(BUTTON_WIDTH * 2.2, BUTTON_HEIGHT / 2);
+        this.btnRotations = new ArrayList<>(List.of(btnRotateLeft, btnRotateRight));
+        this.btnConfirmRotation = new GameButton("Confirm Rotation", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+        btnConfirmRotation.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
-        Text dieResultText = new Text();
+        GameButton btnRollDie = new GameButton("Roll Die", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+        btnRollDie.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
-        GameButton btnMoveAssam = new GameButton("Move Assam", BUTTON_WIDTH, BUTTON_HEIGHT);
+        Text movementText = new Text();
+        GameButton btnMoveAssam = new GameButton("Confirm Movement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+        btnMoveAssam.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
-        GameButton btnMakePayment = new GameButton("Make Payment", BUTTON_WIDTH, BUTTON_HEIGHT);
+        Text paymentText = new Text();
+        GameButton btnConfirmPayment = new GameButton("Confirm", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+        btnConfirmPayment.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
-        this.btnRotateRug = new GameButton("Rotate Rug", BUTTON_WIDTH, BUTTON_HEIGHT);
-
-        this.btnMakePlacement = new GameButton("Make Placement", BUTTON_WIDTH, BUTTON_HEIGHT);
-        this.btnMakePlacement.relocate(0, BUTTON_HEIGHT);
+        Text placementText = new Text();
+        this.btnRotateRug = new GameButton("Rotate Rug", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+        this.btnRotateRug.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT / 2);
+        this.btnConfirmPlacement = new GameButton("Confirm Placement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+        this.btnConfirmPlacement.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
         //allows player to set Assam's initial direction
-        this.controlArea.getChildren().add(btnRotate);
+        this.controlArea.getChildren().addAll(btnInitialRotation, btnConfirmInitialRotation);
 
-        btnRotate.setOnMouseClicked(event -> {
+        btnInitialRotation.setOnMouseClicked(event -> {
+            this.assam.setRotate(this.assam.getRotate() + 90);
+        });
+
+        btnConfirmInitialRotation.setOnMouseClicked(event -> {
             nextPhase();
-            this.controlArea.getChildren().remove(btnRotate);
+            this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
+            this.controlArea.getChildren().removeAll(btnInitialRotation, btnConfirmInitialRotation);
             this.controlArea.getChildren().add(btnRollDie);
         });
 
-        for (Node button : this.buttonBar.getButtons()) {
-            button.setOnMouseClicked(event -> {
-                nextPhase();
-                this.controlArea.getChildren().remove(this.buttonBar);
-                this.controlArea.getChildren().add(btnRollDie);
-            });
-        }
+        btnRotateLeft.setOnMouseClicked(event -> {
+            if (this.gameState.getBoard().isRotationLegal((int) this.assam.getRotate() - getAssamAngle() - 90)) {
+                this.assam.setRotate(this.assam.getRotate() - 90);
+            }
+        });
+
+        btnRotateRight.setOnMouseClicked(event -> {
+            if (this.gameState.getBoard().isRotationLegal((int) this.assam.getRotate() - getAssamAngle() + 90)) {
+                this.assam.setRotate(this.assam.getRotate() + 90);
+            }
+        });
+
+        this.btnConfirmRotation.setOnMouseClicked(event -> {
+            nextPhase();
+            this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
+            this.controlArea.getChildren().removeAll(this.btnRotations);
+            this.controlArea.getChildren().remove(this.btnConfirmRotation);
+            this.controlArea.getChildren().add(btnRollDie);
+        });
 
         btnRollDie.setOnMouseClicked(event -> {
             this.dieResult = Die.getSide();
-            dieResultText.setText("Die result is " + this.dieResult + ".");
+            movementText.setText("Die result is " + this.dieResult + ".");
             this.controlArea.getChildren().remove(btnRollDie);
-            this.controlArea.getChildren().addAll(dieResultText, btnMoveAssam);
+            this.controlArea.getChildren().addAll(movementText, btnMoveAssam);
         });
 
         btnMoveAssam.setOnMouseClicked(event -> {
-            this.controlArea.getChildren().removeAll(dieResultText, btnMoveAssam);
-            this.controlArea.getChildren().add(btnMakePayment);
+            this.controlArea.getChildren().removeAll(movementText, btnMoveAssam);
+            this.controlArea.getChildren().add(btnConfirmPayment);
             this.gameState.moveAssam(this.dieResult);
             updateAssam();
         });
 
-        btnMakePayment.setOnMouseClicked(event -> {
+        btnConfirmPayment.setOnMouseClicked(event -> {
             nextPhase();
-            this.controlArea.getChildren().remove(btnMakePayment);
-            this.controlArea.getChildren().addAll(this.btnRotateRug, this.btnMakePlacement);
-            this.draggableRug = new DraggableRug(750, 500, this.gameState.getCurrentPlayer().getColour());
+            this.controlArea.getChildren().remove(btnConfirmPayment);
+            this.controlArea.getChildren().addAll(this.btnRotateRug, this.btnConfirmPlacement);
+            this.draggableRug = new DraggableRug(755, 500, this.gameState.getCurrentPlayer().getColour());
             this.gameArea.getChildren().add(this.draggableRug);
         });
 
         btnRotateRug.setOnMouseClicked(event -> rotateRug());
 
-        btnMakePlacement.setOnMouseClicked(event -> makePlacement());
+        btnConfirmPlacement.setOnMouseClicked(event -> makePlacement());
 
         Scene scene = new Scene(gameArea, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.setOnKeyPressed(event -> {
@@ -348,7 +373,7 @@ public class Game extends Application {
 
     private void makePlacement() {
         if (this.highlighted != null) {
-            this.controlArea.getChildren().removeAll(this.btnRotateRug, this.btnMakePlacement);
+            this.controlArea.getChildren().removeAll(this.btnRotateRug, this.btnConfirmPlacement);
             this.gameArea.getChildren().remove(this.draggableRug);
 
             Rug rug = new Rug(this.draggableRug.colour, this.rugID++, getTilesFromHighlighted());
@@ -363,7 +388,8 @@ public class Game extends Application {
             if (!gameState.isGameOver()) {
                 nextPhase();
                 gameState.nextPlayer();
-                this.controlArea.getChildren().add(this.buttonBar);
+                this.controlArea.getChildren().addAll(this.btnRotations);
+                this.controlArea.getChildren().add(this.btnConfirmRotation);
             }
         }
     }
@@ -418,11 +444,11 @@ public class Game extends Application {
         int row = assamTile.getRow();
         int col = assamTile.getCol();
         this.assam.relocate(ASSAM_RELOCATION + col * TILE_SIDE, ASSAM_RELOCATION + row * TILE_SIDE);
-        this.assam.setRotate(getAssamDirection().getAngle());
+        this.assam.setRotate(getAssamAngle());
     }
 
-    private Direction getAssamDirection() {
-        return this.gameState.getBoard().getAssamDirection();
+    private int getAssamAngle() {
+        return this.gameState.getBoard().getAssamDirection().getAngle();
     }
 
     private static class GamePane extends Pane {
