@@ -321,7 +321,7 @@ public class Game extends Application {
         Text paymentText = new Text();
         paymentText.relocate(BUTTON_WIDTH, BUTTON_HEIGHT);
         paymentText.setWrappingWidth(300);
-        GameButton btnConfirmPayment = new GameButton("Confirm", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+        GameButton btnConfirmPayment = new GameButton("Proceed", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         btnConfirmPayment.relocate(BUTTON_WIDTH * 1.4, BUTTON_HEIGHT * 2);
 
         this.btnRotateRug = new GameButton("Rotate Rug", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
