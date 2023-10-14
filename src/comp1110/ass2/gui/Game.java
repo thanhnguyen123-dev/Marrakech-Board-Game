@@ -9,6 +9,8 @@ import comp1110.ass2.player.Rug;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
@@ -75,7 +77,10 @@ public class Game extends Application {
     private GameButton btnRotateRug;
     private GameButton btnConfirmPlacement;
 
+    // number of human players
     private int numOfPlayers;
+    // number of computer players
+    private int numOfComputerPlayers;
     private Phase currentPhase;
     private Text phaseText;
     private Region assam;
@@ -84,7 +89,10 @@ public class Game extends Application {
     private DraggableRug draggableRug;
     private int rugID;
 
+    // human player
     private Player[] players;
+    // computer player
+    private Player[] computerPlayers;
     private GameState gameState;
 
     public static void main(String[] args) {
@@ -111,9 +119,15 @@ public class Game extends Application {
         ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.setMinWidth(BUTTON_WIDTH);
         choiceBox.setMaxWidth(BUTTON_WIDTH);
-        choiceBox.getItems().addAll(2, 3, 4);
+        choiceBox.getItems().addAll(1, 2, 3, 4);
         choiceBox.setValue(2);
-        choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 320);
+        choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0-200, 320);
+        ChoiceBox<Integer> choiceComputerBox = new ChoiceBox<>();
+        choiceComputerBox.setMinWidth(BUTTON_WIDTH);
+        choiceComputerBox.setMaxWidth(BUTTON_WIDTH);
+        choiceComputerBox.getItems().addAll(0, 1, 2, 3, 4);
+        choiceComputerBox.setValue(2);
+        choiceComputerBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0+200, 320);
         //Back and Confirm buttons
         GameButton btnNumberBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnNumberBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
@@ -121,7 +135,7 @@ public class Game extends Application {
         btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
         btnNumberConfirm.requestFocus();
 
-        numberPane.getChildren().addAll(choiceBox, btnNumberBack, btnNumberConfirm);
+        numberPane.getChildren().addAll(choiceBox,choiceComputerBox, btnNumberBack, btnNumberConfirm);
 
         //players choose their colours
         Pane colourPane = new Pane();
@@ -149,15 +163,21 @@ public class Game extends Application {
 
         //keep a temporary list of players
         ArrayList<Player> tmp = new ArrayList<>();
+        ArrayList<Player> tmpComputer = new ArrayList<>();
         for (ColourButton colourButton : colourButtons) {
             colourButton.setOnMouseClicked(event -> {
                 tmp.add(new Player(colourButton.colour));
                 colourButton.setBorder(colourButton.border);
                 colourButton.setDisable(true);
                 if (tmp.size() == this.numOfPlayers) {
+                    // 当已选好玩家数量的颜色之后，将其他的颜色禁选
                     colourButtons.forEach(b -> b.setDisable(true));
                     btnColourConfirm.setDisable(false);
                     btnColourConfirm.requestFocus();
+                }
+                if (this.numOfComputerPlayers>0){
+                    // Existing computer player
+
                 }
             });
         }
@@ -169,16 +189,38 @@ public class Game extends Application {
 
         btnNumberBack.setOnMouseClicked(event -> {
             this.numOfPlayers = 0;
+            this.numOfComputerPlayers=0;
             choiceBox.setValue(2);
             primaryStage.setScene(titleScene);
         });
 
         btnNumberConfirm.setOnMouseClicked(event -> {
             this.numOfPlayers = choiceBox.getValue();
-            primaryStage.setScene(colourScene);
-            btnColourReset.requestFocus();
+            this.numOfComputerPlayers=choiceComputerBox.getValue();
+            if (this.numOfPlayers+numOfComputerPlayers>4){
+                // Create a dialog box
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Warning!");
+                alert.setHeaderText("Too many players!");
+                alert.setContentText("The total number of players and computer players \ncannot exceed 4!");
+                // Displays the dialog box and waits for the user to close it
+                alert.showAndWait();
+            } else if (this.numOfPlayers==1 && this.numOfComputerPlayers==0) {
+                // Create a dialog box
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Warning!");
+                alert.setHeaderText("Too few players!");
+                alert.setContentText("You should choose at least two players");
+                // Displays the dialog box and waits for the user to close it
+                alert.showAndWait();
+            } else {
+                primaryStage.setScene(colourScene);
+                btnColourReset.requestFocus();
+            }
+
         });
 
+        // Back to main screen
         btnColourBack.setOnMouseClicked(event -> {
             tmp.clear();
             btnColourConfirm.setDisable(true);
@@ -189,6 +231,7 @@ public class Game extends Application {
             primaryStage.setScene(numberScene);
         });
 
+        // Reset color
         btnColourReset.setOnMouseClicked(event -> {
             tmp.clear();
             btnColourConfirm.setDisable(true);
@@ -200,6 +243,7 @@ public class Game extends Application {
 
         btnColourConfirm.setOnMouseClicked(event -> {
             this.players = tmp.toArray(new Player[0]);
+            this.computerPlayers=tmpComputer.toArray(new Player[0]);
             this.gameState = new GameState(this.players);
             //main game
             Scene mainScene = makeMainScene();
