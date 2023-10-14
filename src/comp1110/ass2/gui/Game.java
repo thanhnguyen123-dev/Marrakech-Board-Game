@@ -170,7 +170,7 @@ public class Game extends Application {
                 colourButton.setBorder(colourButton.border);
                 colourButton.setDisable(true);
                 if (tmp.size() == this.numOfPlayers) {
-                    // 当已选好玩家数量的颜色之后，将其他的颜色禁选
+                    // When the color for the number of players has been selected, disable the other colors.
                     colourButtons.forEach(b -> b.setDisable(true));
                     btnColourConfirm.setDisable(false);
                     btnColourConfirm.requestFocus();
