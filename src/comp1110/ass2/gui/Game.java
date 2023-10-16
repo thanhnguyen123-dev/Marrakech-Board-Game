@@ -89,6 +89,10 @@ public class Game extends Application {
     private InvisibleRug highlighted;
     private DraggableRug draggableRug;
     private int rugID;
+    //Keep a temporary list of players
+    ArrayList<Player> tmp = new ArrayList<>();
+    //Keep a temporary list of computer players
+    ArrayList<Player> tmpComputer = new ArrayList<>();
 
     // human player
     private Player[] players;
@@ -176,11 +180,7 @@ public class Game extends Application {
         // Add all children of colourPane
         colourPane.getChildren().addAll(btnCyan, btnYellow, btnRed, btnPurple, btnColourBack, btnColourReset, btnColourConfirm);
 
-
-
-        //Keep a temporary list of players
-        ArrayList<Player> tmp = new ArrayList<>();
-        ArrayList<Player> tmpComputer = new ArrayList<>();
+        // Add colour to players
         ArrayList<ColourButton> humanColourButtons=new ArrayList<>();
         for (ColourButton colourButton : colourButtons) {
             colourButton.setOnMouseClicked(event -> {
@@ -323,21 +323,51 @@ public class Game extends Application {
         tileArea.getChildren().addAll(this.allTiles, this.placedRugs, this.invisibleRugs, this.assam);
         boardArea.getChildren().add(tileArea);
 
-        //player area to display stats and controls for the players, contains stats area and control area
+        // Display area to display statements and controls for the players, contains statements area and control area
         final GamePane playerArea = new GamePane(PLAYER_AREA_WIDTH, PLAYER_AREA_HEIGHT);
         playerArea.relocate(WINDOW_HEIGHT, MARGIN);
         this.gameArea.getChildren().add(playerArea);
 
-        //stats area
+        // Statement area, include game statement and players statement
         final GamePane statsArea = new GamePane(STATS_AREA_WIDTH, STATS_AREA_HEIGHT);
         statsArea.setBorder(gamePaneBorder);
         playerArea.getChildren().add(statsArea);
-
-        this.phaseText = new Text(this.currentPhase.toString());
-        this.phaseText.relocate(0, 60);
+        // Display game statement
+        this.phaseText = new Text("Current phase of game: "+this.currentPhase.toString());
+        this.phaseText.setFont(new Font(20));
+        this.phaseText.relocate(30, 10);
         statsArea.getChildren().add(this.phaseText);
 
-        //control area
+        // Display players statement
+//        final GamePane playerStatArea = new GamePane(STATS_AREA_WIDTH,STATS_AREA_HEIGHT-50);
+        final FlowPane playerStatArea=new FlowPane();
+        playerStatArea.setPrefSize(STATS_AREA_WIDTH,STATS_AREA_HEIGHT-50);
+        playerStatArea.relocate(30, 50);
+        playerStatArea.setHgap(10);
+        playerStatArea.setVgap(10);
+        for (int i=0; i<this.numOfPlayers; i++){
+            Text colour=new Text(tmp.get(i).getColour().toString());
+            Text dirham=new Text("Dirham: "+Integer.toString(tmp.get(i).getDirham()));
+            Text numOfUnplacedRugs=new Text("Number of unplaced rugs: "+Integer.toString(tmp.get(i).getNumOfUnplacedRugs()));
+            playerStatArea.getChildren().addAll(colour,dirham,numOfUnplacedRugs);
+        }
+        for (int i=0; i<this.numOfComputerPlayers; i++){
+            Text colour=new Text(tmpComputer.get(i).getColour().toString());
+            Text dirham=new Text("Dirham: "+Integer.toString(tmpComputer.get(i).getDirham()));
+            Text numOfUnplacedRugs=new Text("Number of unplaced rugs: "+Integer.toString(tmpComputer.get(i).getNumOfUnplacedRugs()));
+            playerStatArea.getChildren().addAll(colour,dirham,numOfUnplacedRugs);
+        }
+
+//        final GamePane eachPlayerStatArea = new GamePane((STATS_AREA_WIDTH-10)/2,(STATS_AREA_HEIGHT-60)/2)
+
+
+//        playerStatArea.setBorder(gamePaneBorder);
+//        playerStatArea.setStyle("-fx-background-color: #FF5733;");
+        statsArea.getChildren().add(playerStatArea);
+
+
+
+        // control area
         this.controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
         this.controlArea.setBorder(gamePaneBorder);
         this.controlArea.relocate(0, STATS_AREA_HEIGHT + MARGIN);
