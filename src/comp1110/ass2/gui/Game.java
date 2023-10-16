@@ -8,6 +8,7 @@ import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -101,15 +102,16 @@ public class Game extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //title screen
-        Pane titlePane = new Pane();
+        // Home page, title screen
+        VBox titlePane = new VBox();
         Scene titleScene = new Scene(titlePane, WINDOW_WIDTH, WINDOW_HEIGHT);
-        Text title = new Text("Marrakech");
-        title.relocate(WINDOW_WIDTH / 2.0 - 135, 240);
+        Text title = new Text("Play Marrakech!");
         title.setFont(new Font("", 60));
         GameButton btnStart = new GameButton("Start", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnStart.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
-
+        // Make two elements center vertical
+        titlePane.setAlignment(Pos.CENTER);
+        titlePane.setSpacing(20);
+        // Add all children of titlePane
         titlePane.getChildren().addAll(title, btnStart);
 
         //choose number of players
