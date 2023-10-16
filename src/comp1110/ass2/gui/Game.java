@@ -146,12 +146,10 @@ public class Game extends Application {
         // Add all children of numberPane
         numberPane.getChildren().addAll(choiceBox,choiceComputerBox,humanPlayer,computerPlayer, btnNumberBack, btnNumberConfirm);
 
-        numberPane.getChildren().addAll(choiceBox,choiceComputerBox, btnNumberBack, btnNumberConfirm);
-
-        //players choose their colours
+        // Players choose their colours
         Pane colourPane = new Pane();
         Scene colourScene = new Scene(colourPane, WINDOW_WIDTH, WINDOW_HEIGHT);
-        //buttons for different colours
+        // Buttons for different colours
         ColourButton btnCyan = new ColourButton(Colour.CYAN);
         btnCyan.relocate(270, 180);
         ColourButton btnYellow = new ColourButton(Colour.YELLOW);
@@ -169,35 +167,47 @@ public class Game extends Application {
         GameButton btnColourConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnColourConfirm.relocate(WINDOW_WIDTH / 2.0 + BUTTON_WIDTH * 0.5, 420);
         btnColourConfirm.setDisable(true);
-
+        // Add all children of colourPane
         colourPane.getChildren().addAll(btnCyan, btnYellow, btnRed, btnPurple, btnColourBack, btnColourReset, btnColourConfirm);
 
-        //keep a temporary list of players
+        //Keep a temporary list of players
         ArrayList<Player> tmp = new ArrayList<>();
         ArrayList<Player> tmpComputer = new ArrayList<>();
+        ArrayList<ColourButton> humanColourButtons=new ArrayList<>();
         for (ColourButton colourButton : colourButtons) {
             colourButton.setOnMouseClicked(event -> {
+                // Add selected colour to human player
                 tmp.add(new Player(colourButton.colour));
                 colourButton.setBorder(colourButton.border);
                 colourButton.setDisable(true);
+                humanColourButtons.add(colourButton);
                 if (tmp.size() == this.numOfPlayers) {
                     // When the color for the number of players has been selected, disable the other colors.
                     colourButtons.forEach(b -> b.setDisable(true));
+                    // Clone colourButtons
+                    ArrayList<ColourButton> tmpColourButtons=new ArrayList<>(colourButtons);
+                    tmpColourButtons.removeAll(humanColourButtons);
+                    // Once the human player has finished selecting, then they can click Confirm
                     btnColourConfirm.setDisable(false);
                     btnColourConfirm.requestFocus();
-                }
-                if (this.numOfComputerPlayers>0){
                     // Existing computer player
-
+                    if (this.numOfComputerPlayers>0){
+                        // Assign the remaining colours to the computer players
+                        for (int i=0; i<numOfComputerPlayers; i++){
+                            tmpComputer.add(new Player(tmpColourButtons.get(i).colour));
+                        }
+                    }
                 }
             });
         }
 
+        // Start button on the homepage
         btnStart.setOnMouseClicked(event -> {
             primaryStage.setScene(numberScene);
             btnNumberConfirm.requestFocus();
         });
 
+        // Back button on choose player number scene
         btnNumberBack.setOnMouseClicked(event -> {
             this.numOfPlayers = 0;
             this.numOfComputerPlayers=0;
@@ -205,9 +215,11 @@ public class Game extends Application {
             primaryStage.setScene(titleScene);
         });
 
+        // Confirm button on choose player number scene
         btnNumberConfirm.setOnMouseClicked(event -> {
             this.numOfPlayers = choiceBox.getValue();
             this.numOfComputerPlayers=choiceComputerBox.getValue();
+            // Total number of human player + computer players cannot exceed 4
             if (this.numOfPlayers+numOfComputerPlayers>4){
                 // Create a dialog box
                 Alert alert = new Alert(AlertType.WARNING);
@@ -216,7 +228,9 @@ public class Game extends Application {
                 alert.setContentText("The total number of players and computer players \ncannot exceed 4!");
                 // Displays the dialog box and waits for the user to close it
                 alert.showAndWait();
-            } else if (this.numOfPlayers==1 && this.numOfComputerPlayers==0) {
+            }
+            // If there is no computer player, human players should at least 2
+            else if (this.numOfPlayers==1 && this.numOfComputerPlayers==0) {
                 // Create a dialog box
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Warning!");
@@ -231,7 +245,7 @@ public class Game extends Application {
 
         });
 
-        // Back to main screen
+        // Click back button on choose colour scene
         btnColourBack.setOnMouseClicked(event -> {
             tmp.clear();
             btnColourConfirm.setDisable(true);
@@ -242,9 +256,10 @@ public class Game extends Application {
             primaryStage.setScene(numberScene);
         });
 
-        // Reset color
+        // Reset color on choose colour scene
         btnColourReset.setOnMouseClicked(event -> {
             tmp.clear();
+            tmpComputer.clear();
             btnColourConfirm.setDisable(true);
             colourButtons.forEach(b -> {
                 b.setDisable(false);
