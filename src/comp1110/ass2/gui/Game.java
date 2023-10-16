@@ -114,28 +114,37 @@ public class Game extends Application {
         // Add all children of titlePane
         titlePane.getChildren().addAll(title, btnStart);
 
-        //choose number of players
+        // Choose number of players
         Pane numberPane = new Pane();
         Scene numberScene = new Scene(numberPane, WINDOW_WIDTH, WINDOW_HEIGHT);
-        //choice box to choose the number of players
+        // Choice box to choose the number of human players
+        Text humanPlayer=new Text("Choose number of human player");
+        humanPlayer.setFont(new Font(18));
+        humanPlayer.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0-300, 280);
         ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.setMinWidth(BUTTON_WIDTH);
         choiceBox.setMaxWidth(BUTTON_WIDTH);
         choiceBox.getItems().addAll(1, 2, 3, 4);
         choiceBox.setValue(2);
-        choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0-200, 320);
+        choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0-300, 320);
+        // Choice box to choose the number of computer players
+        Text computerPlayer=new Text("Choose number of computer player");
+        computerPlayer.setFont(new Font(18));
+        computerPlayer.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0+300, 280);
         ChoiceBox<Integer> choiceComputerBox = new ChoiceBox<>();
         choiceComputerBox.setMinWidth(BUTTON_WIDTH);
         choiceComputerBox.setMaxWidth(BUTTON_WIDTH);
         choiceComputerBox.getItems().addAll(0, 1, 2, 3, 4);
         choiceComputerBox.setValue(2);
-        choiceComputerBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0+200, 320);
+        choiceComputerBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0+300, 320);
         //Back and Confirm buttons
         GameButton btnNumberBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnNumberBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         GameButton btnNumberConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
+        btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 400);
         btnNumberConfirm.requestFocus();
+        // Add all children of numberPane
+        numberPane.getChildren().addAll(choiceBox,choiceComputerBox,humanPlayer,computerPlayer, btnNumberBack, btnNumberConfirm);
 
         numberPane.getChildren().addAll(choiceBox,choiceComputerBox, btnNumberBack, btnNumberConfirm);
 
