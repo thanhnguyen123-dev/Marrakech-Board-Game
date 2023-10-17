@@ -7,6 +7,7 @@ public class Player {
     private int dirham;
     private int numOfUnplacedRugs;
     private final Colour colour;
+    private boolean isComputer;
 
     /**
      * Constructor: creates an instance of the Player class
@@ -17,6 +18,7 @@ public class Player {
         this.dirham = 30;
         this.numOfUnplacedRugs = 15;
         this.colour = colour;
+        this.isComputer=false;
     }
 
     /**
@@ -44,6 +46,16 @@ public class Player {
      */
     public Colour getColour() {
         return this.colour;
+    }
+
+    public boolean isComputer(){
+        return isComputer;
+    }
+
+    public void setIsComputer(){
+        if (!this.isComputer){
+            this.isComputer=true;
+        }
     }
 
     /**
