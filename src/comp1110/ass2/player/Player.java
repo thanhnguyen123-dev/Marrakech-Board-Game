@@ -18,6 +18,7 @@ public class Player {
         this.dirham = 30;
         this.numOfUnplacedRugs = 15;
         this.colour = colour;
+        // Default is human player
         this.isComputer=false;
     }
 
@@ -48,10 +49,17 @@ public class Player {
         return this.colour;
     }
 
+    /**
+     * getter method for isComputer
+     * @return True if is a computer player, false if is a human player
+     */
     public boolean isComputer(){
         return isComputer;
     }
 
+    /**
+     * set isComputer attribute of player
+     */
     public void setIsComputer(){
         if (!this.isComputer){
             this.isComputer=true;

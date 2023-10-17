@@ -13,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -93,6 +95,43 @@ public class Game extends Application {
     //Keep a temporary list of computer players
     ArrayList<Player> tmpComputer = new ArrayList<>();
     VBox eachPlayerStatArea = new VBox();
+    HBox computerPlayerControl=new HBox();
+    // simulate mouse click
+    MouseEvent clickEvent = new MouseEvent(
+            MouseEvent.MOUSE_CLICKED,
+            0, 0, 0, 0,
+            MouseButton.PRIMARY, 1,
+            true, true, true, true,
+            true, true, true, true,
+            true, true, null
+    );
+    MouseEvent pressEvent = new MouseEvent(
+            MouseEvent.MOUSE_PRESSED,
+            0, 0, 0, 0,
+            MouseButton.PRIMARY, 1,
+            true, true, true, true,
+            true, true, true, true,
+            true, true, null
+    );
+    MouseEvent dragEvent = new MouseEvent(
+            MouseEvent.MOUSE_DRAGGED,
+            100, 100, 100, 100,
+            MouseButton.PRIMARY, 1,
+            true, true, true, true,
+            true, true, true, true,
+            true, true, null
+    );
+    MouseEvent releaseEvent = new MouseEvent(
+            MouseEvent.MOUSE_RELEASED,
+            100, 100, 100, 100,
+            MouseButton.PRIMARY, 1,
+            true, true, true, true,
+            true, true, true, true,
+            true, true, null
+    );
+    GameButton btnRollDie = new GameButton("Roll Die", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+    GameButton btnMoveAssam = new GameButton("Confirm Movement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+    GameButton btnConfirmPayment = new GameButton("Proceed", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
 
     // all players, including human and computer players
     private Player[] players;
@@ -366,18 +405,15 @@ public class Game extends Application {
         this.btnConfirmRotation = new GameButton("Confirm Rotation", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         btnConfirmRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
-        GameButton btnRollDie = new GameButton("Roll Die", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         btnRollDie.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
         Text movementText = new Text();
         movementText.relocate(BUTTON_WIDTH, BUTTON_HEIGHT);
-        GameButton btnMoveAssam = new GameButton("Confirm Movement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         btnMoveAssam.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
         Text paymentText = new Text();
         paymentText.relocate(BUTTON_WIDTH, BUTTON_HEIGHT);
         paymentText.setWrappingWidth(300);
-        GameButton btnConfirmPayment = new GameButton("Proceed", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         btnConfirmPayment.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
         this.btnRotateRug = new GameButton("Rotate Rug", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
@@ -465,8 +501,8 @@ public class Game extends Application {
                         this.gameState.removeCurrentPlayer();
                         this.gameState.nextPlayer();
                         nextPhase();
-                        this.controlArea.getChildren().addAll(this.btnRotations);
-                        this.controlArea.getChildren().add(this.btnConfirmRotation);
+                        // computer player and human player act
+                        simulatePlayerAct();
                     }
                 }
                 // update players statement
@@ -511,7 +547,6 @@ public class Game extends Application {
     }
 
     private void makePlacement() {
-        System.out.println(this.gameState.getCurrentPlayer().isComputer());
         if (this.highlighted != null) {
             this.controlArea.getChildren().removeAll(this.btnRotateRug, this.btnConfirmPlacement);
             this.gameArea.getChildren().remove(this.draggableRug);
@@ -528,11 +563,36 @@ public class Game extends Application {
             if (!gameState.isGameOver()) {
                 nextPhase();
                 gameState.nextPlayer();
-                this.controlArea.getChildren().addAll(this.btnRotations);
-                this.controlArea.getChildren().add(this.btnConfirmRotation);
+                // computer player and human player act
+                simulatePlayerAct();
                 // update players statement
                 updatePlayerStatement();
             }
+        }
+    }
+
+    private void simulatePlayerAct(){
+        if (gameState.getCurrentPlayer().isComputer()){
+            // computer player
+            this.controlArea.getChildren().addAll(this.btnRotations);
+            this.controlArea.getChildren().add(this.btnConfirmRotation);
+            this.btnRotations.forEach(e->e.setDisable(true));
+            this.btnConfirmRotation.setDisable(true);
+            this.btnConfirmRotation.fireEvent(clickEvent);
+            this.btnRollDie.fireEvent(clickEvent);
+            this.btnMoveAssam.fireEvent(clickEvent);
+            this.btnConfirmPayment.fireEvent(clickEvent);
+            this.draggableRug.fireEvent(pressEvent);
+            this.draggableRug.fireEvent(dragEvent);
+            this.draggableRug.fireEvent(releaseEvent);
+            this.btnConfirmPlacement.fireEvent(clickEvent);
+        }
+        else {
+            // human player
+            this.controlArea.getChildren().addAll(this.btnRotations);
+            this.controlArea.getChildren().add(this.btnConfirmRotation);
+            this.btnRotations.forEach(e->e.setDisable(false));
+            this.btnConfirmRotation.setDisable(false);
         }
     }
 
