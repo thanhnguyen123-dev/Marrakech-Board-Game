@@ -162,10 +162,12 @@ public class Game extends Application {
         // Choose number of players
         Pane numberPane = new Pane();
         Scene numberScene = new Scene(numberPane, WINDOW_WIDTH, WINDOW_HEIGHT);
+
         // Choice box to choose the number of human players
-        Text humanPlayer = new Text("Please choose the number of players");
-        humanPlayer.setFont(new Font(18));
-        humanPlayer.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0 - 300, 280);
+        Text numberText = new Text("Please choose the number of players");
+        numberText.setFont(new Font(18));
+        numberText.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0 - 300, 280);
+
         ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.setMinWidth(BUTTON_WIDTH);
         choiceBox.setMaxWidth(BUTTON_WIDTH);
@@ -173,13 +175,15 @@ public class Game extends Application {
         // The default number for human players is 2
         choiceBox.setValue(2);
         choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 320);
+
         //Back and Confirm buttons
         GameButton btnNumberBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnNumberBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         this.btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
         this.btnNumberConfirm.requestFocus();
+
         // Add all children of numberPane
-        numberPane.getChildren().addAll(choiceBox, humanPlayer, btnNumberBack, this.btnNumberConfirm);
+        numberPane.getChildren().addAll(choiceBox, numberText, btnNumberBack, this.btnNumberConfirm);
 
         // Players choose their colours
         Pane colourPane = new Pane();
@@ -197,7 +201,6 @@ public class Game extends Application {
 
         colourPane.getChildren().addAll(this.playerSelectors);
         colourPane.getChildren().addAll(btnColourBack, btnColourReset, btnColourConfirm);
-
 
         // Start button on the homepage
         btnStart.setOnMouseClicked(event -> {
@@ -234,14 +237,14 @@ public class Game extends Application {
         // Reset color on choose colour scene
         btnColourReset.setOnMouseClicked(event -> {
             this.tmp.clear();
-            btnColourConfirm.setDisable(true);
+            this.btnColourConfirm.setDisable(true);
             colourPane.getChildren().removeAll(this.playerSelectors);
             this.playerSelectors = makeNewPlayerSelectors();
             colourPane.getChildren().addAll(this.playerSelectors);
         });
 
         // Confirm selected colour on choose colour scene
-        btnColourConfirm.setOnMouseClicked(event -> {
+        this.btnColourConfirm.setOnMouseClicked(event -> {
             this.players = this.tmp.toArray(new Player[0]);
             this.gameState = new GameState(this.players);
             //main game
