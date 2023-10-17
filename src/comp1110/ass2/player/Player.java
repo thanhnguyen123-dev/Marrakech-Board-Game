@@ -8,6 +8,7 @@ public class Player {
     private int numOfUnplacedRugs;
     private final Colour colour;
     private boolean isComputer;
+    private Strategy strategy;
 
     /**
      * Constructor: creates an instance of the Player class
@@ -19,7 +20,8 @@ public class Player {
         this.numOfUnplacedRugs = 15;
         this.colour = colour;
         // Default is human player
-        this.isComputer=false;
+        this.isComputer = false;
+        this.strategy = null;
     }
 
     /**
@@ -53,17 +55,23 @@ public class Player {
      * getter method for isComputer
      * @return True if is a computer player, false if is a human player
      */
-    public boolean isComputer(){
-        return isComputer;
+    public boolean isComputer() {
+        return this.isComputer;
     }
 
     /**
      * set isComputer attribute of player
      */
-    public void setIsComputer(){
-        if (!this.isComputer){
-            this.isComputer=true;
-        }
+    public void setIsComputer(boolean isComputer) {
+        this.isComputer = isComputer;
+    }
+
+    public Strategy getStrategy() {
+        return this.strategy;
+    }
+
+    public void setStrategy(Strategy strategy) {
+        this.strategy = strategy;
     }
 
     /**
@@ -106,5 +114,10 @@ public class Player {
      */
     public String generatePlayerString() {
         return "P" + this.colour.getColourChar() + String.format("%03d", this.dirham) + String.format("%02d", this.numOfUnplacedRugs);
+    }
+
+    public enum Strategy {
+        RANDOM,
+        INTELLIGENT
     }
 }

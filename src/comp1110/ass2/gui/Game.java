@@ -5,13 +5,13 @@ import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.player.Die;
 import comp1110.ass2.player.Player;
+import comp1110.ass2.player.Player.Strategy;
 import comp1110.ass2.player.Rug;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -74,15 +74,11 @@ public class Game extends Application {
 
     private GamePane gameArea;
     private GamePane controlArea;
-    private ArrayList<GameButton> btnRotations;
-    private GameButton btnConfirmRotation;
-    private GameButton btnRotateRug;
-    private GameButton btnConfirmPlacement;
 
-    // number of human players
+
+    // number of human and computer players
     private int numOfPlayers;
-    // number of computer players
-    private int numOfComputerPlayers;
+
     private Phase currentPhase;
     private Text phaseText;
     private Region assam;
@@ -91,11 +87,11 @@ public class Game extends Application {
     private DraggableRug draggableRug;
     private int rugID;
     //Keep a temporary list of players
-    ArrayList<Player> tmp = new ArrayList<>();
-    //Keep a temporary list of computer players
-    ArrayList<Player> tmpComputer = new ArrayList<>();
+    private final ArrayList<Player> tmp = new ArrayList<>();
+    private ArrayList<PlayerSelector> playerSelectors;
+
     VBox eachPlayerStatArea = new VBox();
-    HBox computerPlayerControl=new HBox();
+    HBox computerPlayerControl = new HBox();
     // simulate mouse click
     MouseEvent clickEvent = new MouseEvent(
             MouseEvent.MOUSE_CLICKED,
@@ -129,9 +125,17 @@ public class Game extends Application {
             true, true, true, true,
             true, true, null
     );
-    GameButton btnRollDie = new GameButton("Roll Die", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
-    GameButton btnMoveAssam = new GameButton("Confirm Movement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
-    GameButton btnConfirmPayment = new GameButton("Proceed", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+
+    private final GameButton btnNumberConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
+    private final GameButton btnColourConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
+
+    private ArrayList<GameButton> btnRotations;
+    private final GameButton btnConfirmRotation = new GameButton("Confirm Rotation", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+    private final GameButton btnRollDie = new GameButton("Roll Die", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+    private final GameButton btnMoveAssam = new GameButton("Confirm Movement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+    private final GameButton btnConfirmPayment = new GameButton("Proceed", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+    private final GameButton btnRotateRug = new GameButton("Rotate Rug", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+    private final GameButton btnConfirmPlacement = new GameButton("Confirm Placement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
 
     // all players, including human and computer players
     private Player[] players;
@@ -141,9 +145,6 @@ public class Game extends Application {
         launch(args);
     }
 
-    /**
-     * @param primaryStage
-     */
     @Override
     public void start(Stage primaryStage) {
         // Home page, title screen
@@ -162,167 +163,86 @@ public class Game extends Application {
         Pane numberPane = new Pane();
         Scene numberScene = new Scene(numberPane, WINDOW_WIDTH, WINDOW_HEIGHT);
         // Choice box to choose the number of human players
-        Text humanPlayer = new Text("Choose number of human player");
+        Text humanPlayer = new Text("Please choose the number of players");
         humanPlayer.setFont(new Font(18));
         humanPlayer.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0 - 300, 280);
         ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.setMinWidth(BUTTON_WIDTH);
         choiceBox.setMaxWidth(BUTTON_WIDTH);
-        choiceBox.getItems().addAll(1, 2, 3, 4);
+        choiceBox.getItems().addAll(2, 3, 4);
         // The default number for human players is 2
         choiceBox.setValue(2);
-        choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0 - 300, 320);
-        // Choice box to choose the number of computer players
-        Text computerPlayer = new Text("Choose number of computer player");
-        computerPlayer.setFont(new Font(18));
-        computerPlayer.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0 + 300, 280);
-        ChoiceBox<Integer> choiceComputerBox = new ChoiceBox<>();
-        choiceComputerBox.setMinWidth(BUTTON_WIDTH);
-        choiceComputerBox.setMaxWidth(BUTTON_WIDTH);
-        choiceComputerBox.getItems().addAll(0, 1, 2, 3, 4);
-        // The default number for computer players is 0
-        choiceComputerBox.setValue(0);
-        choiceComputerBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0 + 300, 320);
+        choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 320);
         //Back and Confirm buttons
         GameButton btnNumberBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnNumberBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
-        GameButton btnNumberConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 400);
-        btnNumberConfirm.requestFocus();
+        this.btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
+        this.btnNumberConfirm.requestFocus();
         // Add all children of numberPane
-        numberPane.getChildren().addAll(choiceBox, choiceComputerBox, humanPlayer, computerPlayer, btnNumberBack, btnNumberConfirm);
+        numberPane.getChildren().addAll(choiceBox, humanPlayer, btnNumberBack, this.btnNumberConfirm);
 
         // Players choose their colours
         Pane colourPane = new Pane();
         Scene colourScene = new Scene(colourPane, WINDOW_WIDTH, WINDOW_HEIGHT);
-        // Buttons for different colours
-        ColourButton btnCyan = new ColourButton(Colour.CYAN);
-        btnCyan.relocate(270, 180);
-        ColourButton btnYellow = new ColourButton(Colour.YELLOW);
-        btnYellow.relocate(270 + 3 * COLOUR_BUTTON_RADIUS, 180);
-        ColourButton btnRed = new ColourButton(Colour.RED);
-        btnRed.relocate(270 + 6 * COLOUR_BUTTON_RADIUS, 180);
-        ColourButton btnPurple = new ColourButton(Colour.PURPLE);
-        btnPurple.relocate(270 + 9 * COLOUR_BUTTON_RADIUS, 180);
-        ArrayList<ColourButton> colourButtons = new ArrayList<>(List.of(btnCyan, btnYellow, btnRed, btnPurple));
+
+        this.playerSelectors = makeNewPlayerSelectors();
+
         //Back, Reset and Confirm buttons
         GameButton btnColourBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnColourBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         GameButton btnColourReset = new GameButton("Reset", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnColourReset.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH * 1.5, 420);
-        GameButton btnColourConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnColourConfirm.relocate(WINDOW_WIDTH / 2.0 + BUTTON_WIDTH * 0.5, 420);
-        btnColourConfirm.setDisable(true);
-        // Add all children of colourPane
-        colourPane.getChildren().addAll(btnCyan, btnYellow, btnRed, btnPurple, btnColourBack, btnColourReset, btnColourConfirm);
+        this.btnColourConfirm.relocate(WINDOW_WIDTH / 2.0 + BUTTON_WIDTH * 0.5, 420);
+        this.btnColourConfirm.setDisable(true);
 
-        // Add colour to players
-        ArrayList<ColourButton> humanColourButtons = new ArrayList<>();
-        for (ColourButton colourButton : colourButtons) {
-            colourButton.setOnMouseClicked(event -> {
-                // Add selected colour to human player
-                tmp.add(new Player(colourButton.colour));
-                colourButton.setBorder(colourButton.border);
-                colourButton.setDisable(true);
-                humanColourButtons.add(colourButton);
-                if (tmp.size() == this.numOfPlayers) {
-                    // When the color for the number of players has been selected, disable the other colors.
-                    colourButtons.forEach(b -> b.setDisable(true));
-                    // Clone colourButtons
-                    ArrayList<ColourButton> tmpColourButtons = new ArrayList<>(colourButtons);
-                    tmpColourButtons.removeAll(humanColourButtons);
-                    // Once the human player has finished selecting, then they can click Confirm
-                    btnColourConfirm.setDisable(false);
-                    btnColourConfirm.requestFocus();
-                    // Existing computer player
-                    if (this.numOfComputerPlayers > 0) {
-                        // Assign the remaining colours to the computer players
-                        for (int i = 0; i < numOfComputerPlayers; i++) {
-                            tmpComputer.add(new Player(tmpColourButtons.get(i).colour));
-                        }
-                    }
-                }
-            });
-        }
+        colourPane.getChildren().addAll(this.playerSelectors);
+        colourPane.getChildren().addAll(btnColourBack, btnColourReset, btnColourConfirm);
+
 
         // Start button on the homepage
         btnStart.setOnMouseClicked(event -> {
             primaryStage.setScene(numberScene);
-            btnNumberConfirm.requestFocus();
+            this.btnNumberConfirm.requestFocus();
         });
 
         // Back button on choose player number scene
         btnNumberBack.setOnMouseClicked(event -> {
             // Initialize human players and computer players
             this.numOfPlayers = 0;
-            this.numOfComputerPlayers = 0;
             choiceBox.setValue(2);
-            choiceComputerBox.setValue(0);
             primaryStage.setScene(titleScene);
         });
 
         // Confirm button on choose player number scene
-        btnNumberConfirm.setOnMouseClicked(event -> {
+        this.btnNumberConfirm.setOnMouseClicked(event -> {
             this.numOfPlayers = choiceBox.getValue();
-            this.numOfComputerPlayers = choiceComputerBox.getValue();
-            // Total number of human player + computer players cannot exceed 4
-            if (this.numOfPlayers + numOfComputerPlayers > 4) {
-                // Create a dialog box
-                Alert alert = new Alert(AlertType.WARNING);
-                alert.setTitle("Warning!");
-                alert.setHeaderText("Too many players!");
-                alert.setContentText("The total number of players and computer players \ncannot exceed 4!");
-                // Displays the dialog box and waits for the user to close it
-                alert.showAndWait();
-            }
-            // If there is no computer player, human players should at least 2
-            else if (this.numOfPlayers == 1 && this.numOfComputerPlayers == 0) {
-                // Create a dialog box
-                Alert alert = new Alert(AlertType.WARNING);
-                alert.setTitle("Warning!");
-                alert.setHeaderText("Too few players!");
-                alert.setContentText("You should choose at least two players");
-                // Displays the dialog box and waits for the user to close it
-                alert.showAndWait();
-            } else {
-                primaryStage.setScene(colourScene);
-                btnColourReset.requestFocus();
-            }
-
+            primaryStage.setScene(colourScene);
+            btnColourReset.requestFocus();
         });
 
         // Click back button on choose colour scene
         btnColourBack.setOnMouseClicked(event -> {
             // Initialize human players and computer players
-            tmp.clear();
-            tmpComputer.clear();
+            this.tmp.clear();
             btnColourConfirm.setDisable(true);
-            colourButtons.forEach(b -> {
-                b.setDisable(false);
-                b.setBorder(null);
-            });
+            colourPane.getChildren().removeAll(this.playerSelectors);
+            this.playerSelectors = makeNewPlayerSelectors();
+            colourPane.getChildren().addAll(this.playerSelectors);
             primaryStage.setScene(numberScene);
         });
 
         // Reset color on choose colour scene
         btnColourReset.setOnMouseClicked(event -> {
-            tmp.clear();
-            tmpComputer.clear();
+            this.tmp.clear();
             btnColourConfirm.setDisable(true);
-            colourButtons.forEach(b -> {
-                b.setDisable(false);
-                b.setBorder(null);
-            });
+            colourPane.getChildren().removeAll(this.playerSelectors);
+            this.playerSelectors = makeNewPlayerSelectors();
+            colourPane.getChildren().addAll(this.playerSelectors);
         });
 
         // Confirm selected colour on choose colour scene
         btnColourConfirm.setOnMouseClicked(event -> {
-            // set computer players attribute
-            if (this.numOfComputerPlayers > 0) {
-                tmpComputer.forEach(t -> t.setIsComputer());
-            }
-            tmp.addAll(tmpComputer);
-            this.players = tmp.toArray(new Player[0]);
+            this.players = this.tmp.toArray(new Player[0]);
             this.gameState = new GameState(this.players);
             //main game
             Scene mainScene = makeMainScene();
@@ -336,6 +256,19 @@ public class Game extends Application {
         primaryStage.show();
     }
 
+    private ArrayList<PlayerSelector> makeNewPlayerSelectors() {
+        // Player Selectors for all the players
+        PlayerSelector playerCyan = new PlayerSelector(COLOUR_BUTTON_RADIUS * 1.2, COLOUR_BUTTON_RADIUS * 4, Colour.CYAN);
+        playerCyan.relocate(270, 180);
+        PlayerSelector playerYellow = new PlayerSelector(COLOUR_BUTTON_RADIUS * 1.2, COLOUR_BUTTON_RADIUS * 4, Colour.YELLOW);
+        playerYellow.relocate(270 + 3 * COLOUR_BUTTON_RADIUS, 180);
+        PlayerSelector playerRed = new PlayerSelector(COLOUR_BUTTON_RADIUS * 1.2, COLOUR_BUTTON_RADIUS * 4, Colour.RED);
+        playerRed.relocate(270 + 6 * COLOUR_BUTTON_RADIUS, 180);
+        PlayerSelector playerPurple = new PlayerSelector(COLOUR_BUTTON_RADIUS * 1.2, COLOUR_BUTTON_RADIUS * 4, Colour.PURPLE);
+        playerPurple.relocate(270 + 9 * COLOUR_BUTTON_RADIUS, 180);
+
+        return new ArrayList<>(List.of(playerCyan, playerYellow, playerRed, playerPurple));
+    }
 
     /**
      * @return
@@ -381,7 +314,7 @@ public class Game extends Application {
         playerStatArea.setPrefSize(STATS_AREA_WIDTH, STATS_AREA_HEIGHT - 50);
         playerStatArea.relocate(30, 50);
         // load player stats
-        updatePlayerStatement();
+        updatePlayerStats();
         playerStatArea.getChildren().addAll(eachPlayerStatArea);
         statsArea.getChildren().add(playerStatArea);
 
@@ -402,23 +335,20 @@ public class Game extends Application {
         GameButton btnRotateRight = new GameButton("Rotate Right", BUTTON_WIDTH * 0.8, BUTTON_HEIGHT);
         btnRotateRight.relocate(BUTTON_WIDTH * 1.8, BUTTON_HEIGHT / 2.0);
         this.btnRotations = new ArrayList<>(List.of(btnRotateLeft, btnRotateRight));
-        this.btnConfirmRotation = new GameButton("Confirm Rotation", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
-        btnConfirmRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
+        this.btnConfirmRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
-        btnRollDie.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
+        this.btnRollDie.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
         Text movementText = new Text();
         movementText.relocate(BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnMoveAssam.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
+        this.btnMoveAssam.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
         Text paymentText = new Text();
         paymentText.relocate(BUTTON_WIDTH, BUTTON_HEIGHT);
         paymentText.setWrappingWidth(300);
-        btnConfirmPayment.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
+        this.btnConfirmPayment.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
-        this.btnRotateRug = new GameButton("Rotate Rug", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         this.btnRotateRug.relocate(BUTTON_WIDTH * 1.5, BUTTON_HEIGHT / 2.0);
-        this.btnConfirmPlacement = new GameButton("Confirm Placement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
         this.btnConfirmPlacement.relocate(BUTTON_WIDTH * 1.5, BUTTON_HEIGHT * 2);
 
         //allows player to set Assam's initial direction
@@ -429,11 +359,11 @@ public class Game extends Application {
         });
 
         btnConfirmInitialRotation.setOnMouseClicked(event -> {
-            if (currentPhase == Phase.ROTATION) {
+            if (this.currentPhase == Phase.ROTATION) {
                 nextPhase();
                 this.controlArea.getChildren().removeAll(btnInitialRotation, btnConfirmInitialRotation);
                 this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
-                this.controlArea.getChildren().add(btnRollDie);
+                this.controlArea.getChildren().add(this.btnRollDie);
             }
         });
 
@@ -456,22 +386,22 @@ public class Game extends Application {
                 this.controlArea.getChildren().removeAll(this.btnRotations);
                 this.controlArea.getChildren().remove(this.btnConfirmRotation);
                 this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
-                this.controlArea.getChildren().add(btnRollDie);
+                this.controlArea.getChildren().add(this.btnRollDie);
             }
         });
 
         // roll die
-        btnRollDie.setOnMouseClicked(event -> {
-            this.controlArea.getChildren().remove(btnRollDie);
+        this.btnRollDie.setOnMouseClicked(event -> {
+            this.controlArea.getChildren().remove(this.btnRollDie);
             this.dieResult = Die.getSide();
-            this.controlArea.getChildren().addAll(movementText, btnMoveAssam);
+            this.controlArea.getChildren().addAll(movementText, this.btnMoveAssam);
             movementText.setText("Die result is " + this.dieResult + ". Assam will now move " + this.dieResult + " steps.");
             movementText.setFont(new Font(16));
         });
 
         // make Assam move
-        btnMoveAssam.setOnMouseClicked(event -> {
-            this.controlArea.getChildren().removeAll(movementText, btnMoveAssam);
+        this.btnMoveAssam.setOnMouseClicked(event -> {
+            this.controlArea.getChildren().removeAll(movementText, this.btnMoveAssam);
             this.gameState.moveAssam(this.dieResult);
             updateAssam();
             this.controlArea.getChildren().addAll(paymentText, btnConfirmPayment);
@@ -486,10 +416,10 @@ public class Game extends Application {
         });
 
         // If need payment, confirm payment
-        btnConfirmPayment.setOnMouseClicked(event -> {
+        this.btnConfirmPayment.setOnMouseClicked(event -> {
             if (this.currentPhase == Phase.MOVEMENT) {
                 nextPhase();
-                this.controlArea.getChildren().removeAll(paymentText, btnConfirmPayment);
+                this.controlArea.getChildren().removeAll(paymentText, this.btnConfirmPayment);
                 if (!this.gameState.isPaymentRequired() || this.gameState.isPaymentAffordable()) {
                     this.gameState.makePayment();
                     this.draggableRug = new DraggableRug(MARGIN_LEFT + BOARD_AREA_SIDE + MARGIN_TOP + BUTTON_WIDTH * 0.5, 500, this.gameState.getCurrentPlayer().getColour());
@@ -506,15 +436,15 @@ public class Game extends Application {
                     }
                 }
                 // update players statement
-                updatePlayerStatement();
+                updatePlayerStats();
             }
         });
 
         // players rotate rug
-        btnRotateRug.setOnMouseClicked(event -> rotateRug());
+        this.btnRotateRug.setOnMouseClicked(event -> rotateRug());
 
         // confirm rugs placement
-        btnConfirmPlacement.setOnMouseClicked(event -> makePlacement());
+        this.btnConfirmPlacement.setOnMouseClicked(event -> makePlacement());
 
         Scene scene = new Scene(gameArea, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.setOnKeyPressed(event -> {
@@ -560,23 +490,23 @@ public class Game extends Application {
             this.highlighted = null;
             this.draggableRug = null;
 
-            if (!gameState.isGameOver()) {
+            if (!this.gameState.isGameOver()) {
                 nextPhase();
-                gameState.nextPlayer();
+                this.gameState.nextPlayer();
                 // computer player and human player act
                 simulatePlayerAct();
-                // update players statement
-                updatePlayerStatement();
+                // update player stats
+                updatePlayerStats();
             }
         }
     }
 
-    private void simulatePlayerAct(){
-        if (gameState.getCurrentPlayer().isComputer()){
+    private void simulatePlayerAct() {
+        if (this.gameState.getCurrentPlayer().isComputer()) {
             // computer player
             this.controlArea.getChildren().addAll(this.btnRotations);
             this.controlArea.getChildren().add(this.btnConfirmRotation);
-            this.btnRotations.forEach(e->e.setDisable(true));
+            this.btnRotations.forEach(e -> e.setDisable(true));
             this.btnConfirmRotation.setDisable(true);
             this.btnConfirmRotation.fireEvent(clickEvent);
             this.btnRollDie.fireEvent(clickEvent);
@@ -586,12 +516,11 @@ public class Game extends Application {
             this.draggableRug.fireEvent(dragEvent);
             this.draggableRug.fireEvent(releaseEvent);
             this.btnConfirmPlacement.fireEvent(clickEvent);
-        }
-        else {
+        } else {
             // human player
             this.controlArea.getChildren().addAll(this.btnRotations);
             this.controlArea.getChildren().add(this.btnConfirmRotation);
-            this.btnRotations.forEach(e->e.setDisable(false));
+            this.btnRotations.forEach(e -> e.setDisable(false));
             this.btnConfirmRotation.setDisable(false);
         }
     }
@@ -654,24 +583,24 @@ public class Game extends Application {
     }
 
     /**
-     * Update player statement
+     * Update player stats
      */
-    private void updatePlayerStatement() {
+    private void updatePlayerStats() {
         eachPlayerStatArea.getChildren().clear();
         eachPlayerStatArea.setSpacing(5);
-        for (int i = 0; i < this.tmp.size(); i++) {
-            if (this.tmp.get(i).isComputer()) {
-                Text colour = new Text("Computer Player: " + this.tmp.get(i).getColour());
+        for (Player player : this.tmp) {
+            if (player.isComputer()) {
+                Text colour = new Text("Computer Player: " + player.getColour());
                 colour.setFont(new Font(16));
                 eachPlayerStatArea.getChildren().add(colour);
             } else {
-                Text colour = new Text("Player: " + this.tmp.get(i).getColour());
+                Text colour = new Text("Player: " + player.getColour());
                 colour.setFont(new Font(16));
                 eachPlayerStatArea.getChildren().add(colour);
             }
-            Text dirham = new Text("Dirham: " + Integer.toString(this.tmp.get(i).getDirham()));
+            Text dirham = new Text("Dirham: " + player.getDirham());
             dirham.setFont(new Font(16));
-            Text numOfUnplacedRugs = new Text("Number of unplaced rugs: " + Integer.toString(this.tmp.get(i).getNumOfUnplacedRugs()));
+            Text numOfUnplacedRugs = new Text("Number of unplaced rugs: " + player.getNumOfUnplacedRugs());
             numOfUnplacedRugs.setFont(new Font(16));
             eachPlayerStatArea.getChildren().addAll(dirham, numOfUnplacedRugs);
         }
@@ -696,13 +625,10 @@ public class Game extends Application {
     }
 
     private static class ColourButton extends Button {
-        private final Colour colour;
-
         private final Border border;
 
         public ColourButton(Colour colour) {
             super();
-            this.colour = colour;
             this.setShape(new Circle(COLOUR_BUTTON_RADIUS));
             this.setMinSize(2 * COLOUR_BUTTON_RADIUS, 2 * COLOUR_BUTTON_RADIUS);
             this.setMaxSize(2 * COLOUR_BUTTON_RADIUS, 2 * COLOUR_BUTTON_RADIUS);
@@ -711,6 +637,78 @@ public class Game extends Application {
         }
     }
 
+    private class PlayerSelector extends Pane {
+        private Player player;
+        private final CheckBox chbIsComputer;
+        private final ColourButton colourButton;
+        private final Label lblStrategy;
+        private final RadioButton rbRandom;
+        private final RadioButton rbIntelligent;
+        private final ToggleGroup toggleGroup;
+
+        public PlayerSelector(double width, double height, Colour colour) {
+            super();
+            this.setMinSize(width, height);
+            this.setMaxSize(width, height);
+
+            this.colourButton = new ColourButton(colour);
+            this.getChildren().add(this.colourButton);
+
+            this.chbIsComputer = new CheckBox();
+            this.chbIsComputer.setText("Computer");
+            this.chbIsComputer.relocate(0, COLOUR_BUTTON_RADIUS * 2.2);
+
+            this.lblStrategy = new Label("Strategy:");
+            this.lblStrategy.relocate(0, COLOUR_BUTTON_RADIUS * 2.6);
+
+            this.toggleGroup = new ToggleGroup();
+            this.rbRandom = new RadioButton("Random");
+            this.rbRandom.relocate(0, COLOUR_BUTTON_RADIUS * 3.0);
+            this.rbRandom.setToggleGroup(this.toggleGroup);
+            this.rbIntelligent = new RadioButton("Intelligent");
+            this.rbIntelligent.relocate(0, COLOUR_BUTTON_RADIUS * 3.4);
+            this.rbIntelligent.setToggleGroup(this.toggleGroup);
+            this.rbIntelligent.setDisable(true);
+
+            this.colourButton.setOnMouseClicked(event -> {
+                this.colourButton.setDisable(true);
+                this.colourButton.setBorder(this.colourButton.border);
+                this.getChildren().add(this.chbIsComputer);
+
+                this.player = new Player(colour);
+                tmp.add(this.player);
+                if (tmp.size() == numOfPlayers) {
+                    // When the appropriate number of players has been selected, disable the other colors.
+                    playerSelectors.forEach(p -> p.colourButton.setDisable(true));
+                    // Once players have finished selecting, then they can click Confirm
+                    btnColourConfirm.setDisable(false);
+                    btnColourConfirm.requestFocus();
+                }
+            });
+
+            this.chbIsComputer.setOnMouseClicked(event -> {
+                if (this.chbIsComputer.isSelected()) {
+                    this.player.setIsComputer(true);
+                    this.player.setStrategy(Strategy.RANDOM);
+                    this.rbRandom.setSelected(true);
+                    this.getChildren().addAll(this.lblStrategy, this.rbRandom, this.rbIntelligent);
+                }
+                if (!this.chbIsComputer.isSelected()) {
+                    this.player.setIsComputer(false);
+                    this.player.setStrategy(null);
+                    this.getChildren().removeAll(this.lblStrategy, this.rbRandom, this.rbIntelligent);
+                }
+            });
+
+            this.rbRandom.setOnMouseClicked(event -> {
+                this.player.setStrategy(Strategy.RANDOM);
+            });
+
+            this.rbIntelligent.setOnMouseClicked(event -> {
+                this.player.setStrategy(Strategy.INTELLIGENT);
+            });
+        }
+    }
 
     private static class InvisibleRug extends Rectangle {
         private final GameTile[] gameTiles = new GameTile[2];
@@ -865,7 +863,7 @@ public class Game extends Application {
             case MOVEMENT -> this.currentPhase = Phase.PLACEMENT;
             case PLACEMENT -> this.currentPhase = Phase.ROTATION;
         }
-        this.phaseText.setText("Current phase of game: " + this.currentPhase.toString());
+        this.phaseText.setText("Current phase of game: " + this.currentPhase);
     }
 
     private enum Orientation {
