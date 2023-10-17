@@ -10,10 +10,8 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -93,11 +91,10 @@ public class Game extends Application {
     ArrayList<Player> tmp = new ArrayList<>();
     //Keep a temporary list of computer players
     ArrayList<Player> tmpComputer = new ArrayList<>();
+    VBox eachPlayerStatArea = new VBox();
 
-    // human player
+    // all players, including human and computer players
     private Player[] players;
-    // computer player
-    private Player[] computerPlayers;
     private GameState gameState;
 
     public static void main(String[] args) {
@@ -281,8 +278,12 @@ public class Game extends Application {
 
         // Confirm selected colour on choose colour scene
         btnColourConfirm.setOnMouseClicked(event -> {
+            // set computer players attribute
+            if (this.numOfComputerPlayers>0){
+                tmpComputer.forEach(t->t.setIsComputer());
+            }
+            tmp.addAll(tmpComputer);
             this.players = tmp.toArray(new Player[0]);
-            this.computerPlayers=tmpComputer.toArray(new Player[0]);
             this.gameState = new GameState(this.players);
             //main game
             Scene mainScene = makeMainScene();
@@ -309,9 +310,9 @@ public class Game extends Application {
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
 
         // Board area to display information about the board and assam
-        final Pane boardArea = new GamePane(BOARD_AREA_SIDE-2*MARGIN, BOARD_AREA_SIDE);
+        final Pane boardArea = new GamePane(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         boardArea.setBorder(gamePaneBorder);
-        boardArea.relocate(MARGIN*3, MARGIN);
+        boardArea.relocate(MARGIN, MARGIN);
         this.gameArea.getChildren().add(boardArea);
 
         final Pane tileArea = new GamePane(NUM_OF_COLS * TILE_SIDE, NUM_OF_ROWS * TILE_SIDE);
@@ -339,33 +340,13 @@ public class Game extends Application {
         statsArea.getChildren().add(this.phaseText);
 
         // Display players statement
-//        final GamePane playerStatArea = new GamePane(STATS_AREA_WIDTH,STATS_AREA_HEIGHT-50);
-        final FlowPane playerStatArea=new FlowPane();
+        final VBox playerStatArea=new VBox();
         playerStatArea.setPrefSize(STATS_AREA_WIDTH,STATS_AREA_HEIGHT-50);
         playerStatArea.relocate(30, 50);
-        playerStatArea.setHgap(10);
-        playerStatArea.setVgap(10);
-        for (int i=0; i<this.numOfPlayers; i++){
-            Text colour=new Text(tmp.get(i).getColour().toString());
-            Text dirham=new Text("Dirham: "+Integer.toString(tmp.get(i).getDirham()));
-            Text numOfUnplacedRugs=new Text("Number of unplaced rugs: "+Integer.toString(tmp.get(i).getNumOfUnplacedRugs()));
-            playerStatArea.getChildren().addAll(colour,dirham,numOfUnplacedRugs);
-        }
-        for (int i=0; i<this.numOfComputerPlayers; i++){
-            Text colour=new Text(tmpComputer.get(i).getColour().toString());
-            Text dirham=new Text("Dirham: "+Integer.toString(tmpComputer.get(i).getDirham()));
-            Text numOfUnplacedRugs=new Text("Number of unplaced rugs: "+Integer.toString(tmpComputer.get(i).getNumOfUnplacedRugs()));
-            playerStatArea.getChildren().addAll(colour,dirham,numOfUnplacedRugs);
-        }
-
-//        final GamePane eachPlayerStatArea = new GamePane((STATS_AREA_WIDTH-10)/2,(STATS_AREA_HEIGHT-60)/2)
-
-
-//        playerStatArea.setBorder(gamePaneBorder);
-//        playerStatArea.setStyle("-fx-background-color: #FF5733;");
+        // load player statement
+        updatePlayerStatement();
+        playerStatArea.getChildren().addAll(eachPlayerStatArea);
         statsArea.getChildren().add(playerStatArea);
-
-
 
         // control area
         this.controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
@@ -434,6 +415,7 @@ public class Game extends Application {
             }
         });
 
+        // confirm rotation Assam
         this.btnConfirmRotation.setOnMouseClicked(event -> {
             if (this.currentPhase == Phase.ROTATION) {
                 nextPhase();
@@ -444,13 +426,16 @@ public class Game extends Application {
             }
         });
 
+        // roll die
         btnRollDie.setOnMouseClicked(event -> {
             this.controlArea.getChildren().remove(btnRollDie);
             this.dieResult = Die.getSide();
             this.controlArea.getChildren().addAll(movementText, btnMoveAssam);
             movementText.setText("Die result is " + this.dieResult + ". Assam will now move " + this.dieResult + " steps.");
+            movementText.setFont(new Font(16));
         });
 
+        // make Assam move
         btnMoveAssam.setOnMouseClicked(event -> {
             this.controlArea.getChildren().removeAll(movementText, btnMoveAssam);
             this.gameState.moveAssam(this.dieResult);
@@ -463,8 +448,10 @@ public class Game extends Application {
             } else {
                 paymentText.setText("You cannot afford to pay. You will have to give all your dirhams to Player " + this.gameState.findAssamRugOwner().getColour().toString() + ". After that, You will be removed from the game");
             }
+            paymentText.setFont(new Font(16));
         });
 
+        // If need payment, confirm payment
         btnConfirmPayment.setOnMouseClicked(event -> {
             if (this.currentPhase == Phase.MOVEMENT) {
                 nextPhase();
@@ -484,12 +471,16 @@ public class Game extends Application {
                         this.controlArea.getChildren().add(this.btnConfirmRotation);
                     }
                 }
+                // update players statement
+                updatePlayerStatement();
             }
             System.out.println(this.gameState.getCurrentPlayer().getColour().toString() + ": " + this.gameState.getCurrentPlayer().getDirham());
         });
 
+        // players rotate rug
         btnRotateRug.setOnMouseClicked(event -> rotateRug());
 
+        // confirm rugs placement
         btnConfirmPlacement.setOnMouseClicked(event -> makePlacement());
 
         Scene scene = new Scene(gameArea, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -523,6 +514,7 @@ public class Game extends Application {
     }
 
     private void makePlacement() {
+        System.out.println(this.gameState.getCurrentPlayer().isComputer());
         if (this.highlighted != null) {
             this.controlArea.getChildren().removeAll(this.btnRotateRug, this.btnConfirmPlacement);
             this.gameArea.getChildren().remove(this.draggableRug);
@@ -541,6 +533,8 @@ public class Game extends Application {
                 gameState.nextPlayer();
                 this.controlArea.getChildren().addAll(this.btnRotations);
                 this.controlArea.getChildren().add(this.btnConfirmRotation);
+                // update players statement
+                updatePlayerStatement();
             }
         }
     }
@@ -605,8 +599,25 @@ public class Game extends Application {
     /**
      * Update player statement
      */
-    private void updateStats() {
-        //FIXME
+    private void updatePlayerStatement(){
+        eachPlayerStatArea.getChildren().clear();
+        eachPlayerStatArea.setSpacing(5);
+        for (int i=0; i<this.tmp.size(); i++){
+            if (this.tmp.get(i).isComputer()){
+                Text colour=new Text("Computer Player: "+this.tmp.get(i).getColour());
+                colour.setFont(new Font(16));
+                eachPlayerStatArea.getChildren().add(colour);
+            }else{
+                Text colour=new Text("Player: "+this.tmp.get(i).getColour());
+                colour.setFont(new Font(16));
+                eachPlayerStatArea.getChildren().add(colour);
+            }
+            Text dirham=new Text("Dirham: "+Integer.toString(this.tmp.get(i).getDirham()));
+            dirham.setFont(new Font(16));
+            Text numOfUnplacedRugs=new Text("Number of unplaced rugs: "+Integer.toString(this.tmp.get(i).getNumOfUnplacedRugs()));
+            numOfUnplacedRugs.setFont(new Font(16));
+            eachPlayerStatArea.getChildren().addAll(dirham,numOfUnplacedRugs);
+        }
     }
 
     private static class GamePane extends Pane {
@@ -797,7 +808,7 @@ public class Game extends Application {
             case MOVEMENT -> this.currentPhase = Phase.PLACEMENT;
             case PLACEMENT -> this.currentPhase = Phase.ROTATION;
         }
-        this.phaseText.setText(this.currentPhase.toString());
+        this.phaseText.setText("Current phase of game: "+this.currentPhase.toString());
     }
 
     private enum Orientation {
