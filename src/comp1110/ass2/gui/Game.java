@@ -14,9 +14,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -65,8 +67,6 @@ public class Game extends Application {
     private static final Color ASSAM_COLOR = Color.SPRINGGREEN.darker();
     //https://fonts.google.com/icons?selected=Material%20Symbols%20Rounded%3Anavigation%3AFILL%401%3Bwght%40400%3BGRAD%400%3Bopsz%4024
     private static final String ASSAM_SVG = "M480-240 222-130q-13 5-24.5 2.5T178-138q-8-8-10.5-20t2.5-25l273-615q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l273 615q5 13 2.5 25T782-138q-8 8-19.5 10.5T738-130L480-240Z";
-
-    private static final Font BUTTON_FONT = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 18);
     private static final Font GENERAL_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14);
     private static final Font GENERAL_TEXT_FONT_ITALIC = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 14);
     private static final Font PLAYER_COLOUR_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18);
@@ -81,6 +81,7 @@ public class Game extends Application {
     private GamePane gameArea;
     private GamePane controlArea;
     Button btnMainBack = CircularImageButton.createCircularImageButton("resources/back.png");
+    Button hintButton = CircularImageButton.createCircularImageButton("resources/problem.png");
     // number of human and computer players
     private int numOfPlayers;
 
@@ -134,7 +135,6 @@ public class Game extends Application {
         Text titleText = new Text("Marrakech");
         titleText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 60));
         GameButton btnStart = new GameButton("Start", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnStart.setFont(BUTTON_FONT);
         // Make two elements center vertical
         titleVBox.setAlignment(Pos.CENTER);
         titleVBox.setSpacing(20);
@@ -149,9 +149,10 @@ public class Game extends Application {
         numberRootPane.setBackground(new Background(background));
         Scene numberScene = new Scene(numberRootPane, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        Text numberText = new Text("Please choose the number of players:");
-        numberText.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 20));
-        numberText.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0 - 300, 280);
+        Text numberText = new Text("Please choose the number of players");
+        numberText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 28));
+        double numberTextWidth = numberText.getLayoutBounds().getWidth();
+        numberText.relocate((WINDOW_WIDTH - numberTextWidth) / 2, 260);
 
         ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.setMinWidth(BUTTON_WIDTH);
@@ -164,7 +165,6 @@ public class Game extends Application {
         //Back and Confirm buttons
         Button btnNumberBack = CircularImageButton.createCircularImageButton("resources/back.png");
         btnNumberBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
-        this.btnNumberConfirm.setFont(BUTTON_FONT);
         this.btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
         this.btnNumberConfirm.requestFocus();
 
@@ -184,9 +184,7 @@ public class Game extends Application {
         Button btnColourBack = CircularImageButton.createCircularImageButton("resources/back.png");
         btnColourBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         GameButton btnColourReset = new GameButton("Reset", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnColourReset.setFont(BUTTON_FONT);
         btnColourReset.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH * 1.5, 420);
-        this.btnColourConfirm.setFont(BUTTON_FONT);
         this.btnColourConfirm.relocate(WINDOW_WIDTH / 2.0 + BUTTON_WIDTH * 0.5, 420);
         this.btnColourConfirm.setDisable(true);
 
@@ -290,11 +288,17 @@ public class Game extends Application {
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
         // back button
         btnMainBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
-        // Board area to display information about the board and assam
-        final Pane boardArea = new GamePane(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
+        // hint information
+        hintButton.relocate(BUTTON_HEIGHT / 2.0, WINDOW_HEIGHT - BUTTON_HEIGHT * 2);
+        // Board area to display information bout the board and assam
+        final GamePane boardArea = new GamePane(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         boardArea.setBorder(gamePaneBorder);
+        // backgroung image
+        ImageView imageView = drawGameBoardBackground(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
+        imageView.relocate(MARGIN_LEFT, MARGIN_TOP);
+        gameArea.getChildren().add(imageView);
         boardArea.relocate(MARGIN_LEFT, MARGIN_TOP);
-        this.gameArea.getChildren().addAll(btnMainBack, boardArea);
+        this.gameArea.getChildren().addAll(btnMainBack, hintButton, boardArea);
 
         final Pane tileArea = new GamePane(NUM_OF_COLS * TILE_SIDE, NUM_OF_ROWS * TILE_SIDE);
         tileArea.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
@@ -307,8 +311,10 @@ public class Game extends Application {
 
         // Display area to display stats and controls for the players, contains stats area and control area
         final GamePane playerArea = new GamePane(PLAYER_AREA_WIDTH, PLAYER_AREA_HEIGHT);
+        ImageView playerView = drawGameBoardBackground(STATS_AREA_WIDTH, STATS_AREA_HEIGHT);
         playerArea.relocate(MARGIN_LEFT + BOARD_AREA_SIDE + MARGIN_TOP, MARGIN_TOP);
         this.gameArea.getChildren().add(playerArea);
+        playerArea.getChildren().add(playerView);
 
         // Stats area, includes current game phase and player stats
         final GamePane statsArea = new GamePane(STATS_AREA_WIDTH, STATS_AREA_HEIGHT);
@@ -327,44 +333,36 @@ public class Game extends Application {
 
         // control area
         this.controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
+        ImageView controlView = drawGameBoardBackground(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
+        controlView.relocate(0, STATS_AREA_HEIGHT + MARGIN_TOP);
         this.controlArea.setBorder(gamePaneBorder);
         this.controlArea.relocate(0, STATS_AREA_HEIGHT + MARGIN_TOP);
-        playerArea.getChildren().add(this.controlArea);
+        playerArea.getChildren().addAll(controlView, controlArea);
 
         //buttons inside control area
-        this.btnInitialRotation.setFont(BUTTON_FONT);
         this.btnInitialRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT / 2.0);
-        this.btnConfirmInitialRotation.setFont(BUTTON_FONT);
         this.btnConfirmInitialRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
         GameButton btnRotateLeft = new GameButton("Rotate Left", BUTTON_WIDTH * 1.4, BUTTON_HEIGHT);
-        btnRotateLeft.setFont(BUTTON_FONT);
         btnRotateLeft.relocate(BUTTON_WIDTH * 0.1, BUTTON_HEIGHT / 2.0);
         GameButton btnRotateRight = new GameButton("Rotate Right", BUTTON_WIDTH * 1.4, BUTTON_HEIGHT);
-        btnRotateRight.setFont(BUTTON_FONT);
         btnRotateRight.relocate(BUTTON_WIDTH * 1.67, BUTTON_HEIGHT / 2.0);
         this.btnRotations = new ArrayList<>(List.of(btnRotateLeft, btnRotateRight));
-        this.btnConfirmRotation.setFont(BUTTON_FONT);
         this.btnConfirmRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
-        this.btnRollDie.setFont(BUTTON_FONT);
         this.btnRollDie.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
         this.movementText.relocate(BUTTON_WIDTH * 0.4, BUTTON_HEIGHT);
         this.movementText.setFont(GENERAL_TEXT_FONT_REGULAR);
         this.movementText.setWrappingWidth(300);
-        this.btnMoveAssam.setFont(BUTTON_FONT);
         this.btnMoveAssam.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
         this.paymentText.relocate(BUTTON_WIDTH * 0.4, BUTTON_HEIGHT);
         this.paymentText.setFont(GENERAL_TEXT_FONT_REGULAR);
         this.paymentText.setWrappingWidth(300);
-        this.btnConfirmPayment.setFont(BUTTON_FONT);
         this.btnConfirmPayment.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
-        this.btnRotateRug.setFont(BUTTON_FONT);
         this.btnRotateRug.relocate(BUTTON_WIDTH * 1.5, BUTTON_HEIGHT / 2.0);
-        this.btnConfirmPlacement.setFont(BUTTON_FONT);
         this.btnConfirmPlacement.relocate(BUTTON_WIDTH * 1.5, BUTTON_HEIGHT * 2);
 
         //allows player or computer to set Assam's initial direction
@@ -376,6 +374,13 @@ public class Game extends Application {
         }
         this.controlArea.getChildren().addAll(this.btnInitialRotation, this.btnConfirmInitialRotation);
 
+        hintButton.setOnMouseClicked(event -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Hint");
+            alert.setHeaderText(null);
+            alert.setContentText("Try to have more dirhams!");
+            alert.showAndWait();
+        });
         this.btnInitialRotation.setOnMouseClicked(event -> this.assam.setRotate(this.assam.getRotate() + 90));
 
         this.btnConfirmInitialRotation.setOnMouseClicked(event -> {
@@ -781,6 +786,11 @@ public class Game extends Application {
                 if (this.gameState.isGameOver()) {
                     ArrayList<Player> winners = this.gameState.getWinners();
                     if (winners.contains(player)) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Game over");
+                        alert.setHeaderText("Congratulations to " + colourString);
+                        alert.setContentText("");
+                        alert.show();
                         colourString += " - WINNER!";
                     }
                 }
@@ -812,11 +822,27 @@ public class Game extends Application {
     private BackgroundImage drawBackground() {
         Image backgroundImage = new Image("resources/background.jpg");
         // set image size, make the picture adaptive
-        BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, true);
+        BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true);
         BackgroundImage background = new BackgroundImage(backgroundImage,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER, backgroundSize);
         return background;
+    }
+
+    private ImageView drawGameBoardBackground(double width, double height) {
+        // set shallow background
+        ImageView imageView = new ImageView(new Image("resources/gameBackground.jpg"));
+        // set ImageView size
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
+        // Use Rectangle to set the rounded corners for the ImageView
+        Rectangle clip = new Rectangle(
+                imageView.getFitWidth(), imageView.getFitHeight()
+        );
+        clip.setArcWidth(50);
+        clip.setArcHeight(50);
+        imageView.setClip(clip);
+        return imageView;
     }
 
     private class PlayerSelector extends Pane {
