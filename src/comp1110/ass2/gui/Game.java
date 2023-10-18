@@ -208,7 +208,7 @@ public class Game extends Application {
         btnColourBack.setOnMouseClicked(event -> {
             // Initialize human players and computer players
             this.tmp.clear();
-            btnColourConfirm.setDisable(true);
+            this.btnColourConfirm.setDisable(true);
             colourPane.getChildren().removeAll(this.playerSelectors);
             this.playerSelectors = makeNewPlayerSelectors();
             colourPane.getChildren().addAll(this.playerSelectors);
@@ -330,7 +330,12 @@ public class Game extends Application {
         this.btnRotateRug.relocate(BUTTON_WIDTH * 1.5, BUTTON_HEIGHT / 2.0);
         this.btnConfirmPlacement.relocate(BUTTON_WIDTH * 1.5, BUTTON_HEIGHT * 2);
 
-        //allows player to set Assam's initial direction
+        //allows player or computer to set Assam's initial direction
+        if (this.gameState.getCurrentPlayer().isComputer()) {
+            this.btnInitialRotation.setDisable(true);
+            this.btnConfirmInitialRotation.setDisable(true);
+            simulateInitialRotation();
+        }
         this.controlArea.getChildren().addAll(this.btnInitialRotation, this.btnConfirmInitialRotation);
 
         this.btnInitialRotation.setOnMouseClicked(event -> this.assam.setRotate(this.assam.getRotate() + 90));
@@ -485,6 +490,7 @@ public class Game extends Application {
             int rotation = new Random().nextInt(4) * 90;
             this.gameState.rotateAssam(rotation);
             updateAssam();
+            nextPhase();
 
             this.controlArea.getChildren().add(this.btnRollDie);
             this.btnRollDie.setDisable(true);
@@ -768,6 +774,7 @@ public class Game extends Application {
 
             this.gameColourButton.setOnMouseClicked(event -> {
                 this.gameColourButton.setDisable(true);
+                this.gameColourButton.setOpacity(1);
                 this.gameColourButton.addBorder();
                 this.getChildren().add(this.chbIsComputer);
 
