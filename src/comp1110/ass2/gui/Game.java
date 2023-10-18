@@ -69,7 +69,7 @@ public class Game extends Application {
     private static final Font BUTTON_FONT = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 18);
     private static final Font GENERAL_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14);
     private static final Font GENERAL_TEXT_FONT_ITALIC = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 14);
-    private static final Font PLAYER_COLOUR_TEXT_FONT_REGULAR_18 = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 24);
+    private static final Font PLAYER_COLOUR_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18);
 
     private final Pane allTiles = new Pane();
     private Pane placedRugs = new Pane();
@@ -113,7 +113,7 @@ public class Game extends Application {
     private final Text movementText = new Text();
     private final Text paymentText = new Text();
 
-    private final long MILLIS = 1500;
+    private final long MILLIS = 400;
 
     // all players, including human and computer players
     private Player[] players;
@@ -635,14 +635,13 @@ public class Game extends Application {
             this.btnRotateRug.setDisable(false);
             this.btnConfirmPlacement.setDisable(false);
 
-            Orientation orientation = new Random().nextInt(2) == 0 ? Orientation.VERTICAL : Orientation.HORIZONTAL;
-            ArrayList<GameInvisibleRug> validRugs = findAllValidPlacements(orientation);
+            ArrayList<GameInvisibleRug> validRugs = findAllValidPlacements();
             int index = new Random().nextInt(validRugs.size());
             GameInvisibleRug randomValidRug = validRugs.get(index);
 
             Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID++, getTilesFromInvisibleRug(randomValidRug));
             this.gameState.makePlacement(rug);
-            GameRug gameRug = new GameRug(randomValidRug.getLayoutX(), randomValidRug.getLayoutY(), orientation, this.gameState.getCurrentPlayer().getColour());
+            GameRug gameRug = new GameRug(randomValidRug.getLayoutX(), randomValidRug.getLayoutY(), randomValidRug.getOrientation(), this.gameState.getCurrentPlayer().getColour());
             this.placedRugs.getChildren().add(gameRug);
 
             if (!this.gameState.isGameOver()) {
@@ -654,22 +653,18 @@ public class Game extends Application {
         });
     }
 
-    private ArrayList<GameInvisibleRug> findAllValidPlacements(Orientation orientation) {
+    private ArrayList<GameInvisibleRug> findAllValidPlacements() {
         ArrayList<GameInvisibleRug> rugs = new ArrayList<>();
-
-        if (orientation == Orientation.VERTICAL) {
-            for (GameInvisibleRug vGameInvisibleRug : this.vGameInvisibleRugs) {
-                Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID, getTilesFromInvisibleRug(vGameInvisibleRug));
-                if (this.gameState.getBoard().isPlacementValid(rug)) {
-                    rugs.add(vGameInvisibleRug);
-                }
+        for (GameInvisibleRug vGameInvisibleRug : this.vGameInvisibleRugs) {
+            Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID, getTilesFromInvisibleRug(vGameInvisibleRug));
+            if (this.gameState.getBoard().isPlacementValid(rug)) {
+                rugs.add(vGameInvisibleRug);
             }
-        } else {
-            for (GameInvisibleRug hGameInvisibleRug : this.hGameInvisibleRugs) {
-                Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID, getTilesFromInvisibleRug(hGameInvisibleRug));
-                if (this.gameState.getBoard().isPlacementValid(rug)) {
-                    rugs.add(hGameInvisibleRug);
-                }
+        }
+        for (GameInvisibleRug hGameInvisibleRug : this.hGameInvisibleRugs) {
+            Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID, getTilesFromInvisibleRug(hGameInvisibleRug));
+            if (this.gameState.getBoard().isPlacementValid(rug)) {
+                rugs.add(hGameInvisibleRug);
             }
         }
         return rugs;
@@ -772,12 +767,20 @@ public class Game extends Application {
         for (Player player : this.gameState.getPlayers()) {
             String colourString = "PLAYER " + player.getColour();
             Text colourText = new Text();
-            colourText.setFont(PLAYER_COLOUR_TEXT_FONT_REGULAR_18);
+            colourText.setFont(PLAYER_COLOUR_TEXT_FONT_REGULAR);
             if (this.gameState.isPlayerAvailable(player)) {
+                if (!this.gameState.isGameOver() && player.equals(this.gameState.getCurrentPlayer())) {
+                    colourString += " - CURRENT";
+                }
+                if (this.gameState.isGameOver()) {
+                    //FIXME
+                }
                 colourText.setFill(Colour.getFrontEndColor(player.getColour()));
+                colourText.setStroke(Colour.getFrontEndColor(player.getColour()).darker());
             } else {
-                colourText.setFill(Color.GRAY);
                 colourString += " - OUT";
+                colourText.setFill(Color.GRAY);
+                colourText.setOpacity(1 - HIGHLIGHTED_OPACITY);
             }
             colourText.setText(colourString);
 
@@ -825,16 +828,20 @@ public class Game extends Application {
 
             this.chbIsComputer = new CheckBox();
             this.chbIsComputer.setText("Computer");
+            this.chbIsComputer.setFont(GENERAL_TEXT_FONT_ITALIC);
             this.chbIsComputer.relocate(0, COLOUR_BUTTON_RADIUS * 2.2);
 
             this.lblStrategy = new Label("Strategy:");
+            this.lblStrategy.setFont(GENERAL_TEXT_FONT_REGULAR);
             this.lblStrategy.relocate(0, COLOUR_BUTTON_RADIUS * 2.6);
 
             ToggleGroup toggleGroup = new ToggleGroup();
             this.rbRandom = new RadioButton("Random");
+            this.rbRandom.setFont(GENERAL_TEXT_FONT_ITALIC);
             this.rbRandom.relocate(0, COLOUR_BUTTON_RADIUS * 3.0);
             this.rbRandom.setToggleGroup(toggleGroup);
             this.rbIntelligent = new RadioButton("Intelligent");
+            this.rbIntelligent.setFont(GENERAL_TEXT_FONT_ITALIC);
             this.rbIntelligent.relocate(0, COLOUR_BUTTON_RADIUS * 3.4);
             this.rbIntelligent.setToggleGroup(toggleGroup);
             this.rbIntelligent.setDisable(true);
