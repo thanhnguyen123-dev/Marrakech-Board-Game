@@ -46,6 +46,17 @@ assets:
     url: https://www.pexels.com/photo/brown-wood-planks-168442/
     licence: All photos and videos on Pexels can be downloaded and used for free.
 
+  - comment: Back icon
+    url: https://www.iconfont.cn/search/index?searchType=icon&q=back&lang=en-us&page=1&fromCollection=1&fills=&tag=
+    licence: This material is only for the majority of users to exchange learning and use, without the written authorization of iconfont or its affiliates, shall not be used for any commercial purpose.
+
+  - comment: Backgroung picture on game scene
+    url: https://www.pexels.com/photo/white-and-black-abstract-painting-4705933/
+    licence: All photos and videos on Pexels can be downloaded and used for free.
+
+  - comment: Hint icon
+    url: https://www.iconfont.cn/search/index?searchType=icon&q=question&page=1&fills=&lang=en-us&fromCollection=1&tag=
+    licence: All photos and videos on Pexels can be downloaded and used for free.
 
 # Sign *your* name and uids here. (Remove entries if you have fewer
 # than three members.)
