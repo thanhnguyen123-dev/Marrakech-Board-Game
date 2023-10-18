@@ -3,7 +3,7 @@ package comp1110.ass2.gui;
 import comp1110.ass2.GameState;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
-import comp1110.ass2.player.Die;
+import comp1110.ass2.board.Die;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Player.Strategy;
 import comp1110.ass2.player.Rug;
@@ -258,13 +258,13 @@ public class Game extends Application {
     private ArrayList<PlayerSelector> makeNewPlayerSelectors() {
         // Player Selectors for all the players
         PlayerSelector playerCyan = new PlayerSelector(COLOUR_BUTTON_RADIUS * 1.2, COLOUR_BUTTON_RADIUS * 4, Colour.CYAN);
-        playerCyan.relocate(270, 180);
+        playerCyan.relocate(4.5 * COLOUR_BUTTON_RADIUS, 180);
         PlayerSelector playerYellow = new PlayerSelector(COLOUR_BUTTON_RADIUS * 1.2, COLOUR_BUTTON_RADIUS * 4, Colour.YELLOW);
-        playerYellow.relocate(270 + 3 * COLOUR_BUTTON_RADIUS, 180);
+        playerYellow.relocate(7.5 * COLOUR_BUTTON_RADIUS, 180);
         PlayerSelector playerRed = new PlayerSelector(COLOUR_BUTTON_RADIUS * 1.2, COLOUR_BUTTON_RADIUS * 4, Colour.RED);
-        playerRed.relocate(270 + 6 * COLOUR_BUTTON_RADIUS, 180);
+        playerRed.relocate(10.5 * COLOUR_BUTTON_RADIUS, 180);
         PlayerSelector playerPurple = new PlayerSelector(COLOUR_BUTTON_RADIUS * 1.2, COLOUR_BUTTON_RADIUS * 4, Colour.PURPLE);
-        playerPurple.relocate(270 + 9 * COLOUR_BUTTON_RADIUS, 180);
+        playerPurple.relocate(13.5 * COLOUR_BUTTON_RADIUS, 180);
 
         return new ArrayList<>(List.of(playerCyan, playerYellow, playerRed, playerPurple));
     }

@@ -1,4 +1,4 @@
-package comp1110.ass2.player;
+package comp1110.ass2.board;
 
 import java.util.Random;
 

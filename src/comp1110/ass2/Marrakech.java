@@ -2,7 +2,7 @@ package comp1110.ass2;
 
 import comp1110.ass2.board.Board;
 import comp1110.ass2.board.Tile;
-import comp1110.ass2.player.Die;
+import comp1110.ass2.board.Die;
 import comp1110.ass2.player.Rug;
 
 import java.util.HashSet;
