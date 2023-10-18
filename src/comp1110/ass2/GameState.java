@@ -7,6 +7,7 @@ import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * GameState class determines the state of each player
@@ -322,6 +323,26 @@ public class GameState {
         return true;
     }
 
+    public ArrayList<Player> getWinners() {
+        HashMap<Player, Integer> scores = getScores();
+        int maxScore = Collections.max(scores.values());
+        ArrayList<Player> maxScorePlayers = new ArrayList<>(this.availablePlayers
+                .stream()
+                .filter(p -> scores.get(p) == maxScore)
+                .collect(Collectors.toList()));
+        if (maxScorePlayers.size() > 1) {
+            HashMap<Player, Integer> dirhams = new HashMap<>();
+            maxScorePlayers.forEach(p -> dirhams.put(p, p.getDirham()));
+            int maxDirhams = Collections.max(dirhams.values());
+            ArrayList<Player> winners = new ArrayList<>(maxScorePlayers
+                    .stream()
+                    .filter(p -> p.getDirham() == maxDirhams)
+                    .collect(Collectors.toList()));
+            return winners;
+        }
+        return maxScorePlayers;
+    }
+
     /**
      * Get the winner if the game is over (e.g. if Red wins then return 'r')
      * If more than one player score the highest score, return 't'
@@ -330,78 +351,55 @@ public class GameState {
      * @author Le Thanh Nguyen u7594144
      */
     public char getWinner() {
-        if (this.isGameOver()) {
-            List<Integer> playersScores = new ArrayList<>();
-            for (Player player : this.availablePlayers) {
-                playersScores.add(this.getPlayerScore(player));
-            }
-            int maxScore = Collections.max(playersScores);
-            List<Player> highestScorePlayers = new ArrayList<>();
-            for (Player player : this.availablePlayers) {
-                if (this.getPlayerScore(player) == maxScore) {
-                    highestScorePlayers.add(player);
-                }
-            }
-
-            if (Collections.frequency(playersScores, maxScore) > 1) {
-                Map<Player, Integer> playerDirhamsMap = new HashMap<>();
-                List<Integer> dirhamsOfPlayers = new ArrayList<>();
-                for (Player highestScorePlayer : highestScorePlayers) {
-                    playerDirhamsMap.put(highestScorePlayer, highestScorePlayer.getDirham());
-                }
-                int maxDirhams = Collections.max(playerDirhamsMap.values());
-                if (Collections.frequency(dirhamsOfPlayers, maxDirhams) > 1) {
-                    return 't';
-                } else {
-                    for (Player highestScorePlayer : highestScorePlayers) {
-                        if (highestScorePlayer.getDirham() == maxDirhams) {
-                            return highestScorePlayer.getColour().colourChar;
-                        }
-                    }
-                }
-            } else {
-                Player winner = highestScorePlayers.get(0);
-                return winner.getColour().colourChar;
-            }
+        if (!isGameOver()) {
+            return 'n';
         }
-        return 'n';
+        ArrayList<Player> winners = getWinners();
+        if (winners.size() > 1) {
+            return 't';
+        }
+        return winners.get(0).getColour().getColourChar();
     }
 
     /**
-     * Calculate the player score of a Player at the current state
-     * @param player
-     * @return a number representation of the score
+     * Calculates each player's score at the current state
+     * @return a map of all players' scores
      * @author Le Thanh Nguyen u7594144
      */
-    public int getPlayerScore(Player player) {
-        int dirhamsValue = player.getDirham();
-        int numOfVisibleSquares = this.getNumOfVisibleSquares(player);
-        return dirhamsValue + numOfVisibleSquares;
+    public HashMap<Player, Integer> getScores() {
+        HashMap<Player, Integer> nums = getNumsOfVisibleRugTiles();
+        HashMap<Player, Integer> scores = new HashMap<>();
+        nums.forEach((player, num) -> scores.put(player, player.getDirham() + nums.get(player)));
+        return scores;
     }
 
-
     /**
-     * Count the number of visible squares of a Player at the current state
-     * @param player
-     * @return a number representation of the visible squares
+     * Counts the number of visible rug tiles of each player at the current state
+     * @return a map of all players' respective numbers of visible rug tiles, including 0
      * @author Le Thanh Nguyen u7594144
      */
-    public int getNumOfVisibleSquares(Player player) {
-        Board board = this.getBoard();
-        Tile[][] tiles = board.getTiles();
-        Colour playerColour = player.getColour();
-        int count = 0;
+    public HashMap<Player, Integer> getNumsOfVisibleRugTiles() {
+        Tile[][] tiles = this.board.getTiles();
+        HashMap<Player, Integer> hashMap = new HashMap<>();
         for (int row = 0; row < Board.NUM_OF_ROWS; row++) {
             for (int col = 0; col < Board.NUM_OF_COLS; col++) {
                 Tile tile = tiles[row][col];
                 if (tile.hasRug()) {
-                    if (playerColour == tile.getTopRug().getColour()) {
-                        count++;
+                    Player rugOwner = findPlayer(tile.getTopRug().getColour());
+                    if (!hashMap.containsKey(rugOwner)) {
+                        hashMap.put(rugOwner, 1);
+                    } else {
+                        hashMap.put(rugOwner, hashMap.get(rugOwner) + 1);
                     }
                 }
             }
         }
-        return count;
+        for (Player player : this.players) {
+            if (!hashMap.containsKey(player)) {
+                hashMap.put(player, 0);
+            }
+        }
+        return hashMap;
     }
 
     /**

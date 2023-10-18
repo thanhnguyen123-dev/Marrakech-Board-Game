@@ -85,7 +85,7 @@ public class Game extends Application {
     private int numOfPlayers;
 
     private Phase currentPhase;
-    private Text phaseText;
+    private Text phaseText = new Text();
     private Region assam;
     private int dieResult;
     GameInvisibleRug highlighted;
@@ -113,7 +113,7 @@ public class Game extends Application {
     private final Text movementText = new Text();
     private final Text paymentText = new Text();
 
-    private final long MILLIS = 400;
+    private final long MILLIS = 2000;
 
     // all players, including human and computer players
     private Player[] players;
@@ -310,24 +310,20 @@ public class Game extends Application {
         playerArea.relocate(MARGIN_LEFT + BOARD_AREA_SIDE + MARGIN_TOP, MARGIN_TOP);
         this.gameArea.getChildren().add(playerArea);
 
-        // Stats area, include game stats and player stats
+        // Stats area, includes current game phase and player stats
         final GamePane statsArea = new GamePane(STATS_AREA_WIDTH, STATS_AREA_HEIGHT);
         statsArea.setBorder(gamePaneBorder);
         playerArea.getChildren().add(statsArea);
-        // Display game stats
-        this.phaseText = new Text("Current Game Phase: " + this.currentPhase.toString());
-        this.phaseText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
-        this.phaseText.relocate(20, 10);
-        statsArea.getChildren().add(this.phaseText);
 
-        // Display player stats
-        final VBox playerStatArea = new VBox();
-        playerStatArea.setPrefSize(STATS_AREA_WIDTH, STATS_AREA_HEIGHT - 50);
-        playerStatArea.relocate(30, 50);
-        // load player stats
-        updatePlayerStats();
-        playerStatArea.getChildren().addAll(playerStatsVBox);
-        statsArea.getChildren().add(playerStatArea);
+        // add styles for elements inside stats area
+        this.phaseText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
+        this.phaseText.relocate(15, 20);
+        this.playerStatsVBox.setSpacing(4);
+        this.playerStatsVBox.relocate(20, 80);
+
+        // update stats area
+        updateStatsArea();
+        statsArea.getChildren().addAll(phaseText, this.playerStatsVBox);
 
         // control area
         this.controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
@@ -444,8 +440,9 @@ public class Game extends Application {
                 if (!this.gameState.isPaymentRequired() || this.gameState.isPaymentAffordable()) {
                     this.gameState.makePayment();
                     nextPhase();
+
                     // update players stats
-                    updatePlayerStats();
+                    updateStatsArea();
                     this.gameDraggableRug = new GameDraggableRug(this, MARGIN_LEFT + BOARD_AREA_SIDE + MARGIN_TOP + BUTTON_WIDTH * 0.5, 500, this.gameState.getCurrentPlayer().getColour());
                     this.gameArea.getChildren().add(this.gameDraggableRug);
                     this.controlArea.getChildren().addAll(this.btnRotateRug, this.btnConfirmPlacement);
@@ -454,12 +451,13 @@ public class Game extends Application {
                     this.gameState.makePayment();
                     this.gameState.removeCurrentPlayer();
                     nextPhase();
-                    updatePlayerStats();
+
+                    updateStatsArea();
+
                     if (!this.gameState.isGameOver()) {
                         nextTurn();
                     } else {
-                        updatePlayerStats();
-                        this.phaseText.setText("Game Over");
+                        this.btnMainBack.setDisable(false);
                     }
                 }
             }
@@ -513,9 +511,10 @@ public class Game extends Application {
 
             Rug rug = new Rug(this.gameDraggableRug.getColour(), this.rugID++, getTilesFromHighlighted());
             this.gameState.makePlacement(rug);
+
+            updateStatsArea();
             GameRug gameRug = new GameRug(this.highlighted.getLayoutX(), this.highlighted.getLayoutY(), this.gameDraggableRug.getOrientation(), this.gameDraggableRug.getColour());
             this.placedRugs.getChildren().add(gameRug);
-
             this.highlighted.setOpacity(0);
             this.highlighted = null;
             this.gameDraggableRug = null;
@@ -523,8 +522,7 @@ public class Game extends Application {
             if (!this.gameState.isGameOver()) {
                 nextTurn();
             } else {
-                updatePlayerStats();
-                this.phaseText.setText("Game Over");
+                this.btnMainBack.setDisable(false);
             }
         }
     }
@@ -607,8 +605,9 @@ public class Game extends Application {
             if (!this.gameState.isPaymentRequired() || this.gameState.isPaymentAffordable()) {
                 this.gameState.makePayment();
                 nextPhase();
+
                 // update players stats
-                updatePlayerStats();
+                updateStatsArea();
                 this.controlArea.getChildren().addAll(this.btnRotateRug, this.btnConfirmPlacement);
                 this.btnRotateRug.setDisable(true);
                 this.btnConfirmPlacement.setDisable(true);
@@ -618,12 +617,13 @@ public class Game extends Application {
                 this.gameState.makePayment();
                 this.gameState.removeCurrentPlayer();
                 nextPhase();
-                updatePlayerStats();
+
+                updateStatsArea();
+
                 if (!this.gameState.isGameOver()) {
                     nextTurn();
                 } else {
-                    updatePlayerStats();
-                    this.phaseText.setText("Game Over");
+                    this.btnMainBack.setDisable(false);
                 }
             }
         });
@@ -641,14 +641,15 @@ public class Game extends Application {
 
             Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID++, getTilesFromInvisibleRug(randomValidRug));
             this.gameState.makePlacement(rug);
+
+            updateStatsArea();
             GameRug gameRug = new GameRug(randomValidRug.getLayoutX(), randomValidRug.getLayoutY(), randomValidRug.getOrientation(), this.gameState.getCurrentPlayer().getColour());
             this.placedRugs.getChildren().add(gameRug);
 
             if (!this.gameState.isGameOver()) {
                 nextTurn();
             } else {
-                updatePlayerStats();
-                this.phaseText.setText("Game Over");
+                this.btnMainBack.setDisable(false);
             }
         });
     }
@@ -685,9 +686,9 @@ public class Game extends Application {
     private void nextTurn() {
         this.gameState.nextPlayer();
         nextPhase();
-        // update player stats
-        updatePlayerStats();
 
+        // update stats area
+        updateStatsArea();
         this.controlArea.getChildren().addAll(this.btnRotations);
         this.controlArea.getChildren().add(this.btnConfirmRotation);
 
@@ -761,9 +762,14 @@ public class Game extends Application {
     /**
      * Update player stats
      */
-    private void updatePlayerStats() {
+    private void updateStatsArea() {
+        if (!this.gameState.isGameOver()) {
+            this.phaseText.setText("Current Game Phase: " + this.currentPhase);
+        } else {
+            this.phaseText.setText("Game Over");
+        }
+
         this.playerStatsVBox.getChildren().clear();
-        this.playerStatsVBox.setSpacing(4);
         for (Player player : this.gameState.getPlayers()) {
             String colourString = "PLAYER " + player.getColour();
             Text colourText = new Text();
@@ -773,7 +779,10 @@ public class Game extends Application {
                     colourString += " - CURRENT";
                 }
                 if (this.gameState.isGameOver()) {
-                    //FIXME
+                    ArrayList<Player> winners = this.gameState.getWinners();
+                    if (winners.contains(player)) {
+                        colourString += " - WINNER!";
+                    }
                 }
                 colourText.setFill(Colour.getFrontEndColor(player.getColour()));
                 colourText.setStroke(Colour.getFrontEndColor(player.getColour()).darker());
@@ -784,7 +793,7 @@ public class Game extends Application {
             }
             colourText.setText(colourString);
 
-            String scoreString = "     Current Score: " + this.gameState.getPlayerScore(player);
+            String scoreString = "     Current Score: " + this.gameState.getScores().get(player);
             Text scoreText = new Text();
             scoreText.setFont(GENERAL_TEXT_FONT_ITALIC);
             if (player.isComputer()) {
