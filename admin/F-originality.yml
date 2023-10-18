@@ -42,9 +42,9 @@ code:
 # Add as many "url+licence+comment" entries as necessary
 # (or remove it altogether if you haven't used any external assets)
 assets:
-  - comment:
-    url:
-    licence:
+  - comment: Backgroung picture
+    url: https://www.pexels.com/photo/brown-wood-planks-168442/
+    licence: All photos and videos on Pexels can be downloaded and used for free.
 
 
 # Sign *your* name and uids here. (Remove entries if you have fewer

@@ -13,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -117,20 +118,27 @@ public class Game extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Home page, title screen
-        VBox titleVBox = new VBox();
-        Scene titleScene = new Scene(titleVBox, WINDOW_WIDTH, WINDOW_HEIGHT);
-        Text titleText = new Text("Play Marrakech!");
-        titleText.setFont(new Font("", 60));
+        StackPane titleRootPane = new StackPane();
+        VBox titlePane = new VBox();
+        BackgroundImage background = drawBackground();
+        titleRootPane.setBackground(new Background(background));
+
+        Text title = new Text("Play Marrakech!");
+        title.setFont(new Font("", 60));
         GameButton btnStart = new GameButton("Start", BUTTON_WIDTH, BUTTON_HEIGHT);
         // Make two elements center vertical
-        titleVBox.setAlignment(Pos.CENTER);
-        titleVBox.setSpacing(20);
+        titlePane.setAlignment(Pos.CENTER);
+        titlePane.setSpacing(20);
         // Add all children of titlePane
-        titleVBox.getChildren().addAll(titleText, btnStart);
+        titlePane.getChildren().addAll(title, btnStart);
+        titleRootPane.getChildren().add(titlePane);
+        Scene titleScene = new Scene(titleRootPane, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         // Choose number of players
+        StackPane numberRootPane = new StackPane();
         Pane numberPane = new Pane();
-        Scene numberScene = new Scene(numberPane, WINDOW_WIDTH, WINDOW_HEIGHT);
+        numberRootPane.setBackground(new Background(background));
+        Scene numberScene = new Scene(numberRootPane, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         // Choice box to choose the number of human players
         Text numberText = new Text("Please choose the number of players:");
@@ -152,11 +160,14 @@ public class Game extends Application {
         this.btnNumberConfirm.requestFocus();
 
         // Add all children of numberPane
+        numberRootPane.getChildren().add(numberPane);
         numberPane.getChildren().addAll(choiceBox, numberText, btnNumberBack, this.btnNumberConfirm);
 
         // Players choose their colours
         Pane colourPane = new Pane();
-        Scene colourScene = new Scene(colourPane, WINDOW_WIDTH, WINDOW_HEIGHT);
+        StackPane colourRootPane = new StackPane();
+        colourRootPane.setBackground(new Background(background));
+        Scene colourScene = new Scene(colourRootPane, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         this.playerSelectors = makeNewPlayerSelectors();
 
@@ -170,6 +181,7 @@ public class Game extends Application {
 
         colourPane.getChildren().addAll(this.playerSelectors);
         colourPane.getChildren().addAll(btnColourBack, btnColourReset, btnColourConfirm);
+        colourRootPane.getChildren().add(colourPane);
 
         // Start button on the homepage
         btnStart.setOnMouseClicked(event -> {
@@ -409,7 +421,11 @@ public class Game extends Application {
         // confirm rugs placement
         this.btnConfirmPlacement.setOnMouseClicked(event -> makePlacement());
 
-        Scene scene = new Scene(gameArea, WINDOW_WIDTH, WINDOW_HEIGHT);
+        StackPane gameRootArea = new StackPane();
+        BackgroundImage background = drawBackground();
+        gameRootArea.setBackground(new Background(background));
+        Scene scene = new Scene(gameRootArea, WINDOW_WIDTH, WINDOW_HEIGHT);
+        gameRootArea.getChildren().add(gameArea);
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.Q || event.getCode() == KeyCode.E) {
                 if (this.currentPhase == Phase.PLACEMENT) {
@@ -706,6 +722,16 @@ public class Game extends Application {
             numOfUnplacedRugsText.setFont(new Font(16));
             eachPlayerStatArea.getChildren().addAll(dirhamText, numOfUnplacedRugsText);
         }
+    }
+
+    private BackgroundImage drawBackground() {
+        Image backgroundImage = new Image("resources/background.jpg");
+        // set image size, make the picture adaptive
+        BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, true);
+        BackgroundImage background = new BackgroundImage(backgroundImage,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, backgroundSize);
+        return background;
     }
 
     private class PlayerSelector extends Pane {
