@@ -8,13 +8,12 @@ import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Player.Strategy;
 import comp1110.ass2.player.Rug;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
@@ -24,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Game extends Application {
     private static final int WINDOW_WIDTH = 1200;
@@ -72,7 +72,6 @@ public class Game extends Application {
     private GamePane gameArea;
     private GamePane controlArea;
 
-
     // number of human and computer players
     private int numOfPlayers;
 
@@ -88,44 +87,12 @@ public class Game extends Application {
     private ArrayList<PlayerSelector> playerSelectors;
 
     VBox eachPlayerStatArea = new VBox();
-    HBox computerPlayerControl = new HBox();
-    // simulate mouse click
-    MouseEvent clickEvent = new MouseEvent(
-            MouseEvent.MOUSE_CLICKED,
-            0, 0, 0, 0,
-            MouseButton.PRIMARY, 1,
-            true, true, true, true,
-            true, true, true, true,
-            true, true, null
-    );
-    MouseEvent pressEvent = new MouseEvent(
-            MouseEvent.MOUSE_PRESSED,
-            0, 0, 0, 0,
-            MouseButton.PRIMARY, 1,
-            true, true, true, true,
-            true, true, true, true,
-            true, true, null
-    );
-    MouseEvent dragEvent = new MouseEvent(
-            MouseEvent.MOUSE_DRAGGED,
-            100, 100, 100, 100,
-            MouseButton.PRIMARY, 1,
-            true, true, true, true,
-            true, true, true, true,
-            true, true, null
-    );
-    MouseEvent releaseEvent = new MouseEvent(
-            MouseEvent.MOUSE_RELEASED,
-            100, 100, 100, 100,
-            MouseButton.PRIMARY, 1,
-            true, true, true, true,
-            true, true, true, true,
-            true, true, null
-    );
 
     private final GameButton btnNumberConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
     private final GameButton btnColourConfirm = new GameButton("Confirm", BUTTON_WIDTH, BUTTON_HEIGHT);
 
+    private final GameButton btnInitialRotation = new GameButton("Rotate Right", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+    private final GameButton btnConfirmInitialRotation = new GameButton("Confirm Rotation", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
     private ArrayList<GameButton> btnRotations;
     private final GameButton btnConfirmRotation = new GameButton("Confirm Rotation", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
     private final GameButton btnRollDie = new GameButton("Roll Die", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
@@ -133,6 +100,11 @@ public class Game extends Application {
     private final GameButton btnConfirmPayment = new GameButton("Proceed", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
     private final GameButton btnRotateRug = new GameButton("Rotate Rug", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
     private final GameButton btnConfirmPlacement = new GameButton("Confirm Placement", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
+
+    private final Text movementText = new Text();
+    private final Text paymentText = new Text();
+
+    private final long MILLIS = 1500;
 
     // all players, including human and computer players
     private Player[] players;
@@ -145,23 +117,23 @@ public class Game extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Home page, title screen
-        VBox titlePane = new VBox();
-        Scene titleScene = new Scene(titlePane, WINDOW_WIDTH, WINDOW_HEIGHT);
-        Text title = new Text("Play Marrakech!");
-        title.setFont(new Font("", 60));
+        VBox titleVBox = new VBox();
+        Scene titleScene = new Scene(titleVBox, WINDOW_WIDTH, WINDOW_HEIGHT);
+        Text titleText = new Text("Play Marrakech!");
+        titleText.setFont(new Font("", 60));
         GameButton btnStart = new GameButton("Start", BUTTON_WIDTH, BUTTON_HEIGHT);
         // Make two elements center vertical
-        titlePane.setAlignment(Pos.CENTER);
-        titlePane.setSpacing(20);
+        titleVBox.setAlignment(Pos.CENTER);
+        titleVBox.setSpacing(20);
         // Add all children of titlePane
-        titlePane.getChildren().addAll(title, btnStart);
+        titleVBox.getChildren().addAll(titleText, btnStart);
 
         // Choose number of players
         Pane numberPane = new Pane();
         Scene numberScene = new Scene(numberPane, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         // Choice box to choose the number of human players
-        Text numberText = new Text("Please choose the number of players");
+        Text numberText = new Text("Please choose the number of players:");
         numberText.setFont(new Font(18));
         numberText.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0 - 300, 280);
 
@@ -250,7 +222,7 @@ public class Game extends Application {
         });
 
         primaryStage.setResizable(false);
-        primaryStage.setTitle("Marrakech Game");
+        primaryStage.setTitle("Marrakech");
         primaryStage.setScene(titleScene);
         primaryStage.show();
     }
@@ -269,9 +241,6 @@ public class Game extends Application {
         return new ArrayList<>(List.of(playerCyan, playerYellow, playerRed, playerPurple));
     }
 
-    /**
-     * @return
-     */
     private Scene makeMainScene() {
         // Initialize game phase as rotation phase
         this.currentPhase = Phase.ROTATION;
@@ -293,7 +262,7 @@ public class Game extends Application {
         tileArea.getChildren().addAll(this.allTiles, this.placedRugs, this.invisibleRugs, this.assam);
         boardArea.getChildren().add(tileArea);
 
-        // Display area to display statements and controls for the players, contains statements area and control area
+        // Display area to display stats and controls for the players, contains stats area and control area
         final GamePane playerArea = new GamePane(PLAYER_AREA_WIDTH, PLAYER_AREA_HEIGHT);
         playerArea.relocate(MARGIN_LEFT + BOARD_AREA_SIDE + MARGIN_TOP, MARGIN_TOP);
         this.gameArea.getChildren().add(playerArea);
@@ -303,7 +272,7 @@ public class Game extends Application {
         statsArea.setBorder(gamePaneBorder);
         playerArea.getChildren().add(statsArea);
         // Display game stats
-        this.phaseText = new Text("Current phase of game: " + this.currentPhase.toString());
+        this.phaseText = new Text("Current Game Phase: " + this.currentPhase.toString());
         this.phaseText.setFont(new Font(20));
         this.phaseText.relocate(30, 10);
         statsArea.getChildren().add(this.phaseText);
@@ -324,10 +293,8 @@ public class Game extends Application {
         playerArea.getChildren().add(this.controlArea);
 
         //buttons inside control area
-        GameButton btnInitialRotation = new GameButton("Rotate Right", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
-        btnInitialRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT / 2.0);
-        GameButton btnConfirmInitialRotation = new GameButton("Confirm Rotation", BUTTON_WIDTH * 1.2, BUTTON_HEIGHT);
-        btnConfirmInitialRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
+        this.btnInitialRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT / 2.0);
+        this.btnConfirmInitialRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
         GameButton btnRotateLeft = new GameButton("Rotate Left", BUTTON_WIDTH * 0.8, BUTTON_HEIGHT);
         btnRotateLeft.relocate(BUTTON_WIDTH * 0.6, BUTTON_HEIGHT / 2.0);
@@ -338,30 +305,29 @@ public class Game extends Application {
 
         this.btnRollDie.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
-        Text movementText = new Text();
-        movementText.relocate(BUTTON_WIDTH, BUTTON_HEIGHT);
+        this.movementText.relocate(BUTTON_WIDTH * 0.4, BUTTON_HEIGHT);
+        this.movementText.setFont(new Font(16));
+        this.movementText.setWrappingWidth(300);
         this.btnMoveAssam.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
-        Text paymentText = new Text();
-        paymentText.relocate(BUTTON_WIDTH, BUTTON_HEIGHT);
-        paymentText.setWrappingWidth(300);
+        this.paymentText.relocate(BUTTON_WIDTH * 0.4, BUTTON_HEIGHT);
+        this.paymentText.setFont(new Font(16));
+        this.paymentText.setWrappingWidth(300);
         this.btnConfirmPayment.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
         this.btnRotateRug.relocate(BUTTON_WIDTH * 1.5, BUTTON_HEIGHT / 2.0);
         this.btnConfirmPlacement.relocate(BUTTON_WIDTH * 1.5, BUTTON_HEIGHT * 2);
 
         //allows player to set Assam's initial direction
-        this.controlArea.getChildren().addAll(btnInitialRotation, btnConfirmInitialRotation);
+        this.controlArea.getChildren().addAll(this.btnInitialRotation, this.btnConfirmInitialRotation);
 
-        btnInitialRotation.setOnMouseClicked(event -> {
-            this.assam.setRotate(this.assam.getRotate() + 90);
-        });
+        this.btnInitialRotation.setOnMouseClicked(event -> this.assam.setRotate(this.assam.getRotate() + 90));
 
-        btnConfirmInitialRotation.setOnMouseClicked(event -> {
+        this.btnConfirmInitialRotation.setOnMouseClicked(event -> {
             if (this.currentPhase == Phase.ROTATION) {
-                nextPhase();
                 this.controlArea.getChildren().removeAll(btnInitialRotation, btnConfirmInitialRotation);
                 this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
+                nextPhase();
                 this.controlArea.getChildren().add(this.btnRollDie);
             }
         });
@@ -381,10 +347,10 @@ public class Game extends Application {
         // confirm rotation Assam
         this.btnConfirmRotation.setOnMouseClicked(event -> {
             if (this.currentPhase == Phase.ROTATION) {
-                nextPhase();
                 this.controlArea.getChildren().removeAll(this.btnRotations);
                 this.controlArea.getChildren().remove(this.btnConfirmRotation);
                 this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
+                nextPhase();
                 this.controlArea.getChildren().add(this.btnRollDie);
             }
         });
@@ -393,17 +359,15 @@ public class Game extends Application {
         this.btnRollDie.setOnMouseClicked(event -> {
             this.controlArea.getChildren().remove(this.btnRollDie);
             this.dieResult = Die.getSide();
+            this.movementText.setText("Die result is " + this.dieResult + ". Assam will now move " + this.dieResult + " steps.");
             this.controlArea.getChildren().addAll(movementText, this.btnMoveAssam);
-            movementText.setText("Die result is " + this.dieResult + ". Assam will now move " + this.dieResult + " steps.");
-            movementText.setFont(new Font(16));
         });
 
         // make Assam move
         this.btnMoveAssam.setOnMouseClicked(event -> {
-            this.controlArea.getChildren().removeAll(movementText, this.btnMoveAssam);
+            this.controlArea.getChildren().removeAll(this.movementText, this.btnMoveAssam);
             this.gameState.moveAssam(this.dieResult);
             updateAssam();
-            this.controlArea.getChildren().addAll(paymentText, btnConfirmPayment);
             if (!this.gameState.isPaymentRequired()) {
                 paymentText.setText("No payment required.");
             } else if (this.gameState.isPaymentAffordable()) {
@@ -411,31 +375,31 @@ public class Game extends Application {
             } else {
                 paymentText.setText("You cannot afford to pay. You will have to give all your dirhams to Player " + this.gameState.findAssamRugOwner().getColour().toString() + ". After that, You will be removed from the game");
             }
-            paymentText.setFont(new Font(16));
+            this.controlArea.getChildren().addAll(paymentText, this.btnConfirmPayment);
         });
 
         // If need payment, confirm payment
         this.btnConfirmPayment.setOnMouseClicked(event -> {
             if (this.currentPhase == Phase.MOVEMENT) {
-                nextPhase();
                 this.controlArea.getChildren().removeAll(paymentText, this.btnConfirmPayment);
                 if (!this.gameState.isPaymentRequired() || this.gameState.isPaymentAffordable()) {
                     this.gameState.makePayment();
+                    nextPhase();
+                    // update players stats
+                    updatePlayerStats();
                     this.gameDraggableRug = new GameDraggableRug(this, MARGIN_LEFT + BOARD_AREA_SIDE + MARGIN_TOP + BUTTON_WIDTH * 0.5, 500, this.gameState.getCurrentPlayer().getColour());
                     this.gameArea.getChildren().add(this.gameDraggableRug);
                     this.controlArea.getChildren().addAll(this.btnRotateRug, this.btnConfirmPlacement);
                 } else {
+                    // If the current player cannot afford to pay the full amount
                     this.gameState.makePayment();
-                    if (!gameState.isGameOver()) {
-                        this.gameState.removeCurrentPlayer();
-                        this.gameState.nextPlayer();
-                        nextPhase();
-                        // computer player and human player act
-                        simulatePlayerAct();
+                    this.gameState.removeCurrentPlayer();
+                    nextPhase();
+                    updatePlayerStats();
+                    if (!this.gameState.isGameOver()) {
+                        nextTurn();
                     }
                 }
-                // update players statement
-                updatePlayerStats();
             }
         });
 
@@ -461,9 +425,6 @@ public class Game extends Application {
         return scene;
     }
 
-    /**
-     *
-     */
     private void rotateRug() {
         if (this.gameDraggableRug != null) {
             this.gameDraggableRug.setRotate(this.gameDraggableRug.getRotate() + 90);
@@ -494,37 +455,175 @@ public class Game extends Application {
             this.gameDraggableRug = null;
 
             if (!this.gameState.isGameOver()) {
-                nextPhase();
-                this.gameState.nextPlayer();
-                // computer player and human player act
-                simulatePlayerAct();
-                // update player stats
-                updatePlayerStats();
+                nextTurn();
             }
         }
     }
 
-    private void simulatePlayerAct() {
-        if (this.gameState.getCurrentPlayer().isComputer()) {
-            // computer player
-            this.controlArea.getChildren().addAll(this.btnRotations);
-            this.controlArea.getChildren().add(this.btnConfirmRotation);
-            this.btnRotations.forEach(e -> e.setDisable(true));
-            this.btnConfirmRotation.setDisable(true);
-            this.btnConfirmRotation.fireEvent(clickEvent);
-            this.btnRollDie.fireEvent(clickEvent);
-            this.btnMoveAssam.fireEvent(clickEvent);
-            this.btnConfirmPayment.fireEvent(clickEvent);
-            this.gameDraggableRug.fireEvent(pressEvent);
-            this.gameDraggableRug.fireEvent(dragEvent);
-            this.gameDraggableRug.fireEvent(releaseEvent);
-            this.btnConfirmPlacement.fireEvent(clickEvent);
-        } else {
-            // human player
-            this.controlArea.getChildren().addAll(this.btnRotations);
-            this.controlArea.getChildren().add(this.btnConfirmRotation);
-            this.btnRotations.forEach(e -> e.setDisable(false));
+    private void simulateInitialRotation() {
+        delay(() -> {
+            this.controlArea.getChildren().removeAll(this.btnInitialRotation, this.btnConfirmInitialRotation);
+            this.btnInitialRotation.setDisable(false);
+            this.btnConfirmInitialRotation.setDisable(false);
+
+            int rotation = new Random().nextInt(4) * 90;
+            this.gameState.rotateAssam(rotation);
+            updateAssam();
+
+            this.controlArea.getChildren().add(this.btnRollDie);
+            this.btnRollDie.setDisable(true);
+            simulateRollDie();
+        });
+    }
+
+    private void simulateRotation() {
+        delay(() -> {
+            this.controlArea.getChildren().removeAll(this.btnRotations);
+            this.controlArea.getChildren().remove(this.btnConfirmRotation);
+            this.btnRotations.forEach(b -> b.setDisable(false));
             this.btnConfirmRotation.setDisable(false);
+
+            int rotation = new Random().nextInt(3) * 90 - 90;
+            this.gameState.rotateAssam(rotation);
+            updateAssam();
+            nextPhase();
+
+            this.controlArea.getChildren().add(this.btnRollDie);
+            this.btnRollDie.setDisable(true);
+            simulateRollDie();
+        });
+    }
+
+    private void simulateRollDie() {
+        delay(() -> {
+            this.controlArea.getChildren().remove(this.btnRollDie);
+            this.btnRollDie.setDisable(false);
+
+            this.dieResult = Die.getSide();
+
+            this.movementText.setText("Die result is " + this.dieResult + ". Assam will now move " + this.dieResult + " steps.");
+            this.controlArea.getChildren().addAll(this.movementText, this.btnMoveAssam);
+            this.btnMoveAssam.setDisable(true);
+            simulateMovement();
+        });
+    }
+
+    private void simulateMovement() {
+        delay(() -> {
+            this.controlArea.getChildren().removeAll(this.movementText, this.btnMoveAssam);
+            this.btnMoveAssam.setDisable(false);
+
+            this.gameState.moveAssam(this.dieResult);
+            updateAssam();
+
+            if (!this.gameState.isPaymentRequired()) {
+                this.paymentText.setText("No payment required.");
+            } else if (this.gameState.isPaymentAffordable()) {
+                this.paymentText.setText("You will need to pay Player " + this.gameState.findAssamRugOwner().getColour().toString() + " " + this.gameState.getPaymentAmount() + " dirhams.");
+            } else {
+                this.paymentText.setText("You cannot afford to pay. You will have to give all your dirhams to Player " + this.gameState.findAssamRugOwner().getColour().toString() + ". After that, You will be removed from the game");
+            }
+            this.controlArea.getChildren().addAll(this.paymentText, this.btnConfirmPayment);
+            this.btnConfirmPayment.setDisable(true);
+            simulatePayment();
+        });
+    }
+
+    private void simulatePayment() {
+        delay(() -> {
+            this.controlArea.getChildren().removeAll(paymentText, this.btnConfirmPayment);
+            this.btnConfirmPayment.setDisable(false);
+
+            if (!this.gameState.isPaymentRequired() || this.gameState.isPaymentAffordable()) {
+                this.gameState.makePayment();
+                nextPhase();
+                // update players stats
+                updatePlayerStats();
+                this.controlArea.getChildren().addAll(this.btnRotateRug, this.btnConfirmPlacement);
+                this.btnRotateRug.setDisable(true);
+                this.btnConfirmPlacement.setDisable(true);
+                simulatePlacement();
+            } else {
+                // If the current player cannot afford to pay the full amount
+                this.gameState.makePayment();
+                this.gameState.removeCurrentPlayer();
+                nextPhase();
+                updatePlayerStats();
+                if (!this.gameState.isGameOver()) {
+                    nextTurn();
+                }
+            }
+        });
+    }
+
+    private void simulatePlacement() {
+        delay(() -> {
+            this.controlArea.getChildren().removeAll(this.btnRotateRug, this.btnConfirmPlacement);
+            this.btnRotateRug.setDisable(false);
+            this.btnConfirmPlacement.setDisable(false);
+
+            Orientation orientation = new Random().nextInt(2) == 0 ? Orientation.VERTICAL : Orientation.HORIZONTAL;
+            ArrayList<GameInvisibleRug> validRugs = findAllValidPlacements(orientation);
+            int index = new Random().nextInt(validRugs.size());
+            GameInvisibleRug randomValidRug = validRugs.get(index);
+
+            Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID++, getTilesFromInvisibleRug(randomValidRug));
+            this.gameState.makePlacement(rug);
+            GameRug gameRug = new GameRug(randomValidRug.getLayoutX(), randomValidRug.getLayoutY(), orientation, this.gameState.getCurrentPlayer().getColour());
+            this.placedRugs.getChildren().add(gameRug);
+
+            if (!this.gameState.isGameOver()) {
+                nextTurn();
+            }
+        });
+    }
+
+    private ArrayList<GameInvisibleRug> findAllValidPlacements(Orientation orientation) {
+        ArrayList<GameInvisibleRug> rugs = new ArrayList<>();
+
+        if (orientation == Orientation.VERTICAL) {
+            for (GameInvisibleRug vGameInvisibleRug : this.vGameInvisibleRugs) {
+                Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID, getTilesFromInvisibleRug(vGameInvisibleRug));
+                if (this.gameState.getBoard().isPlacementValid(rug)) {
+                    rugs.add(vGameInvisibleRug);
+                }
+            }
+        } else {
+            for (GameInvisibleRug hGameInvisibleRug : this.hGameInvisibleRugs) {
+                Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID, getTilesFromInvisibleRug(hGameInvisibleRug));
+                if (this.gameState.getBoard().isPlacementValid(rug)) {
+                    rugs.add(hGameInvisibleRug);
+                }
+            }
+        }
+        return rugs;
+    }
+
+    private void delay(Runnable func) {
+        Task<Void> sleeper = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                Thread.sleep(MILLIS);
+                return null;
+            }
+        };
+        sleeper.setOnSucceeded(event -> func.run());
+        new Thread(sleeper).start();
+    }
+
+    private void nextTurn() {
+        this.gameState.nextPlayer();
+        nextPhase();
+        // update player stats
+        updatePlayerStats();
+
+        this.controlArea.getChildren().addAll(this.btnRotations);
+        this.controlArea.getChildren().add(this.btnConfirmRotation);
+
+        if (this.gameState.getCurrentPlayer().isComputer()) {
+            this.btnRotations.forEach(b -> b.setDisable(true));
+            this.btnConfirmRotation.setDisable(true);
+            simulateRotation();
         }
     }
 
@@ -591,21 +690,21 @@ public class Game extends Application {
     private void updatePlayerStats() {
         eachPlayerStatArea.getChildren().clear();
         eachPlayerStatArea.setSpacing(5);
-        for (Player player : this.tmp) {
+        for (Player player : this.gameState.getPlayers()) {
             if (player.isComputer()) {
-                Text colour = new Text("Computer Player: " + player.getColour());
-                colour.setFont(new Font(16));
-                eachPlayerStatArea.getChildren().add(colour);
+                Text colourText = new Text("Player " + player.getColour() + " (Computer: " + player.getStrategy() + ")");
+                colourText.setFont(new Font(16));
+                eachPlayerStatArea.getChildren().add(colourText);
             } else {
-                Text colour = new Text("Player: " + player.getColour());
-                colour.setFont(new Font(16));
-                eachPlayerStatArea.getChildren().add(colour);
+                Text colourText = new Text("Player " + player.getColour());
+                colourText.setFont(new Font(16));
+                eachPlayerStatArea.getChildren().add(colourText);
             }
-            Text dirham = new Text("Dirham: " + player.getDirham());
-            dirham.setFont(new Font(16));
-            Text numOfUnplacedRugs = new Text("Number of unplaced rugs: " + player.getNumOfUnplacedRugs());
-            numOfUnplacedRugs.setFont(new Font(16));
-            eachPlayerStatArea.getChildren().addAll(dirham, numOfUnplacedRugs);
+            Text dirhamText = new Text("Dirham: " + player.getDirham());
+            dirhamText.setFont(new Font(16));
+            Text numOfUnplacedRugsText = new Text("Number of unplaced rugs: " + player.getNumOfUnplacedRugs());
+            numOfUnplacedRugsText.setFont(new Font(16));
+            eachPlayerStatArea.getChildren().addAll(dirhamText, numOfUnplacedRugsText);
         }
     }
 
@@ -616,7 +715,6 @@ public class Game extends Application {
         private final Label lblStrategy;
         private final RadioButton rbRandom;
         private final RadioButton rbIntelligent;
-        private final ToggleGroup toggleGroup;
 
         public PlayerSelector(double width, double height, Colour colour) {
             super();
@@ -633,13 +731,13 @@ public class Game extends Application {
             this.lblStrategy = new Label("Strategy:");
             this.lblStrategy.relocate(0, COLOUR_BUTTON_RADIUS * 2.6);
 
-            this.toggleGroup = new ToggleGroup();
+            ToggleGroup toggleGroup = new ToggleGroup();
             this.rbRandom = new RadioButton("Random");
             this.rbRandom.relocate(0, COLOUR_BUTTON_RADIUS * 3.0);
-            this.rbRandom.setToggleGroup(this.toggleGroup);
+            this.rbRandom.setToggleGroup(toggleGroup);
             this.rbIntelligent = new RadioButton("Intelligent");
             this.rbIntelligent.relocate(0, COLOUR_BUTTON_RADIUS * 3.4);
-            this.rbIntelligent.setToggleGroup(this.toggleGroup);
+            this.rbIntelligent.setToggleGroup(toggleGroup);
             this.rbIntelligent.setDisable(true);
 
             this.gameColourButton.setOnMouseClicked(event -> {
@@ -672,13 +770,9 @@ public class Game extends Application {
                 }
             });
 
-            this.rbRandom.setOnMouseClicked(event -> {
-                this.player.setStrategy(Strategy.RANDOM);
-            });
+            this.rbRandom.setOnMouseClicked(event -> this.player.setStrategy(Strategy.RANDOM));
 
-            this.rbIntelligent.setOnMouseClicked(event -> {
-                this.player.setStrategy(Strategy.INTELLIGENT);
-            });
+            this.rbIntelligent.setOnMouseClicked(event -> this.player.setStrategy(Strategy.INTELLIGENT));
         }
     }
 
@@ -703,7 +797,7 @@ public class Game extends Application {
             case MOVEMENT -> this.currentPhase = Phase.PLACEMENT;
             case PLACEMENT -> this.currentPhase = Phase.ROTATION;
         }
-        this.phaseText.setText("Current phase of game: " + this.currentPhase);
+        this.phaseText.setText("Current Game Phase: " + this.currentPhase);
     }
 
     enum Orientation {

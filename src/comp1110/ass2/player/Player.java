@@ -118,6 +118,14 @@ public class Player {
 
     public enum Strategy {
         RANDOM,
-        INTELLIGENT
+        INTELLIGENT;
+
+        @Override
+        public String toString() {
+            return switch (this) {
+                case RANDOM -> "RANDOM";
+                case INTELLIGENT -> "INTELLIGENT";
+            };
+        }
     }
 }
