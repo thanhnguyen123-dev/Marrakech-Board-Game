@@ -72,7 +72,7 @@ public class Game extends Application {
     private static final Font PLAYER_COLOUR_TEXT_FONT_REGULAR_18 = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 24);
 
     private final Pane allTiles = new Pane();
-    private final Pane placedRugs = new Pane();
+    private Pane placedRugs = new Pane();
     private final Pane invisibleRugs = new Pane();
     private final GameTile[][] gameTiles = new GameTile[NUM_OF_ROWS][NUM_OF_COLS];
     final ArrayList<GameInvisibleRug> vGameInvisibleRugs = new ArrayList<>();
@@ -184,7 +184,9 @@ public class Game extends Application {
         Button btnColourBack = CircularImageButton.createCircularImageButton("resources/back.png");
         btnColourBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         GameButton btnColourReset = new GameButton("Reset", BUTTON_WIDTH, BUTTON_HEIGHT);
+        btnColourReset.setFont(BUTTON_FONT);
         btnColourReset.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH * 1.5, 420);
+        this.btnColourConfirm.setFont(BUTTON_FONT);
         this.btnColourConfirm.relocate(WINDOW_WIDTH / 2.0 + BUTTON_WIDTH * 0.5, 420);
         this.btnColourConfirm.setDisable(true);
 
@@ -237,6 +239,8 @@ public class Game extends Application {
         this.btnColourConfirm.setOnMouseClicked(event -> {
             this.players = this.tmp.toArray(new Player[0]);
             this.gameState = new GameState(this.players);
+            this.tmp.clear();
+            this.rugID = 0;
             //main game
             Scene mainScene = makeMainScene();
             primaryStage.setScene(mainScene);
@@ -244,7 +248,9 @@ public class Game extends Application {
 
         // back button on main game scene
         btnMainBack.setOnMouseClicked(event -> {
-            this.tmp.clear();
+            this.placedRugs = new Pane();
+            this.players = null;
+            this.gameState = null;
             colourPane.getChildren().removeAll(this.playerSelectors);
             this.playerSelectors = makeNewPlayerSelectors();
             colourPane.getChildren().addAll(this.playerSelectors);
@@ -275,6 +281,11 @@ public class Game extends Application {
     private Scene makeMainScene() {
         // Initialize game phase as rotation phase
         this.currentPhase = Phase.ROTATION;
+        if (this.highlighted != null) {
+            this.highlighted.setOpacity(0);
+            this.highlighted = null;
+        }
+        this.gameDraggableRug = null;
         this.gameArea = new GamePane(WINDOW_WIDTH, WINDOW_HEIGHT);
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
         // back button
@@ -362,6 +373,7 @@ public class Game extends Application {
 
         //allows player or computer to set Assam's initial direction
         if (this.gameState.getCurrentPlayer().isComputer()) {
+            this.btnMainBack.setDisable(true);
             this.btnInitialRotation.setDisable(true);
             this.btnConfirmInitialRotation.setDisable(true);
             simulateInitialRotation();
@@ -685,9 +697,12 @@ public class Game extends Application {
         this.controlArea.getChildren().add(this.btnConfirmRotation);
 
         if (this.gameState.getCurrentPlayer().isComputer()) {
+            this.btnMainBack.setDisable(true);
             this.btnRotations.forEach(b -> b.setDisable(true));
             this.btnConfirmRotation.setDisable(true);
             simulateRotation();
+        } else {
+            this.btnMainBack.setDisable(false);
         }
     }
 
