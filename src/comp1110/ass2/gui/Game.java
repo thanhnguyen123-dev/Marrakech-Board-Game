@@ -17,22 +17,19 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Game extends Application {
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;
-    private static final double MARGIN_LEFT = 120;
-    private static final double MARGIN_TOP = 30;
+    static final double MARGIN_LEFT = 120;
+    static final double MARGIN_TOP = 30;
     private static final double BOARD_AREA_SIDE = WINDOW_HEIGHT - 2 * MARGIN_TOP;
     private static final double PLAYER_AREA_WIDTH = WINDOW_WIDTH - BOARD_AREA_SIDE - MARGIN_LEFT - 2 * MARGIN_TOP;
     private static final double PLAYER_AREA_HEIGHT = BOARD_AREA_SIDE;
@@ -40,25 +37,25 @@ public class Game extends Application {
     private static final double STATS_AREA_HEIGHT = 400;
     private static final double CONTROL_AREA_WIDTH = PLAYER_AREA_WIDTH;
     private static final double CONTROL_AREA_HEIGHT = PLAYER_AREA_HEIGHT - STATS_AREA_HEIGHT - MARGIN_TOP;
-    private static final Color TILE_COLOR = Color.TAN;
+    static final Color TILE_COLOR = Color.TAN;
     private static final Color GAME_PANE_BORDER_COLOR = TILE_COLOR.darker();
     private static final BorderStrokeStyle GAME_PANE_BORDER_STROKE_STYLE = BorderStrokeStyle.SOLID;
     private static final CornerRadii GAME_PANE_BORDER_RADII = new CornerRadii(24);
     private static final BorderWidths GAME_PANE_BORDER_WIDTH = new BorderWidths(4);
     private static final int NUM_OF_ROWS = 7;
     private static final int NUM_OF_COLS = 7;
-    private static final double TILE_SIDE = 64;
-    private static final double TILE_RELOCATION_X = (BOARD_AREA_SIDE - NUM_OF_COLS * TILE_SIDE) / 2;
-    private static final double TILE_RELOCATION_Y = (BOARD_AREA_SIDE - NUM_OF_ROWS * TILE_SIDE) / 2;
-    private static final int TILE_BORDER_WIDTH = 4;
-    private static final int RUG_BORDER_WIDTH = 4;
+    static final double TILE_SIDE = 64;
+    static final double TILE_RELOCATION_X = (BOARD_AREA_SIDE - NUM_OF_COLS * TILE_SIDE) / 2;
+    static final double TILE_RELOCATION_Y = (BOARD_AREA_SIDE - NUM_OF_ROWS * TILE_SIDE) / 2;
+    static final int TILE_BORDER_WIDTH = 4;
+    static final int RUG_BORDER_WIDTH = 4;
     private static final int BUTTON_WIDTH = 120;
     private static final int BUTTON_HEIGHT = 60;
-    private static final int COLOUR_BUTTON_RADIUS = 60;
-    private static final BorderStrokeStyle COLOUR_BUTTON_BORDER_STROKE_STYLE = GAME_PANE_BORDER_STROKE_STYLE;
-    private static final CornerRadii COLOUR_BUTTON_BORDER_RADII = GAME_PANE_BORDER_RADII;
-    private static final BorderWidths COLOUR_BUTTON_BORDER_WIDTH = new BorderWidths(8);
-    private static final double HIGHLIGHTED_OPACITY = 1 - (Math.sqrt(5) - 1) / 2;
+    static final int COLOUR_BUTTON_RADIUS = 60;
+    static final BorderStrokeStyle COLOUR_BUTTON_BORDER_STROKE_STYLE = GAME_PANE_BORDER_STROKE_STYLE;
+    static final CornerRadii COLOUR_BUTTON_BORDER_RADII = GAME_PANE_BORDER_RADII;
+    static final BorderWidths COLOUR_BUTTON_BORDER_WIDTH = new BorderWidths(8);
+    static final double HIGHLIGHTED_OPACITY = 1 - (Math.sqrt(5) - 1) / 2;
     private static final double ASSAM_SIDE = (Math.sqrt(5) - 1) / 2 * TILE_SIDE;
     private static final double ASSAM_RELOCATION = (TILE_SIDE - ASSAM_SIDE) / 2;
     private static final Color ASSAM_COLOR = Color.SPRINGGREEN.darker();
@@ -69,8 +66,8 @@ public class Game extends Application {
     private final Pane placedRugs = new Pane();
     private final Pane invisibleRugs = new Pane();
     private final GameTile[][] gameTiles = new GameTile[NUM_OF_ROWS][NUM_OF_COLS];
-    private final ArrayList<InvisibleRug> vInvisibleRugs = new ArrayList<>();
-    private final ArrayList<InvisibleRug> hInvisibleRugs = new ArrayList<>();
+    final ArrayList<GameInvisibleRug> vGameInvisibleRugs = new ArrayList<>();
+    final ArrayList<GameInvisibleRug> hGameInvisibleRugs = new ArrayList<>();
 
     private GamePane gameArea;
     private GamePane controlArea;
@@ -83,9 +80,9 @@ public class Game extends Application {
     private Text phaseText;
     private Region assam;
     private int dieResult;
-    private InvisibleRug highlighted;
-    private DraggableRug draggableRug;
-    private int rugID;
+    GameInvisibleRug highlighted;
+    GameDraggableRug gameDraggableRug;
+    int rugID;
     //Keep a temporary list of players
     private final ArrayList<Player> tmp = new ArrayList<>();
     private ArrayList<PlayerSelector> playerSelectors;
@@ -139,7 +136,7 @@ public class Game extends Application {
 
     // all players, including human and computer players
     private Player[] players;
-    private GameState gameState;
+    GameState gameState;
 
     public static void main(String[] args) {
         launch(args);
@@ -251,7 +248,6 @@ public class Game extends Application {
             Scene mainScene = makeMainScene();
             primaryStage.setScene(mainScene);
         });
-
 
         primaryStage.setResizable(false);
         primaryStage.setTitle("Marrakech Game");
@@ -425,8 +421,8 @@ public class Game extends Application {
                 this.controlArea.getChildren().removeAll(paymentText, this.btnConfirmPayment);
                 if (!this.gameState.isPaymentRequired() || this.gameState.isPaymentAffordable()) {
                     this.gameState.makePayment();
-                    this.draggableRug = new DraggableRug(MARGIN_LEFT + BOARD_AREA_SIDE + MARGIN_TOP + BUTTON_WIDTH * 0.5, 500, this.gameState.getCurrentPlayer().getColour());
-                    this.gameArea.getChildren().add(this.draggableRug);
+                    this.gameDraggableRug = new GameDraggableRug(this, MARGIN_LEFT + BOARD_AREA_SIDE + MARGIN_TOP + BUTTON_WIDTH * 0.5, 500, this.gameState.getCurrentPlayer().getColour());
+                    this.gameArea.getChildren().add(this.gameDraggableRug);
                     this.controlArea.getChildren().addAll(this.btnRotateRug, this.btnConfirmPlacement);
                 } else {
                     this.gameState.makePayment();
@@ -469,9 +465,13 @@ public class Game extends Application {
      *
      */
     private void rotateRug() {
-        if (this.draggableRug != null) {
-            this.draggableRug.setRotate(this.draggableRug.getRotate() + 90);
-            this.draggableRug.orientation = this.draggableRug.orientation == Orientation.VERTICAL ? Orientation.HORIZONTAL : Orientation.VERTICAL;
+        if (this.gameDraggableRug != null) {
+            this.gameDraggableRug.setRotate(this.gameDraggableRug.getRotate() + 90);
+            if (this.gameDraggableRug.getOrientation() == Orientation.VERTICAL) {
+                this.gameDraggableRug.setOrientation(Orientation.HORIZONTAL);
+            } else {
+                this.gameDraggableRug.setOrientation(Orientation.VERTICAL);
+            }
             if (this.highlighted != null) {
                 this.highlighted.setOpacity(0);
                 this.highlighted = null;
@@ -482,16 +482,16 @@ public class Game extends Application {
     private void makePlacement() {
         if (this.highlighted != null) {
             this.controlArea.getChildren().removeAll(this.btnRotateRug, this.btnConfirmPlacement);
-            this.gameArea.getChildren().remove(this.draggableRug);
+            this.gameArea.getChildren().remove(this.gameDraggableRug);
 
-            Rug rug = new Rug(this.draggableRug.colour, this.rugID++, getTilesFromHighlighted());
+            Rug rug = new Rug(this.gameDraggableRug.getColour(), this.rugID++, getTilesFromHighlighted());
             this.gameState.makePlacement(rug);
-            GameRug gameRug = new GameRug(this.highlighted.getLayoutX(), this.highlighted.getLayoutY(), this.draggableRug.orientation, this.draggableRug.colour);
+            GameRug gameRug = new GameRug(this.highlighted.getLayoutX(), this.highlighted.getLayoutY(), this.gameDraggableRug.getOrientation(), this.gameDraggableRug.getColour());
             this.placedRugs.getChildren().add(gameRug);
 
             this.highlighted.setOpacity(0);
             this.highlighted = null;
-            this.draggableRug = null;
+            this.gameDraggableRug = null;
 
             if (!this.gameState.isGameOver()) {
                 nextPhase();
@@ -515,9 +515,9 @@ public class Game extends Application {
             this.btnRollDie.fireEvent(clickEvent);
             this.btnMoveAssam.fireEvent(clickEvent);
             this.btnConfirmPayment.fireEvent(clickEvent);
-            this.draggableRug.fireEvent(pressEvent);
-            this.draggableRug.fireEvent(dragEvent);
-            this.draggableRug.fireEvent(releaseEvent);
+            this.gameDraggableRug.fireEvent(pressEvent);
+            this.gameDraggableRug.fireEvent(dragEvent);
+            this.gameDraggableRug.fireEvent(releaseEvent);
             this.btnConfirmPlacement.fireEvent(clickEvent);
         } else {
             // human player
@@ -543,8 +543,8 @@ public class Game extends Application {
                 GameTile[] gameTiles = new GameTile[]{
                         this.gameTiles[i][j], this.gameTiles[i + 1][j]
                 };
-                InvisibleRug rug = new InvisibleRug(j * TILE_SIDE + TILE_SIDE / 2, i * TILE_SIDE + TILE_SIDE, gameTiles, Orientation.VERTICAL);
-                this.vInvisibleRugs.add(rug);
+                GameInvisibleRug rug = new GameInvisibleRug(j * TILE_SIDE + TILE_SIDE / 2, i * TILE_SIDE + TILE_SIDE, gameTiles, Orientation.VERTICAL);
+                this.vGameInvisibleRugs.add(rug);
                 this.invisibleRugs.getChildren().add(rug);
             }
         }
@@ -554,8 +554,8 @@ public class Game extends Application {
                 GameTile[] gameTiles = new GameTile[]{
                         this.gameTiles[i][j], this.gameTiles[i][j + 1]
                 };
-                InvisibleRug rug = new InvisibleRug(j * TILE_SIDE + TILE_SIDE, i * TILE_SIDE + TILE_SIDE / 2, gameTiles, Orientation.HORIZONTAL);
-                this.hInvisibleRugs.add(rug);
+                GameInvisibleRug rug = new GameInvisibleRug(j * TILE_SIDE + TILE_SIDE, i * TILE_SIDE + TILE_SIDE / 2, gameTiles, Orientation.HORIZONTAL);
+                this.hGameInvisibleRugs.add(rug);
                 this.invisibleRugs.getChildren().add(rug);
             }
         }
@@ -609,41 +609,10 @@ public class Game extends Application {
         }
     }
 
-    private static class GamePane extends Pane {
-        public GamePane(double width, double height) {
-            super();
-            this.setMinSize(width, height);
-            this.setMaxSize(width, height);
-        }
-
-    }
-
-    private static class GameButton extends Button {
-        public GameButton(String string, double width, double height) {
-            super(string);
-            this.setMinSize(width, height);
-            this.setMaxSize(width, height);
-        }
-
-    }
-
-    private static class ColourButton extends Button {
-        private final Border border;
-
-        public ColourButton(Colour colour) {
-            super();
-            this.setShape(new Circle(COLOUR_BUTTON_RADIUS));
-            this.setMinSize(2 * COLOUR_BUTTON_RADIUS, 2 * COLOUR_BUTTON_RADIUS);
-            this.setMaxSize(2 * COLOUR_BUTTON_RADIUS, 2 * COLOUR_BUTTON_RADIUS);
-            this.setBackground(new Background(new BackgroundFill(Colour.getFrontEndColor(colour), CornerRadii.EMPTY, Insets.EMPTY)));
-            this.border = new Border(new BorderStroke(Colour.getFrontEndColor(colour).darker(), COLOUR_BUTTON_BORDER_STROKE_STYLE, COLOUR_BUTTON_BORDER_RADII, COLOUR_BUTTON_BORDER_WIDTH));
-        }
-    }
-
     private class PlayerSelector extends Pane {
         private Player player;
         private final CheckBox chbIsComputer;
-        private final ColourButton colourButton;
+        private final GameColourButton gameColourButton;
         private final Label lblStrategy;
         private final RadioButton rbRandom;
         private final RadioButton rbIntelligent;
@@ -654,8 +623,8 @@ public class Game extends Application {
             this.setMinSize(width, height);
             this.setMaxSize(width, height);
 
-            this.colourButton = new ColourButton(colour);
-            this.getChildren().add(this.colourButton);
+            this.gameColourButton = new GameColourButton(colour);
+            this.getChildren().add(this.gameColourButton);
 
             this.chbIsComputer = new CheckBox();
             this.chbIsComputer.setText("Computer");
@@ -673,16 +642,16 @@ public class Game extends Application {
             this.rbIntelligent.setToggleGroup(this.toggleGroup);
             this.rbIntelligent.setDisable(true);
 
-            this.colourButton.setOnMouseClicked(event -> {
-                this.colourButton.setDisable(true);
-                this.colourButton.setBorder(this.colourButton.border);
+            this.gameColourButton.setOnMouseClicked(event -> {
+                this.gameColourButton.setDisable(true);
+                this.gameColourButton.addBorder();
                 this.getChildren().add(this.chbIsComputer);
 
                 this.player = new Player(colour);
                 tmp.add(this.player);
                 if (tmp.size() == numOfPlayers) {
                     // When the appropriate number of players has been selected, disable the other colors.
-                    playerSelectors.forEach(p -> p.colourButton.setDisable(true));
+                    playerSelectors.forEach(p -> p.gameColourButton.setDisable(true));
                     // Once players have finished selecting, then they can click Confirm
                     btnColourConfirm.setDisable(false);
                     btnColourConfirm.requestFocus();
@@ -713,138 +682,6 @@ public class Game extends Application {
         }
     }
 
-    private static class InvisibleRug extends Rectangle {
-        private final GameTile[] gameTiles = new GameTile[2];
-
-        public InvisibleRug(double x, double y, GameTile[] gameTiles, Orientation orientation) {
-            super(0, 0, TILE_SIDE, 2 * TILE_SIDE);
-            this.gameTiles[0] = gameTiles[0];
-            this.gameTiles[1] = gameTiles[1];
-
-            this.relocate(x - TILE_SIDE / 2, y - TILE_SIDE);
-            if (orientation == Orientation.HORIZONTAL) {
-                this.setRotate(90);
-            }
-            this.setFill(Color.WHITE);
-            this.setStroke(Color.WHITE.darker());
-            this.setStrokeWidth(RUG_BORDER_WIDTH);
-            this.setOpacity(0);
-        }
-
-        public double distance(double x, double y) {
-            return Math.sqrt((this.getLayoutX() - x) * (this.getLayoutX() - x) + (this.getLayoutY() - y) * (this.getLayoutY() - y));
-        }
-    }
-
-    private static class GameRug extends Rectangle {
-        public GameRug(double x, double y, Orientation orientation, Colour colour) {
-            super(0, 0, TILE_SIDE, 2 * TILE_SIDE);
-
-            this.relocate(x, y);
-            if (orientation == Orientation.HORIZONTAL) {
-                this.setRotate(90);
-            }
-            Color color = Colour.getFrontEndColor(colour);
-            if (color != null) {
-                this.setFill(Colour.getFrontEndColor(colour));
-                this.setStroke(color.darker());
-                this.setStrokeWidth(RUG_BORDER_WIDTH);
-            }
-        }
-    }
-
-    private class DraggableRug extends GameRug {
-        private Orientation orientation = Orientation.VERTICAL;
-        private final Colour colour;
-        private double mouseX, mouseY;
-
-        public DraggableRug(double x, double y, Colour colour) {
-            super(x, y, Orientation.VERTICAL, colour);
-            this.colour = colour;
-
-            this.setOnMousePressed(event -> {
-                this.toFront();
-                this.mouseX = event.getSceneX();
-                this.mouseY = event.getSceneY();
-            });
-
-            this.setOnMouseDragged(event -> {
-                double movementX = event.getSceneX() - this.mouseX;
-                double movementY = event.getSceneY() - this.mouseY;
-                this.setLayoutX(this.getLayoutX() + movementX);
-                this.setLayoutY(this.getLayoutY() + movementY);
-                this.mouseX = event.getSceneX();
-                this.mouseY = event.getSceneY();
-                highlightNearestInvisibleRug();
-            });
-
-            this.setOnMouseReleased(event -> {
-                InvisibleRug nearestInvisibleRug = findNearestInvisibleRug();
-                if (nearestInvisibleRug != null) {
-                    this.setLayoutX(nearestInvisibleRug.getLayoutX() + TILE_RELOCATION_X + MARGIN_LEFT);
-                    this.setLayoutY(nearestInvisibleRug.getLayoutY() + TILE_RELOCATION_Y + MARGIN_TOP);
-                }
-            });
-        }
-
-        private InvisibleRug findNearestInvisibleRug() {
-            if (this.orientation == Orientation.VERTICAL) {
-                vInvisibleRugs.sort(compareByDistance());
-                for (InvisibleRug vInvisibleRug : vInvisibleRugs) {
-                    Rug rug = new Rug(draggableRug.colour, rugID, getTilesFromInvisibleRug(vInvisibleRug));
-                    if (gameState.getBoard().isPlacementValid(rug)) {
-                        return vInvisibleRug;
-                    }
-                }
-            }
-            hInvisibleRugs.sort(compareByDistance());
-            for (InvisibleRug hInvisibleRug : hInvisibleRugs) {
-                Rug rug = new Rug(draggableRug.colour, rugID, getTilesFromInvisibleRug(hInvisibleRug));
-                if (gameState.getBoard().isPlacementValid(rug)) {
-                    return hInvisibleRug;
-                }
-            }
-            return null;
-        }
-
-        private void highlightNearestInvisibleRug() {
-            if (highlighted != null) {
-                highlighted.setOpacity(0);
-            }
-            highlighted = findNearestInvisibleRug();
-            if (highlighted != null) {
-                highlighted.setOpacity(HIGHLIGHTED_OPACITY);
-            }
-        }
-
-        public Comparator<InvisibleRug> compareByDistance() {
-            return new Comparator<>() {
-                @Override
-                public int compare(InvisibleRug rug1, InvisibleRug rug2) {
-                    return Double.compare(
-                            rug1.distance(DraggableRug.this.getLayoutX() - TILE_RELOCATION_X - MARGIN_LEFT, DraggableRug.this.getLayoutY() - TILE_RELOCATION_Y - MARGIN_TOP),
-                            rug2.distance(DraggableRug.this.getLayoutX() - TILE_RELOCATION_X - MARGIN_LEFT, DraggableRug.this.getLayoutY() - TILE_RELOCATION_Y - MARGIN_TOP));
-                }
-            };
-        }
-    }
-
-    private static class GameTile extends Rectangle {
-        private final int row;
-        private final int col;
-
-        public GameTile(double x, double y, int row, int col) {
-            super(0, 0, TILE_SIDE, TILE_SIDE);
-            this.row = row;
-            this.col = col;
-
-            this.relocate(x, y);
-            this.setFill(TILE_COLOR);
-            this.setStroke(TILE_COLOR.darker());
-            this.setStrokeWidth(TILE_BORDER_WIDTH);
-        }
-    }
-
     private enum Phase {
         ROTATION,
         MOVEMENT,
@@ -869,23 +706,23 @@ public class Game extends Application {
         this.phaseText.setText("Current phase of game: " + this.currentPhase);
     }
 
-    private enum Orientation {
+    enum Orientation {
         VERTICAL,
         HORIZONTAL
     }
 
-    private Tile[] getTilesFromHighlighted() {
+    Tile[] getTilesFromHighlighted() {
         if (this.highlighted != null) {
-            return new Tile[]{getTileFromGameTile(this.highlighted.gameTiles[0]), getTileFromGameTile(this.highlighted.gameTiles[1])};
+            return new Tile[]{getTileFromGameTile(this.highlighted.getGameTiles()[0]), getTileFromGameTile(this.highlighted.getGameTiles()[1])};
         }
         return null;
     }
 
-    private Tile[] getTilesFromInvisibleRug(InvisibleRug invisibleRug) {
-        return new Tile[]{getTileFromGameTile(invisibleRug.gameTiles[0]), getTileFromGameTile(invisibleRug.gameTiles[1])};
+    Tile[] getTilesFromInvisibleRug(GameInvisibleRug gameInvisibleRug) {
+        return new Tile[]{getTileFromGameTile(gameInvisibleRug.getGameTiles()[0]), getTileFromGameTile(gameInvisibleRug.getGameTiles()[1])};
     }
 
-    private Tile getTileFromGameTile(GameTile gameTile) {
-        return this.gameState.getBoard().getTiles()[gameTile.row][gameTile.col];
+    Tile getTileFromGameTile(GameTile gameTile) {
+        return this.gameState.getBoard().getTiles()[gameTile.getRow()][gameTile.getCol()];
     }
 }
