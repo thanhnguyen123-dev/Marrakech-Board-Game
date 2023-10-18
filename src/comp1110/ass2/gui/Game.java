@@ -72,7 +72,7 @@ public class Game extends Application {
 
     private GamePane gameArea;
     private GamePane controlArea;
-
+    Button btnMainBack = CircularImageButton.createCircularImageButton("resources/back.png");
     // number of human and computer players
     private int numOfPlayers;
 
@@ -154,7 +154,7 @@ public class Game extends Application {
         choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 320);
 
         //Back and Confirm buttons
-        GameButton btnNumberBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
+        Button btnNumberBack = CircularImageButton.createCircularImageButton("resources/back.png");
         btnNumberBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         this.btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
         this.btnNumberConfirm.requestFocus();
@@ -172,7 +172,7 @@ public class Game extends Application {
         this.playerSelectors = makeNewPlayerSelectors();
 
         //Back, Reset and Confirm buttons
-        GameButton btnColourBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
+        Button btnColourBack = CircularImageButton.createCircularImageButton("resources/back.png");
         btnColourBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         GameButton btnColourReset = new GameButton("Reset", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnColourReset.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH * 1.5, 420);
@@ -233,6 +233,16 @@ public class Game extends Application {
             primaryStage.setScene(mainScene);
         });
 
+        // back button on main game scene
+        btnMainBack.setOnMouseClicked(event -> {
+            this.tmp.clear();
+            colourPane.getChildren().removeAll(this.playerSelectors);
+            this.playerSelectors = makeNewPlayerSelectors();
+            colourPane.getChildren().addAll(this.playerSelectors);
+            this.btnColourConfirm.setDisable(true);
+            primaryStage.setScene(colourScene);
+        });
+
         primaryStage.setResizable(false);
         primaryStage.setTitle("Marrakech");
         primaryStage.setScene(titleScene);
@@ -258,12 +268,13 @@ public class Game extends Application {
         this.currentPhase = Phase.ROTATION;
         this.gameArea = new GamePane(WINDOW_WIDTH, WINDOW_HEIGHT);
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
-
+        // back button
+        btnMainBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         // Board area to display information about the board and assam
         final Pane boardArea = new GamePane(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         boardArea.setBorder(gamePaneBorder);
         boardArea.relocate(MARGIN_LEFT, MARGIN_TOP);
-        this.gameArea.getChildren().add(boardArea);
+        this.gameArea.getChildren().addAll(btnMainBack, boardArea);
 
         final Pane tileArea = new GamePane(NUM_OF_COLS * TILE_SIDE, NUM_OF_ROWS * TILE_SIDE);
         tileArea.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
