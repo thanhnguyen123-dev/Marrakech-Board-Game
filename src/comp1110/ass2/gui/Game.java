@@ -80,7 +80,7 @@ public class Game extends Application {
 
     private GamePane gameArea;
     private GamePane controlArea;
-
+    Button btnMainBack = CircularImageButton.createCircularImageButton("resources/back.png");
     // number of human and computer players
     private int numOfPlayers;
 
@@ -113,7 +113,7 @@ public class Game extends Application {
     private final Text movementText = new Text();
     private final Text paymentText = new Text();
 
-    private final long MILLIS = 10;
+    private final long MILLIS = 1500;
 
     // all players, including human and computer players
     private Player[] players;
@@ -153,7 +153,6 @@ public class Game extends Application {
         numberText.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 20));
         numberText.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0 - 300, 280);
 
-        // Choice box to choose the number of human players
         ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.setMinWidth(BUTTON_WIDTH);
         choiceBox.setMaxWidth(BUTTON_WIDTH);
@@ -163,8 +162,7 @@ public class Game extends Application {
         choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 320);
 
         //Back and Confirm buttons
-        GameButton btnNumberBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnNumberBack.setFont(BUTTON_FONT);
+        Button btnNumberBack = CircularImageButton.createCircularImageButton("resources/back.png");
         btnNumberBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         this.btnNumberConfirm.setFont(BUTTON_FONT);
         this.btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
@@ -183,13 +181,10 @@ public class Game extends Application {
         this.playerSelectors = makeNewPlayerSelectors();
 
         //Back, Reset and Confirm buttons
-        GameButton btnColourBack = new GameButton("Back", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnColourBack.setFont(BUTTON_FONT);
+        Button btnColourBack = CircularImageButton.createCircularImageButton("resources/back.png");
         btnColourBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         GameButton btnColourReset = new GameButton("Reset", BUTTON_WIDTH, BUTTON_HEIGHT);
-        btnColourReset.setFont(BUTTON_FONT);
         btnColourReset.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH * 1.5, 420);
-        this.btnColourConfirm.setFont(BUTTON_FONT);
         this.btnColourConfirm.relocate(WINDOW_WIDTH / 2.0 + BUTTON_WIDTH * 0.5, 420);
         this.btnColourConfirm.setDisable(true);
 
@@ -247,6 +242,16 @@ public class Game extends Application {
             primaryStage.setScene(mainScene);
         });
 
+        // back button on main game scene
+        btnMainBack.setOnMouseClicked(event -> {
+            this.tmp.clear();
+            colourPane.getChildren().removeAll(this.playerSelectors);
+            this.playerSelectors = makeNewPlayerSelectors();
+            colourPane.getChildren().addAll(this.playerSelectors);
+            this.btnColourConfirm.setDisable(true);
+            primaryStage.setScene(colourScene);
+        });
+
         primaryStage.setResizable(false);
         primaryStage.setTitle("Marrakech");
         primaryStage.setScene(titleScene);
@@ -272,12 +277,13 @@ public class Game extends Application {
         this.currentPhase = Phase.ROTATION;
         this.gameArea = new GamePane(WINDOW_WIDTH, WINDOW_HEIGHT);
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
-
+        // back button
+        btnMainBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
         // Board area to display information about the board and assam
         final Pane boardArea = new GamePane(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         boardArea.setBorder(gamePaneBorder);
         boardArea.relocate(MARGIN_LEFT, MARGIN_TOP);
-        this.gameArea.getChildren().add(boardArea);
+        this.gameArea.getChildren().addAll(btnMainBack, boardArea);
 
         final Pane tileArea = new GamePane(NUM_OF_COLS * TILE_SIDE, NUM_OF_ROWS * TILE_SIDE);
         tileArea.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
@@ -804,20 +810,16 @@ public class Game extends Application {
 
             this.chbIsComputer = new CheckBox();
             this.chbIsComputer.setText("Computer");
-            this.chbIsComputer.setFont(GENERAL_TEXT_FONT_ITALIC);
             this.chbIsComputer.relocate(0, COLOUR_BUTTON_RADIUS * 2.2);
 
             this.lblStrategy = new Label("Strategy:");
-            this.lblStrategy.setFont(GENERAL_TEXT_FONT_REGULAR);
             this.lblStrategy.relocate(0, COLOUR_BUTTON_RADIUS * 2.6);
 
             ToggleGroup toggleGroup = new ToggleGroup();
             this.rbRandom = new RadioButton("Random");
-            this.rbRandom.setFont(GENERAL_TEXT_FONT_ITALIC);
             this.rbRandom.relocate(0, COLOUR_BUTTON_RADIUS * 3.0);
             this.rbRandom.setToggleGroup(toggleGroup);
             this.rbIntelligent = new RadioButton("Intelligent");
-            this.rbIntelligent.setFont(GENERAL_TEXT_FONT_ITALIC);
             this.rbIntelligent.relocate(0, COLOUR_BUTTON_RADIUS * 3.4);
             this.rbIntelligent.setToggleGroup(toggleGroup);
             this.rbIntelligent.setDisable(true);

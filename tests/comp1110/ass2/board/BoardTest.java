@@ -31,17 +31,23 @@ class BoardTest {
 
     @Test
     void generateAssamString() {
+        // Test initial situation
+        Board board = new Board();
+        assertEquals(board.generateAssamString(), "A33N");
     }
 
     @Test
     void generateBoardString() {
+        // Test initial situation
+        Board board = new Board();
+        assertEquals(board.generateBoardString(), "Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00");
     }
 
     @Test
     void isTileValid() {
-        Random random=new Random();
-        int row=random.nextInt(Board.NUM_OF_ROWS);
-        int col=random.nextInt(Board.NUM_OF_COLS);
-        Assertions.assertTrue(Board.isTileValid(new Tile(row,col)));
+        Random random = new Random();
+        int row = random.nextInt(Board.NUM_OF_ROWS);
+        int col = random.nextInt(Board.NUM_OF_COLS);
+        Assertions.assertTrue(Board.isTileValid(new Tile(row, col)));
     }
 }
