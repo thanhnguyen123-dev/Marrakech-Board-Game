@@ -338,19 +338,18 @@ public class GameState {
     public ArrayList<Player> getWinners() {
         HashMap<Player, Integer> scores = getScores();
         int maxScore = Collections.max(scores.values());
-        ArrayList<Player> maxScorePlayers = new ArrayList<>(this.availablePlayers
+        ArrayList<Player> maxScorePlayers = this.availablePlayers
                 .stream()
                 .filter(p -> scores.get(p) == maxScore)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toCollection(ArrayList::new));
         if (maxScorePlayers.size() > 1) {
             HashMap<Player, Integer> dirhams = new HashMap<>();
             maxScorePlayers.forEach(p -> dirhams.put(p, p.getDirham()));
             int maxDirhams = Collections.max(dirhams.values());
-            ArrayList<Player> winners = new ArrayList<>(maxScorePlayers
+            return maxScorePlayers
                     .stream()
                     .filter(p -> p.getDirham() == maxDirhams)
-                    .collect(Collectors.toList()));
-            return winners;
+                    .collect(Collectors.toCollection(ArrayList::new));
         }
         return maxScorePlayers;
     }
