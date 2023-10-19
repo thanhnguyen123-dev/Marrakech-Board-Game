@@ -2,6 +2,10 @@ package comp1110.ass2.utils;
 
 import comp1110.ass2.board.Tile;
 
+/**
+ * some utility functions used for coordinates string to tile object conversion
+ * @author u7620014 Haobo Zou
+ */
 public class StringToTile {
     /**
      * (reserved for rug placement validation only)
