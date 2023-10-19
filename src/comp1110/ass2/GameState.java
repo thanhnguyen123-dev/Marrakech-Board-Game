@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 /**
  * GameState class determines the state of each player
  * and makes sure the game is played according to the rules
+ * @author u7594144 Le Thanh Nguyen, u7582846 Yaolin Li, u7620014 Haobo Zou
  */
 public class GameState {
     private static final int LENGTH_OF_PLAYER_STRING = 8;
@@ -26,7 +27,8 @@ public class GameState {
 
     /**
      * Constructor: creates an instance of the GameState class
-     * @param players an array of all the players at the beginning of the game
+     * @param players an array of all the players
+     * @author u7620014 Haobo Zou
      */
     public GameState(Player[] players) {
         this.board = new Board();
@@ -38,6 +40,7 @@ public class GameState {
     /**
      * getter method for board
      * @return the board
+     * @author u7620014 Haobo Zou
      */
     public Board getBoard() {
         return this.board;
@@ -46,6 +49,7 @@ public class GameState {
     /**
      * getter method for players
      * @return the array containing all the players
+     * @author u7620014 Haobo Zou
      */
     public Player[] getPlayers() {
         return this.players;
@@ -54,6 +58,7 @@ public class GameState {
     /**
      * getter method for currentPlayer
      * @return the current player
+     * @author u7620014 Haobo Zou
      */
     public Player getCurrentPlayer() {
         return currentPlayer;
@@ -101,15 +106,18 @@ public class GameState {
     }
 
     /**
-     * Rotates Assam
+     * Rotates Assam with a given rotation
+     * @param rotation rotation in degrees
+     * @author u7620014 Haobo Zou
      */
     public void rotateAssam(int rotation) {
         this.board.rotateAssam(rotation);
     }
 
     /**
-     * Moves Assam
-     * @param steps number of steps to be taken by Assam
+     * Moves Assam with given steps
+     * @param steps number of steps
+     * @author u7620014 Haobo Zou
      */
     public void moveAssam(int steps) {
         this.board.moveAssam(steps);
@@ -195,13 +203,12 @@ public class GameState {
     }
 
     /**
-     * Checks the validity of the given gameString
+     * Checks the validity of a given gameString
      * @param gameString string representation for a game state
      * @return true if the gameString is valid, false if not
      * @author u7620014 Haobo Zou
      */
     public static boolean isGameStringValid(String gameString) {
-        assert isGameStringValid(gameString) : "Invalid game string!";
         String playerStringsPattern = "(P[yrcp][0-9]{5}[io]){2,4}";
         String assamStringPattern = "A[0-6]{2}[NESW]";
         String boardStringPattern = "B([yrcp][0-9]{2}|n00){49}";
@@ -350,7 +357,7 @@ public class GameState {
 
     /**
      * Calculates each player's score at the current state
-     * @return a map of all players' scores
+     * @return a HashMap of all players' scores, including 0
      * @author Le Thanh Nguyen u7594144
      */
     public HashMap<Player, Integer> getScores() {
@@ -362,7 +369,7 @@ public class GameState {
 
     /**
      * Counts the number of visible rug tiles of each player at the current state
-     * @return a map of all players' respective numbers of visible rug tiles, including 0
+     * @return a HashMap of all players' respective numbers of visible rug tiles, including 0
      * @author Le Thanh Nguyen u7594144
      */
     public HashMap<Player, Integer> getNumsOfVisibleRugTiles() {
@@ -392,6 +399,7 @@ public class GameState {
     /**
      * Calculates the amount of payment required
      * @return the amount of payment
+     * @author u7594144 Le Thanh Nguyen
      */
     public int getPaymentAmount() {
         Set<Tile> visited = new HashSet<>();
@@ -400,8 +408,8 @@ public class GameState {
 
     /**
      * Calculates the amount of payment required using DFS
-     * @param currentTile
-     * @param visitedTiles
+     * @param currentTile a tile to be checked
+     * @param visitedTiles a set of already visited tiles
      * @return the amount of payment
      * @author u7594144 Le Thanh Nguyen
      */
