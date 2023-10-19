@@ -801,10 +801,10 @@ public class Game extends Application {
             statsText.setFont(GENERAL_TEXT_FONT_ITALIC);
 
             if (this.gameState.isPlayerAvailable(player)) {
+                scoreText.setStyle("-fx-fill:" + TEXT_FILL);
+                statsText.setStyle("-fx-fill:" + TEXT_FILL);
                 if (!this.gameState.isGameOver() && player.equals(this.gameState.getCurrentPlayer())) {
                     colourString += " - CURRENT";
-                    scoreText.setStyle("-fx-fill:" + TEXT_FILL);
-                    statsText.setStyle("-fx-fill:" + TEXT_FILL);
                 }
                 if (this.gameState.isGameOver()) {
                     ArrayList<Player> winners = this.gameState.getWinners();
