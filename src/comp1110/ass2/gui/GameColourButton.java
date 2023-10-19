@@ -7,7 +7,7 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 
 /**
- * a custom colour button class used for player colour selection inside Game class
+ * a custom coloured button class used for player colour selection inside Game class
  * @author u7620014 Haobo Zou
  */
 class GameColourButton extends Button {
@@ -15,7 +15,7 @@ class GameColourButton extends Button {
 
     /**
      * Constructor: creates an instance of the GameColourButton class
-     * @param colour colour enum of the corresponding player
+     * @param colour the colour of the corresponding player
      * @author u7620014 Haobo Zou
      */
     public GameColourButton(Colour colour) {
@@ -28,7 +28,8 @@ class GameColourButton extends Button {
     }
 
     /**
-     * Adds a border to the colour button
+     * Adds a border to the coloured button
+     * @author u7620014 Haobo Zou
      */
     public void addBorder() {
         this.setBorder(this.border);
