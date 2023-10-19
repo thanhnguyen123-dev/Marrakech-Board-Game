@@ -76,14 +76,16 @@ public class Game extends Application {
     private Pane placedRugs = new Pane();
     private final Pane invisibleRugs = new Pane();
     private final GameTile[][] gameTiles = new GameTile[NUM_OF_ROWS][NUM_OF_COLS];
+    // Vertical invisible rugs
     final ArrayList<GameInvisibleRug> vGameInvisibleRugs = new ArrayList<>();
+    // Horizontal invisible rugs
     final ArrayList<GameInvisibleRug> hGameInvisibleRugs = new ArrayList<>();
 
     private GamePane gameArea;
     private GamePane controlArea;
     Button btnMainBack = CircularImageButton.createCircularImageButton("resources/back.png");
     Button hintButton = CircularImageButton.createCircularImageButton("resources/problem.png");
-    // number of human and computer players
+    // Number of human and computer players
     private int numOfPlayers;
 
     private Phase currentPhase;
@@ -93,7 +95,7 @@ public class Game extends Application {
     GameInvisibleRug highlighted;
     GameDraggableRug gameDraggableRug;
     int rugID;
-    //Keep a temporary list of players
+    // Keep a temporary list of players
     private final ArrayList<Player> tmp = new ArrayList<>();
     private ArrayList<PlayerSelector> playerSelectors;
 
@@ -115,9 +117,7 @@ public class Game extends Application {
     private final Text movementText = new Text();
     private final Text paymentText = new Text();
 
-    private final long MILLIS = 500;
-
-    // all players, including human and computer players
+    // All players, including human and computer players
     private Player[] players;
     GameState gameState;
 
@@ -125,6 +125,11 @@ public class Game extends Application {
         launch(args);
     }
 
+    /**
+     * Initializes and displays the primary stage for the Marrakech game.
+     * @param primaryStage The primary stage on which the game scenes are displayed.
+     * @author u7620014 Haobo Zou, u7582846 Yaolin Li
+     */
     @Override
     public void start(Stage primaryStage) {
         // Home page, titleText screen
@@ -265,6 +270,12 @@ public class Game extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Creates a list of PlayerSelector objects, each representing a distinct player color.
+     * Players can choose their own colour
+     * @return ArrayList of PlayerSelector objects with specific colours
+     * @author u7620014 Haobo Zou, u7582846 Yaolin Li
+     */
     private ArrayList<PlayerSelector> makeNewPlayerSelectors() {
         // Player Selectors for all the players
         PlayerSelector playerCyan = new PlayerSelector(COLOUR_BUTTON_RADIUS * 1.2, COLOUR_BUTTON_RADIUS * 4, Colour.CYAN);
@@ -279,6 +290,12 @@ public class Game extends Application {
         return new ArrayList<>(List.of(playerCyan, playerYellow, playerRed, playerPurple));
     }
 
+    /**
+     * Constructs and initializes the main game scene,
+     * including game board, players' stats and control area
+     * @return Scene representing the main game area with all its nodes and controls.
+     * @author u7620014 Haobo Zou, u7582846 Yaolin Li
+     */
     private Scene makeMainScene() {
         // Initialize game phase as rotation phase
         this.currentPhase = Phase.ROTATION;
@@ -505,6 +522,10 @@ public class Game extends Application {
         return scene;
     }
 
+    /**
+     * Rotates the current rug
+     * @author u7620014 Haobo Zou
+     */
     private void rotateRug() {
         if (this.gameDraggableRug != null) {
             this.gameDraggableRug.setRotate(this.gameDraggableRug.getRotate() + 90);
@@ -520,6 +541,10 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * Place the current rug on the game board
+     * @author u7620014 Haobo Zou
+     */
     private void makePlacement() {
         if (this.highlighted != null) {
             this.controlArea.getChildren().removeAll(this.btnRotateRug, this.btnConfirmPlacement);
@@ -545,6 +570,11 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * Simulates the initial rotation of Assam and roll die for computer players
+     * Set a delay so that players can see more clearly
+     * @author u7620014 Haobo Zou
+     */
     private void simulateInitialRotation() {
         delay(() -> {
             this.controlArea.getChildren().removeAll(this.btnInitialRotation, this.btnConfirmInitialRotation);
@@ -562,6 +592,11 @@ public class Game extends Application {
         });
     }
 
+    /**
+     * Simulates the following rotation of Assam for computer players
+     * Set a delay so that players can see more clearly
+     * @author u7620014 Haobo Zou
+     */
     private void simulateRotation() {
         delay(() -> {
             this.controlArea.getChildren().removeAll(this.btnRotations);
@@ -584,6 +619,11 @@ public class Game extends Application {
         });
     }
 
+    /**
+     * Simulate roll die to make Assam move for computer players
+     * Set a delay so that players can see more clearly
+     * @author u7620014 Haobo Zou
+     */
     private void simulateRollDie() {
         delay(() -> {
             this.controlArea.getChildren().remove(this.btnRollDie);
@@ -598,6 +638,11 @@ public class Game extends Application {
         });
     }
 
+    /**
+     * Simulate move Assam for computer players
+     * Set a delay so that players can see more clearly
+     * @author u7620014 Haobo Zou
+     */
     private void simulateMovement() {
         delay(() -> {
             this.controlArea.getChildren().removeAll(this.movementText, this.btnMoveAssam);
@@ -619,6 +664,11 @@ public class Game extends Application {
         });
     }
 
+    /**
+     * Simulate make payment for computer players
+     * Set a delay so that players can see more clearly
+     * @author u7620014 Haobo Zou
+     */
     private void simulatePayment() {
         delay(() -> {
             this.controlArea.getChildren().removeAll(paymentText, this.btnConfirmPayment);
@@ -651,6 +701,11 @@ public class Game extends Application {
         });
     }
 
+    /**
+     * Simulate place the rug on the game board for computer players
+     * Set a delay so that players can see more clearly
+     * @author u7620014 Haobo Zou
+     */
     private void simulatePlacement() {
         delay(() -> {
             this.controlArea.getChildren().removeAll(this.btnRotateRug, this.btnConfirmPlacement);
@@ -680,14 +735,20 @@ public class Game extends Application {
         });
     }
 
+    /**
+     * @return A list of all valid placement positions for the current player's rug.
+     * @author u7620014 Haobo Zou
+     */
     private ArrayList<GameInvisibleRug> findAllValidPlacements() {
         ArrayList<GameInvisibleRug> rugs = new ArrayList<>();
+        // Iterate over vertical invisible rugs to find valid placement positions
         for (GameInvisibleRug vGameInvisibleRug : this.vGameInvisibleRugs) {
             Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID, getTilesFromInvisibleRug(vGameInvisibleRug));
             if (this.gameState.getBoard().isPlacementValid(rug)) {
                 rugs.add(vGameInvisibleRug);
             }
         }
+        // Iterate over horizontal invisible rugs to find valid placement positions
         for (GameInvisibleRug hGameInvisibleRug : this.hGameInvisibleRugs) {
             Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID, getTilesFromInvisibleRug(hGameInvisibleRug));
             if (this.gameState.getBoard().isPlacementValid(rug)) {
@@ -697,11 +758,19 @@ public class Game extends Application {
         return rugs;
     }
 
+    /**
+     * Add delay so that the player can see the computer player's actions more clearly
+     * @param func Delay the execution of the code
+     * @author u7620014 Haobo Zou
+     */
     private void delay(Runnable func) {
+        // Create a Task to sleep for the specified duration
         Task<Void> sleeper = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                Thread.sleep(MILLIS);
+                // Sleep for millis milliseconds
+                final long millis = 500;
+                Thread.sleep(millis);
                 return null;
             }
         };
@@ -709,11 +778,15 @@ public class Game extends Application {
         new Thread(sleeper).start();
     }
 
+    /**
+     * Advances the game to the next player's turn and updates the UI accordingly.
+     * @author u7620014 Haobo Zou
+     */
     private void nextTurn() {
         this.gameState.nextPlayer();
+        // Move to the next game phase
         nextPhase();
-
-        // update stats area
+        // Update players stats area
         updateStatsArea();
         this.controlArea.getChildren().addAll(this.btnRotations);
         this.controlArea.getChildren().add(this.btnConfirmRotation);
@@ -728,6 +801,10 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * Initializes the game tiles and adds them to the game board.
+     * @author u7620014 Haobo Zou
+     */
     private void initTiles() {
         for (int i = 0; i < NUM_OF_ROWS; i++) {
             for (int j = 0; j < NUM_OF_COLS; j++) {
@@ -737,6 +814,10 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * Initializes the invisible rugs for the game board.
+     * @author u7620014 Haobo Zou
+     */
     private void initInvisibleRugs() {
         for (int i = 0; i < NUM_OF_ROWS - 1; i++) {
             for (int j = 0; j < NUM_OF_COLS; j++) {
@@ -761,6 +842,10 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * Initialize Assam's position on (3, 3), direction is north
+     * @author u7620014 Haobo Zou
+     */
     private void initAssam() {
         SVGPath svg = new SVGPath();
         svg.setContent(ASSAM_SVG);
@@ -773,6 +858,10 @@ public class Game extends Application {
         updateAssam();
     }
 
+    /**
+     * Update Assam's position and direction after moving Assam
+     * @author u7620014 Haobo Zou
+     */
     private void updateAssam() {
         Tile assamTile = this.gameState.getBoard().getAssamTile();
         int row = assamTile.getRow();
@@ -781,12 +870,18 @@ public class Game extends Application {
         this.assam.setRotate(getAssamAngle());
     }
 
+    /**
+     * Get Assam rotation angle
+     * @return Assam rotation angle
+     * @author u7620014 Haobo Zou
+     */
     private int getAssamAngle() {
         return this.gameState.getBoard().getAssamDirection().getAngle();
     }
 
     /**
-     * Update player stats
+     * Update player stats after each operation
+     * @author u7620014 Haobo Zou, u7582846 Yaolin Li
      */
     private void updateStatsArea() {
         if (!this.gameState.isGameOver()) {
@@ -841,12 +936,15 @@ public class Game extends Application {
             } else {
                 scoreText.setText("HUMAN" + scoreString);
             }
-
-
             playerStatsVBox.getChildren().addAll(colourText, scoreText, statsText);
         }
     }
 
+    /**
+     * Create and return a background image for whole game
+     * @return The configured background image.
+     * @author u7582846 Yaolin Li
+     */
     private BackgroundImage drawBackground() {
         Image backgroundImage = new Image("resources/background.jpg");
         // set image size, make the picture adaptive
@@ -856,6 +954,13 @@ public class Game extends Application {
                 BackgroundPosition.CENTER, backgroundSize);
     }
 
+    /**
+     * Creates and returns an ImageView representing the specific game board's background.
+     * @param width  the specific game board's width
+     * @param height the specific game board's height
+     * @return An ImageView representing the specific game board's background with rounded corners.
+     * @author u7582846 Yaolin Li
+     */
     private ImageView drawGameBoardBackground(double width, double height) {
         // set shallow background
         ImageView imageView = new ImageView(new Image("resources/gameBackground.jpg"));
@@ -872,6 +977,11 @@ public class Game extends Application {
         return imageView;
     }
 
+    /**
+     * Provides a user interface element to allow players to select their color,
+     * and choose to be a human player or computer player
+     * @author u7620014 Haobo Zou
+     */
     private class PlayerSelector extends Pane {
         private final Colour colour;
         private Player player;
@@ -957,6 +1067,10 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * Represents the three phases of the game, rotation, movement and placement
+     * @author u7620014 Haobo Zou
+     */
     private enum Phase {
         ROTATION,
         MOVEMENT,
@@ -972,20 +1086,34 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * Transitions the game to the next phase
+     * @author u7620014 Haobo Zou
+     */
     private void nextPhase() {
         switch (this.currentPhase) {
             case ROTATION -> this.currentPhase = Phase.MOVEMENT;
             case MOVEMENT -> this.currentPhase = Phase.PLACEMENT;
             case PLACEMENT -> this.currentPhase = Phase.ROTATION;
         }
+        // Display current phase in player stats area
         this.phaseText.setText("Current Game Phase: " + this.currentPhase);
     }
 
+    /**
+     * Represents the orientation of game objects.
+     * @author u7620014 Haobo Zou
+     */
     enum Orientation {
         VERTICAL,
         HORIZONTAL
     }
 
+    /**
+     * Retrieves the tiles associated with the highlighted game object
+     * @return An array containing the tiles associated with the highlighted game object, or null if no object is highlighted.
+     * @author u7620014 Haobo Zou
+     */
     Tile[] getTilesFromHighlighted() {
         if (this.highlighted != null) {
             return new Tile[]{getTileFromGameTile(this.highlighted.getGameTiles()[0]), getTileFromGameTile(this.highlighted.getGameTiles()[1])};
@@ -993,10 +1121,22 @@ public class Game extends Application {
         return null;
     }
 
+    /**
+     * Converts the tiles of an invisible rug into visible game tiles.
+     * @param gameInvisibleRug The invisible rug whose tiles need to be converted.
+     * @return An array of converted game tiles.
+     * @author u7620014 Haobo Zou
+     */
     Tile[] getTilesFromInvisibleRug(GameInvisibleRug gameInvisibleRug) {
         return new Tile[]{getTileFromGameTile(gameInvisibleRug.getGameTiles()[0]), getTileFromGameTile(gameInvisibleRug.getGameTiles()[1])};
     }
 
+    /**
+     * Get tiles
+     * @param gameTile
+     * @return
+     * @author u7620014 Haobo Zou
+     */
     Tile getTileFromGameTile(GameTile gameTile) {
         return this.gameState.getBoard().getTiles()[gameTile.getRow()][gameTile.getCol()];
     }
