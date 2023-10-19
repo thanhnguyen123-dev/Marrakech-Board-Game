@@ -1,7 +1,7 @@
 package comp1110.ass2.board;
 
 /**
- * Possible rotation direction for Assam
+ * Direction enum represents possible directions of Assam
  * @author u7594144 Le Thanh Nguyen, u7620014 Haobo Zou
  */
 public enum Direction {

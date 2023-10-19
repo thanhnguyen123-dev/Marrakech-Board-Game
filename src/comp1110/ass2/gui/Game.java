@@ -732,6 +732,7 @@ public class Game extends Application {
      * Calculates expected payment from a given Assam path of four steps
      * @param assamPath the path Assam takes on the board, which consists of four tiles
      * @return the expected payment
+     * @author u7620014 Haobo Zou
      */
     private double getExpPayment(List<Tile> assamPath) {
         double exp = 0;
@@ -888,7 +889,7 @@ public class Game extends Application {
 
     /**
      * Finds all the valid rug placements for the current player's rug
-     * @return An ArrayList of all the valid placements for the current player's rug,
+     * @return an ArrayList of all the valid placements for the current player's rug,
      * represented with invisible rugs
      * @author u7620014 Haobo Zou
      */
@@ -1171,8 +1172,8 @@ public class Game extends Application {
     }
 
     /**
-     * Create and return a background image for whole game
-     * @return The configured background image.
+     * Creates and returns a background image for the whole game
+     * @return the configured background image.
      * @author u7582846 Yaolin Li
      */
     private BackgroundImage drawBackground() {
@@ -1188,7 +1189,7 @@ public class Game extends Application {
      * Creates and returns an ImageView representing the specific game board's background.
      * @param width the specific game board's width
      * @param height the specific game board's height
-     * @return An ImageView representing the specific game board's background with rounded corners.
+     * @return an ImageView representing the specific game board's background with rounded corners.
      * @author u7582846 Yaolin Li
      */
     private ImageView drawGameBoardBackground(double width, double height) {
@@ -1208,8 +1209,8 @@ public class Game extends Application {
     }
 
     /**
-     * Provides a user interface element to allow players to select their color,
-     * and choose to be a human player or computer player
+     * a custom pane class designed to provide a user interface element to allow players to select their colours,
+     * and choose to be a human player or computer player, and choose computer player's strategies
      * @author u7620014 Haobo Zou
      */
     private class PlayerSelector extends Pane {
@@ -1221,6 +1222,12 @@ public class Game extends Application {
         private final RadioButton rbRandom;
         private final RadioButton rbIntelligent;
 
+        /**
+         * Constructor: creates an instance of the PlayerSelector class
+         * @param width a fixed width
+         * @param height a fixed height
+         * @param colour the colour of the player
+         */
         public PlayerSelector(double width, double height, Colour colour) {
             super();
             this.setMinSize(width, height);
@@ -1297,7 +1304,7 @@ public class Game extends Application {
     }
 
     /**
-     * Represents the three phases of the game, rotation, movement and placement
+     * Phase enum represents the three phases of the game: rotation, movement and placement
      * @author u7620014 Haobo Zou
      */
     private enum Phase {
@@ -1305,6 +1312,11 @@ public class Game extends Application {
         MOVEMENT,
         PLACEMENT;
 
+        /**
+         * Converts a Phase enum to a string of its full name
+         * @return full name of the phase
+         * @author u7620014 Haobo Zou
+         */
         @Override
         public String toString() {
             return switch (this) {
@@ -1330,7 +1342,7 @@ public class Game extends Application {
     }
 
     /**
-     * Represents the orientation of game objects.
+     * Orientation enum represents possible orientations of rugs
      * @author u7620014 Haobo Zou
      */
     enum Orientation {
@@ -1339,8 +1351,8 @@ public class Game extends Application {
     }
 
     /**
-     * Retrieves the tiles associated with the highlighted game object
-     * @return An array containing the tiles associated with the highlighted game object, or null if no object is highlighted.
+     * Converts the highlighted rug to an array of two tiles occupied by it on the board inside game state
+     * @return an array of the two corresponding tiles, null if no invisible rug is currently highlighted.
      * @author u7620014 Haobo Zou
      */
     Tile[] getTilesFromHighlighted() {
@@ -1351,9 +1363,9 @@ public class Game extends Application {
     }
 
     /**
-     * Converts GameInvisibleRug to its corresponding two tiles on the board in game state
+     * Converts an invisible rug to an array of two tiles occupied by it on the board inside game state
      * @param gameInvisibleRug the invisible rug to be converted
-     * @return an array of two tiles
+     * @return an array of the two corresponding tiles
      * @author u7620014 Haobo Zou
      */
     Tile[] getTilesFromInvisibleRug(GameInvisibleRug gameInvisibleRug) {
@@ -1361,9 +1373,9 @@ public class Game extends Application {
     }
 
     /**
-     * Converts GameTile to its corresponding tile on the board in game state
+     * Converts a game tile to its corresponding tile on the board inside game state
      * @param gameTile the game tile to be converted
-     * @return a tile
+     * @return the corresponding tile
      * @author u7620014 Haobo Zou
      */
     Tile getTileFromGameTile(GameTile gameTile) {
