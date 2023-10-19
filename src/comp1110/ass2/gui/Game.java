@@ -81,16 +81,16 @@ public class Game extends Application {
     final ArrayList<GameInvisibleRug> vGameInvisibleRugs = new ArrayList<>();
     // Horizontal invisible rugs
     final ArrayList<GameInvisibleRug> hGameInvisibleRugs = new ArrayList<>();
-    private final Group mosaic = new Group();
+    private Group mosaic;
     private GamePane gameArea;
     // Control area on game scene, with player operated button and information
     private GamePane controlArea;
     // Back button on main game scene
     Button btnMainBack = CircularImageButton.createCircularImageButton("resources/back.png");
     // Hint button on main game scene
-    Button hintButton = CircularImageButton.createCircularImageButton("resources/problem.png");
+    Button btnHint = CircularImageButton.createCircularImageButton("resources/problem.png");
     // Restart button, show after the game is over
-    Button restart = CircularImageButton.createCircularImageButton("resources/restart.png");
+    Button btnRestart = CircularImageButton.createCircularImageButton("resources/restart.png");
     // Number of human and computer players
     private int numOfPlayers;
 
@@ -283,7 +283,7 @@ public class Game extends Application {
         });
 
         // back button on main game scene
-        btnMainBack.setOnMouseClicked(event -> {
+        this.btnMainBack.setOnMouseClicked(event -> {
             this.placedRugs = new Pane();
             this.players = null;
             this.gameState = null;
@@ -295,7 +295,7 @@ public class Game extends Application {
         });
 
         // After game is over, click restart to back to homepage
-        restart.setOnMouseClicked(event -> {
+        this.btnRestart.setOnMouseClicked(event -> {
             this.placedRugs = new Pane();
             this.players = null;
             this.gameState = null;
@@ -353,18 +353,18 @@ public class Game extends Application {
         this.gameArea = new GamePane(WINDOW_WIDTH, WINDOW_HEIGHT);
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
         // back button
-        btnMainBack.relocate(BUTTON_HEIGHT / 3.0, BUTTON_HEIGHT / 2.0);
+        this.btnMainBack.relocate(BUTTON_HEIGHT / 3.0, BUTTON_HEIGHT / 2.0);
         // hint information
-        hintButton.relocate(BUTTON_HEIGHT / 3.0, WINDOW_HEIGHT - BUTTON_HEIGHT * 2);
+        this.btnHint.relocate(BUTTON_HEIGHT / 3.0, WINDOW_HEIGHT - BUTTON_HEIGHT * 2);
         // Board area to display information bout the board and assam
         final GamePane boardArea = new GamePane(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         boardArea.setBorder(gamePaneBorder);
         // background image
         ImageView imageView = drawGameBoardBackground(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         imageView.relocate(MARGIN_LEFT, MARGIN_TOP);
-        gameArea.getChildren().add(imageView);
+        this.gameArea.getChildren().add(imageView);
         boardArea.relocate(MARGIN_LEFT, MARGIN_TOP);
-        this.gameArea.getChildren().addAll(btnMainBack, hintButton, boardArea);
+        this.gameArea.getChildren().addAll(btnMainBack, btnHint, boardArea);
 
         final Pane tileArea = new GamePane(NUM_OF_COLS * TILE_SIDE, NUM_OF_ROWS * TILE_SIDE);
         tileArea.relocate(TILE_RELOCATION_X, TILE_RELOCATION_Y);
@@ -440,7 +440,7 @@ public class Game extends Application {
         if (this.gameState.getCurrentPlayer().isComputer()) {
             // For computer player's turn, disable button
             this.btnMainBack.setDisable(true);
-            this.hintButton.setDisable(true);
+            this.btnHint.setDisable(true);
             this.btnInitialRotation.setDisable(true);
             this.btnConfirmInitialRotation.setDisable(true);
             simulateInitialRotation();
@@ -448,7 +448,7 @@ public class Game extends Application {
         this.controlArea.getChildren().addAll(this.btnInitialRotation, this.btnConfirmInitialRotation);
 
         // Click hint button to display game rules
-        hintButton.setOnMouseClicked(event -> {
+        this.btnHint.setOnMouseClicked(event -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Hint");
             // Modify the default icon
@@ -463,16 +463,16 @@ public class Game extends Application {
             dialogPane.setStyle("-fx-background-color: #eecdab; -fx-padding: 15px;");
             dialogPane.setPrefSize(400, 250);
             // Different hints in different phases
-            alert.setHeaderText("In " + currentPhase + " phase");
-            if (currentPhase == Phase.ROTATION) {
+            alert.setHeaderText("In " + this.currentPhase + " phase");
+            if (this.currentPhase == Phase.ROTATION) {
                 alert.setContentText("You can click 'Rotate Left' and 'Rotate Right' to rotate direction of Assam" +
                         " or current rug (you also can press 'Q' or 'E' to rotate rug), " +
                         "then click 'Confirm.");
-            } else if (currentPhase == Phase.MOVEMENT) {
+            } else if (this.currentPhase == Phase.MOVEMENT) {
                 alert.setContentText("You can 'Roll Die' to make Assam move, " +
                         "if Assam lands on the rug of another player who is still in the game," +
                         " you need to pay that player a certain amount of dirhams.");
-            } else if (currentPhase == Phase.PLACEMENT) {
+            } else if (this.currentPhase == Phase.PLACEMENT) {
                 alert.setContentText("You can rotate and drag the rug onto the board, " +
                         "trying to make your rug occupy as much space as possible.");
             }
@@ -492,7 +492,7 @@ public class Game extends Application {
         // Confirm button of initial rotation of Assam
         this.btnConfirmInitialRotation.setOnMouseClicked(event -> {
             if (this.currentPhase == Phase.ROTATION) {
-                this.controlArea.getChildren().removeAll(btnInitialRotation, btnConfirmInitialRotation);
+                this.controlArea.getChildren().removeAll(this.btnInitialRotation, this.btnConfirmInitialRotation);
                 this.gameState.rotateAssam((int) this.assam.getRotate() - getAssamAngle());
                 nextPhase();
                 this.controlArea.getChildren().add(this.btnRollDie);
@@ -577,7 +577,7 @@ public class Game extends Application {
                         nextTurn();
                     } else {
                         this.btnMainBack.setDisable(false);
-                        this.hintButton.setDisable(false);
+                        this.btnHint.setDisable(false);
                     }
                 }
             }
@@ -594,7 +594,7 @@ public class Game extends Application {
         BackgroundImage background = drawBackground();
         gameRootArea.setBackground(new Background(background));
         Scene scene = new Scene(gameRootArea, WINDOW_WIDTH, WINDOW_HEIGHT);
-        gameRootArea.getChildren().add(gameArea);
+        gameRootArea.getChildren().add(this.gameArea);
         scene.setOnKeyPressed(event -> {
             // Press Q or E to rotate rug
             if (event.getCode() == KeyCode.Q || event.getCode() == KeyCode.E) {
@@ -655,7 +655,7 @@ public class Game extends Application {
                 nextTurn();
             } else {
                 this.btnMainBack.setDisable(false);
-                this.hintButton.setDisable(false);
+                this.btnHint.setDisable(false);
             }
         }
     }
@@ -806,7 +806,7 @@ public class Game extends Application {
      */
     private void simulatePayment() {
         delay(() -> {
-            this.controlArea.getChildren().removeAll(paymentText, this.btnConfirmPayment);
+            this.controlArea.getChildren().removeAll(this.paymentText, this.btnConfirmPayment);
             this.btnConfirmPayment.setDisable(false);
 
             if (!this.gameState.isPaymentRequired() || this.gameState.isPaymentAffordable()) {
@@ -831,7 +831,7 @@ public class Game extends Application {
                     nextTurn();
                 } else {
                     this.btnMainBack.setDisable(false);
-                    this.hintButton.setDisable(false);
+                    this.btnHint.setDisable(false);
                 }
             }
         });
@@ -886,7 +886,7 @@ public class Game extends Application {
                 nextTurn();
             } else {
                 this.btnMainBack.setDisable(false);
-                this.hintButton.setDisable(false);
+                this.btnHint.setDisable(false);
             }
         });
     }
@@ -950,13 +950,13 @@ public class Game extends Application {
         if (this.gameState.getCurrentPlayer().isComputer()) {
             // For computer player's turn, disable button
             this.btnMainBack.setDisable(true);
-            this.hintButton.setDisable(true);
+            this.btnHint.setDisable(true);
             this.btnRotations.forEach(b -> b.setDisable(true));
             this.btnConfirmRotation.setDisable(true);
             simulateRotation();
         } else {
             this.btnMainBack.setDisable(false);
-            this.hintButton.setDisable(false);
+            this.btnHint.setDisable(false);
         }
     }
 
@@ -981,11 +981,12 @@ public class Game extends Application {
      * @author Le Thanh Nguyen
      */
     public void drawMosaicTrack() {
+        this.mosaic = new Group();
         double xTop = TILE_SIDE;
         double yTop = 0;
         for (int i = 0; i < 3; i++) {
             GameMosaicTrack circle = new GameMosaicTrack(xTop, yTop);
-            mosaic.getChildren().add(circle);
+            this.mosaic.getChildren().add(circle);
             xTop += TILE_SIDE * 2;
         }
 
@@ -993,7 +994,7 @@ public class Game extends Application {
         double yBot = NUM_OF_ROWS * TILE_SIDE;
         for (int i = 0; i < 4; i++) {
             GameMosaicTrack circle = new GameMosaicTrack(xBot, yBot);
-            mosaic.getChildren().add(circle);
+            this.mosaic.getChildren().add(circle);
             xBot += TILE_SIDE * 2;
         }
 
@@ -1001,7 +1002,7 @@ public class Game extends Application {
         double yLeft = TILE_SIDE;
         for (int i = 0; i < 3; i++) {
             GameMosaicTrack circle = new GameMosaicTrack(xLeft, yLeft);
-            mosaic.getChildren().add(circle);
+            this.mosaic.getChildren().add(circle);
             yLeft += TILE_SIDE * 2;
         }
 
@@ -1009,7 +1010,7 @@ public class Game extends Application {
         double yRight = 0;
         for (int i = 0; i < 4; i++) {
             GameMosaicTrack circle = new GameMosaicTrack(xRight, yRight);
-            mosaic.getChildren().add(circle);
+            this.mosaic.getChildren().add(circle);
             yRight += TILE_SIDE * 2;
         }
     }
@@ -1131,7 +1132,9 @@ public class Game extends Application {
                         // Different hints in different phases
                         alert.setTitle("Game Over");
                         alert.setHeaderText("Game Over!");
-                        alert.setContentText("Congratulations to " + colourString + " with highest score: " + this.gameState.getScores().get(player));
+                        Text messageText = new Text("Congratulations to PLAYER " + player.getColour() + " with highest score: " + this.gameState.getScores().get(player) + "!");
+                        messageText.setWrappingWidth(300);
+                        alert.getDialogPane().setContent(messageText);
                         // Set style of Alert dialogPane
                         Platform.runLater(() -> {
                             dialogPane.lookup(".label").setStyle("-fx-font-size: 18px; -fx-font-weight: bold;" + "-fx-text-fill:" + TEXT_FILL);
@@ -1147,7 +1150,7 @@ public class Game extends Application {
                         playAgain.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
                         playAgain.setStyle("-fx-fill:" + TEXT_FILL);
                         playAgain.setWrappingWidth(300);
-                        controlAreaAfterGameOver.getChildren().addAll(playAgain, restart);
+                        controlAreaAfterGameOver.getChildren().addAll(playAgain, this.btnRestart);
                         this.controlArea.getChildren().add(controlAreaAfterGameOver);
                     }
                 }
@@ -1168,7 +1171,7 @@ public class Game extends Application {
             } else {
                 scoreText.setText("HUMAN" + scoreString);
             }
-            playerStatsVBox.getChildren().addAll(playerText, scoreText, statsText);
+            this.playerStatsVBox.getChildren().addAll(playerText, scoreText, statsText);
         }
     }
 
