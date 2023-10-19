@@ -87,8 +87,11 @@ public class Game extends Application {
     private GamePane gameArea;
     // Control area on game scene, with player operated button and information
     private GamePane controlArea;
+    // Back button on main game scene
     Button btnMainBack = CircularImageButton.createCircularImageButton("resources/back.png");
+    // Hint button on main game scene
     Button hintButton = CircularImageButton.createCircularImageButton("resources/problem.png");
+    // Restart button, show after the game is over
     Button restart = CircularImageButton.createCircularImageButton("resources/restart.png");
     // Number of human and computer players
     private int numOfPlayers;
@@ -140,6 +143,7 @@ public class Game extends Application {
         // Home page, titleText screen
         StackPane titleRootPane = new StackPane();
         VBox titleVBox = new VBox();
+        // Set background image
         BackgroundImage background = drawBackground();
         titleRootPane.setBackground(new Background(background));
 
@@ -390,12 +394,14 @@ public class Game extends Application {
 
         this.btnRollDie.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
+        // Show text information corresponding to movement phase
         this.movementText.relocate(BUTTON_WIDTH * 0.4, BUTTON_HEIGHT * 0.6);
         this.movementText.setFont(GENERAL_TEXT_FONT_ITALIC);
         this.movementText.setStyle("-fx-fill:" + TEXT_FILL);
         this.movementText.setWrappingWidth(300);
         this.btnMoveAssam.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
+        // Show text information corresponding to payment phase
         this.paymentText.relocate(BUTTON_WIDTH * 0.4, BUTTON_HEIGHT * 0.6);
         this.paymentText.setFont(GENERAL_TEXT_FONT_ITALIC);
         this.paymentText.setStyle("-fx-fill:" + TEXT_FILL);
@@ -434,7 +440,8 @@ public class Game extends Application {
             // Different hints in different phases
             alert.setHeaderText("In " + currentPhase + " phase");
             if (currentPhase == Phase.ROTATION) {
-                alert.setContentText("You can use 'Rotate Left' and 'Rotate Right' to rotate direction of Assam or current rug, " +
+                alert.setContentText("You can click 'Rotate Left' and 'Rotate Right' to rotate direction of Assam" +
+                        " or current rug (you also can press 'Q' or 'E' to rotate rug), " +
                         "then click 'Confirm.");
             } else if (currentPhase == Phase.MOVEMENT) {
                 alert.setContentText("You can 'Roll Die' to make Assam move, " +
@@ -454,8 +461,10 @@ public class Game extends Application {
             alert.showAndWait();
         });
 
+        // Initial rotation of Assam
         this.btnInitialRotation.setOnMouseClicked(event -> this.assam.setRotate(this.assam.getRotate() + 90));
 
+        // Confirm button of initial rotation of Assam
         this.btnConfirmInitialRotation.setOnMouseClicked(event -> {
             if (this.currentPhase == Phase.ROTATION) {
                 this.controlArea.getChildren().removeAll(btnInitialRotation, btnConfirmInitialRotation);
@@ -465,19 +474,21 @@ public class Game extends Application {
             }
         });
 
+        // Rotate left button
         btnRotateLeft.setOnMouseClicked(event -> {
             if (this.gameState.getBoard().isRotationLegal((int) this.assam.getRotate() - getAssamAngle() - 90)) {
                 this.assam.setRotate(this.assam.getRotate() - 90);
             }
         });
 
+        // Rotate right
         btnRotateRight.setOnMouseClicked(event -> {
             if (this.gameState.getBoard().isRotationLegal((int) this.assam.getRotate() - getAssamAngle() + 90)) {
                 this.assam.setRotate(this.assam.getRotate() + 90);
             }
         });
 
-        // confirm rotation Assam
+        // Confirm Assam rotation
         this.btnConfirmRotation.setOnMouseClicked(event -> {
             if (this.currentPhase == Phase.ROTATION) {
                 this.controlArea.getChildren().removeAll(this.btnRotations);
@@ -488,7 +499,7 @@ public class Game extends Application {
             }
         });
 
-        // roll die
+        // Roll die
         this.btnRollDie.setOnMouseClicked(event -> {
             this.controlArea.getChildren().remove(this.btnRollDie);
             this.dieResult = Die.getSide();
@@ -496,7 +507,7 @@ public class Game extends Application {
             this.controlArea.getChildren().addAll(movementText, this.btnMoveAssam);
         });
 
-        // make Assam move
+        // Make Assam move
         this.btnMoveAssam.setOnMouseClicked(event -> {
             this.controlArea.getChildren().removeAll(this.movementText, this.btnMoveAssam);
             this.gameState.moveAssam(this.dieResult);
@@ -547,18 +558,20 @@ public class Game extends Application {
             }
         });
 
-        // players rotate rug
+        // Players rotate rug
         this.btnRotateRug.setOnMouseClicked(event -> rotateRug());
 
-        // confirm rugs placement
+        // Confirm rugs placement
         this.btnConfirmPlacement.setOnMouseClicked(event -> makePlacement());
 
+        // Set background image
         StackPane gameRootArea = new StackPane();
         BackgroundImage background = drawBackground();
         gameRootArea.setBackground(new Background(background));
         Scene scene = new Scene(gameRootArea, WINDOW_WIDTH, WINDOW_HEIGHT);
         gameRootArea.getChildren().add(gameArea);
         scene.setOnKeyPressed(event -> {
+            // Press Q or E to rotate rug
             if (event.getCode() == KeyCode.Q || event.getCode() == KeyCode.E) {
                 if (this.currentPhase == Phase.PLACEMENT) {
                     rotateRug();
@@ -823,7 +836,7 @@ public class Game extends Application {
             @Override
             protected Void call() throws Exception {
                 // Sleep for millis milliseconds
-                final long millis = 100;
+                final long millis = 500;
                 Thread.sleep(millis);
                 return null;
             }
@@ -1008,6 +1021,7 @@ public class Game extends Application {
                     colourString += " - CURRENT";
                 }
                 if (this.gameState.isGameOver()) {
+                    // Game is over
                     ArrayList<Player> winners = this.gameState.getWinners();
                     if (winners.contains(player)) {
                         // Show winners
@@ -1051,6 +1065,7 @@ public class Game extends Application {
                 colourText.setFill(Colour.getFrontEndColor(player.getColour()));
                 colourText.setStroke(Colour.getFrontEndColor(player.getColour()).darker());
             } else {
+                // The player is out when game is not over
                 colourString += " - OUT";
                 colourText.setFill(Color.GRAY);
                 colourText.setOpacity(1 - HIGHLIGHTED_OPACITY);

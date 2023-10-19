@@ -71,7 +71,7 @@ public enum Colour {
      */
     public static Color getFrontEndColor(Colour colour) {
         return switch (colour) {
-            case YELLOW -> Color.YELLOW.darker();
+            case YELLOW -> Color.YELLOW.deriveColor(0.0, 1.0, 0.9, 1.0);
             case RED -> Color.RED.darker();
             case CYAN -> Color.CYAN.darker();
             case PURPLE -> Color.PURPLE;

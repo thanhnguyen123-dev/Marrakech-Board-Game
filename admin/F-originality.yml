@@ -54,7 +54,7 @@ assets:
     licence: This material is only for the majority of users to exchange learning and use, without the written authorization of iconfont or its affiliates, shall not be used for any commercial purpose.
 
   - comment: Game over icon
-    url: "https://www.flaticon.com/free-icons/game-over" title="game over icons">Game over icons created by Freepik - Flaticon
+    url: https://www.flaticon.com/free-icons/game-over
     licence: Free for personal and commercial use with attribution.
 
   - comment: Game over icon
@@ -71,7 +71,7 @@ assets:
 signatures:
   - name:
     uid:
-  - name:
-    uid:
+  - name: Yaolin Li
+    uid: u7582846
   - name: Haobo Zou
     uid: u7620014
