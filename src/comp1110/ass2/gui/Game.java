@@ -70,6 +70,7 @@ public class Game extends Application {
     private static final Font GENERAL_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14);
     private static final Font GENERAL_TEXT_FONT_ITALIC = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 14);
     private static final Font PLAYER_COLOUR_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18);
+    private static final String TEXT_FILL = "#3F301D";
 
     private final Pane allTiles = new Pane();
     private Pane placedRugs = new Pane();
@@ -114,7 +115,7 @@ public class Game extends Application {
     private final Text movementText = new Text();
     private final Text paymentText = new Text();
 
-    private final long MILLIS = 2000;
+    private final long MILLIS = 500;
 
     // all players, including human and computer players
     private Player[] players;
@@ -134,6 +135,7 @@ public class Game extends Application {
 
         Text titleText = new Text("Marrakech");
         titleText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 60));
+        titleText.setStyle("-fx-fill:" + TEXT_FILL);
         GameButton btnStart = new GameButton("Start", BUTTON_WIDTH, BUTTON_HEIGHT);
         // Make two elements center vertical
         titleVBox.setAlignment(Pos.CENTER);
@@ -151,6 +153,7 @@ public class Game extends Application {
 
         Text numberText = new Text("Please choose the number of players");
         numberText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 28));
+        numberText.setStyle("-fx-fill:" + TEXT_FILL);
         double numberTextWidth = numberText.getLayoutBounds().getWidth();
         numberText.relocate((WINDOW_WIDTH - numberTextWidth) / 2, 260);
 
@@ -323,6 +326,7 @@ public class Game extends Application {
 
         // add styles for elements inside stats area
         this.phaseText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
+        this.phaseText.setStyle("-fx-fill:" + TEXT_FILL);
         this.phaseText.relocate(15, 20);
         this.playerStatsVBox.setSpacing(4);
         this.playerStatsVBox.relocate(20, 80);
@@ -352,13 +356,15 @@ public class Game extends Application {
 
         this.btnRollDie.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
-        this.movementText.relocate(BUTTON_WIDTH * 0.4, BUTTON_HEIGHT);
-        this.movementText.setFont(GENERAL_TEXT_FONT_REGULAR);
+        this.movementText.relocate(BUTTON_WIDTH * 0.4, BUTTON_HEIGHT * 0.6);
+        this.movementText.setFont(GENERAL_TEXT_FONT_ITALIC);
+        this.movementText.setStyle("-fx-fill:" + TEXT_FILL);
         this.movementText.setWrappingWidth(300);
         this.btnMoveAssam.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
-        this.paymentText.relocate(BUTTON_WIDTH * 0.4, BUTTON_HEIGHT);
-        this.paymentText.setFont(GENERAL_TEXT_FONT_REGULAR);
+        this.paymentText.relocate(BUTTON_WIDTH * 0.4, BUTTON_HEIGHT * 0.6);
+        this.paymentText.setFont(GENERAL_TEXT_FONT_ITALIC);
+        this.paymentText.setStyle("-fx-fill:" + TEXT_FILL);
         this.paymentText.setWrappingWidth(300);
         this.btnConfirmPayment.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
@@ -594,7 +600,7 @@ public class Game extends Application {
             } else if (this.gameState.isPaymentAffordable()) {
                 this.paymentText.setText("You will need to pay Player " + this.gameState.findAssamRugOwner().getColour().toString() + " " + this.gameState.getPaymentAmount() + " dirhams.");
             } else {
-                this.paymentText.setText("You cannot afford to pay. You will have to give all your dirhams to Player " + this.gameState.findAssamRugOwner().getColour().toString() + ". After that, You will be removed from the game");
+                this.paymentText.setText("You cannot afford to pay. You will have to give all your dirhams to Player " + this.gameState.findAssamRugOwner().getColour().toString() + ". After that, You will be removed from the game.");
             }
             this.controlArea.getChildren().addAll(this.paymentText, this.btnConfirmPayment);
             this.btnConfirmPayment.setDisable(true);
@@ -806,6 +812,7 @@ public class Game extends Application {
             String scoreString = "     Current Score: " + this.gameState.getScores().get(player);
             Text scoreText = new Text();
             scoreText.setFont(GENERAL_TEXT_FONT_ITALIC);
+            scoreText.setStyle("-fx-fill:" + TEXT_FILL);
             if (player.isComputer()) {
                 scoreText.setText("COMPUTER - " + player.getStrategy() + scoreString);
             } else {
@@ -814,6 +821,7 @@ public class Game extends Application {
 
             Text statsText = new Text(player.getDirham() + " dirhams     " + player.getNumOfUnplacedRugs() + " rugs remaining");
             statsText.setFont(GENERAL_TEXT_FONT_ITALIC);
+            statsText.setStyle("-fx-fill:" + TEXT_FILL);
 
             playerStatsVBox.getChildren().addAll(colourText, scoreText, statsText);
         }
@@ -864,19 +872,23 @@ public class Game extends Application {
             this.chbIsComputer = new CheckBox();
             this.chbIsComputer.setText("Computer");
             this.chbIsComputer.setFont(GENERAL_TEXT_FONT_ITALIC);
+            this.chbIsComputer.setStyle("-fx-text-fill:" + TEXT_FILL);
             this.chbIsComputer.relocate(0, COLOUR_BUTTON_RADIUS * 2.2);
 
             this.lblStrategy = new Label("Strategy:");
             this.lblStrategy.setFont(GENERAL_TEXT_FONT_REGULAR);
+            this.lblStrategy.setStyle("-fx-text-fill:" + TEXT_FILL);
             this.lblStrategy.relocate(0, COLOUR_BUTTON_RADIUS * 2.6);
 
             ToggleGroup toggleGroup = new ToggleGroup();
             this.rbRandom = new RadioButton("Random");
             this.rbRandom.setFont(GENERAL_TEXT_FONT_ITALIC);
+            this.rbRandom.setStyle("-fx-text-fill:" + TEXT_FILL);
             this.rbRandom.relocate(0, COLOUR_BUTTON_RADIUS * 3.0);
             this.rbRandom.setToggleGroup(toggleGroup);
             this.rbIntelligent = new RadioButton("Intelligent");
             this.rbIntelligent.setFont(GENERAL_TEXT_FONT_ITALIC);
+            this.rbIntelligent.setStyle("-fx-text-fill:" + TEXT_FILL);
             this.rbIntelligent.relocate(0, COLOUR_BUTTON_RADIUS * 3.4);
             this.rbIntelligent.setToggleGroup(toggleGroup);
             this.rbIntelligent.setDisable(true);
