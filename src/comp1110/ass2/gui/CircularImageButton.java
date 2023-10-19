@@ -4,6 +4,11 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Customized circular image buttons
+ *
+ * @author u7582846 Yaolin Li
+ */
 public class CircularImageButton {
     public static Button createCircularImageButton(String imagePath) {
         // create button

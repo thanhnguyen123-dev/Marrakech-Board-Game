@@ -5,6 +5,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
+/**
+ * Customized rectangle buttons
+ *
+ * @author u7620014 Haobo Zou, u7582846 Yaolin Li
+ */
 class GameButton extends Button {
     public GameButton(String string, double width, double height) {
         super(string);
