@@ -234,7 +234,7 @@ public class Game extends Application {
 
         // Back button on choose player number scene
         btnNumberBack.setOnMouseClicked(event -> {
-            // Initialize human players and computer players
+            // Initialises human players and computer players
             this.numOfPlayers = 0;
             rbChoose2.setSelected(true);
             primaryStage.setScene(titleScene);
@@ -252,7 +252,7 @@ public class Game extends Application {
 
         // Click back button on choose colour scene
         btnColourBack.setOnMouseClicked(event -> {
-            // Initialize human players and computer players
+            // Initialises human players and computer players
             this.tmp.clear();
             rbChoose2.setSelected(true);
             this.btnColourConfirm.setDisable(true);
@@ -262,7 +262,7 @@ public class Game extends Application {
             primaryStage.setScene(numberScene);
         });
 
-        // Reset color on choose colour scene
+        // Reset chosen colours on choose colour scene
         btnColourReset.setOnMouseClicked(event -> {
             this.tmp.clear();
             this.btnColourConfirm.setDisable(true);
@@ -317,7 +317,7 @@ public class Game extends Application {
     }
 
     /**
-     * Creates a list of PlayerSelector objects, each representing a distinct player color
+     * Creates a list of PlayerSelector objects, each representing a distinct player colour
      * Players can choose their own colour
      * @return an ArrayList of PlayerSelector objects with specific colours
      * @author u7620014 Haobo Zou, u7582846 Yaolin Li
@@ -337,13 +337,13 @@ public class Game extends Application {
     }
 
     /**
-     * Constructs and initializes the main game scene,
+     * Constructs and initialises the main game scene,
      * including board area, stats area and control area
      * @return Scene representing the main game area with all its nodes and controls
      * @author u7620014 Haobo Zou, u7582846 Yaolin Li
      */
     private Scene makeMainScene() {
-        // Initialize game phase as rotation phase
+        // Initialise game phase as rotation phase
         this.currentPhase = Phase.ROTATION;
         if (this.highlighted != null) {
             this.highlighted.setOpacity(0);
@@ -957,7 +957,7 @@ public class Game extends Application {
     }
 
     /**
-     * Initializes all the game tiles for the game board
+     * Initialises all the game tiles for the game board
      * @author u7620014 Haobo Zou
      */
     private void initTiles() {
@@ -1012,7 +1012,7 @@ public class Game extends Application {
     }
 
     /**
-     * Initializes all the invisible rugs for the game board
+     * Initialises all the invisible rugs for the game board
      * @author u7620014 Haobo Zou
      */
     private void initInvisibleRugs() {
@@ -1040,7 +1040,7 @@ public class Game extends Application {
     }
 
     /**
-     * Initializes Assam's position on (3, 3) and direction to the north
+     * Initialises Assam's position on (3, 3) and direction to the north
      * @author u7620014 Haobo Zou
      */
     private void initAssam() {
@@ -1269,7 +1269,7 @@ public class Game extends Application {
                 this.player = new Player(colour);
                 tmp.add(this.player);
                 if (tmp.size() == numOfPlayers) {
-                    // When the appropriate number of players has been selected, disable the other colors,
+                    // When the appropriate number of players has been selected, disable the other colour buttons,
                     // and make them transparent
                     playerSelectors.forEach(playerSelector -> {
                         playerSelector.gameColourButton.setDisable(true);
