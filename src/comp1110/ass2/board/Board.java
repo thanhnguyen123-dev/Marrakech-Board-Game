@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Board class represents the dimensions of the board and relevant objects on
- * the board
+ * Board class contains properties of each board
+ * @author u7594144 Le Thanh Nguyen, u7582846 Yaolin Li, u7620014 Haobo Zou
  */
 public class Board {
     public static final int NUM_OF_ROWS = 7;
@@ -72,13 +72,18 @@ public class Board {
         return this.assamDirection;
     }
 
+    /**
+     * getter method for assamPath
+     * @return a List of tiles representing the path taken by assam after his last movement
+     * @author u7620014 Haobo Zou
+     */
     public List<Tile> getAssamPath() {
         return this.assamPath;
     }
 
     /**
-     * Moves Assam by a given number of steps from rolling the die
-     * @param steps number of steps to be taken by Assam
+     * Moves Assam with given steps
+     * @param steps number of steps
      * @author u7620014 Haobo Zou
      */
     public void moveAssam(int steps) {
@@ -88,8 +93,8 @@ public class Board {
     }
 
     /**
-     * Moves Assam within the board by a given number of steps from rolling the die
-     * @param steps number of steps to be taken by Assam
+     * Moves Assam within the board with given steps
+     * @param steps number of steps
      * @author u7620014 Haobo Zou
      */
     public void moveAssamInBounds(int steps) {
@@ -179,7 +184,7 @@ public class Board {
     }
 
     /**
-     * Rotates Assam by a given angle of rotation
+     * Rotates Assam with a given angle of rotation
      * @param rotation rotation in degrees
      * @author Le Thanh Nguyen u7594144
      */
@@ -250,9 +255,9 @@ public class Board {
                 int beginIndex = (col * NUM_OF_ROWS + row) * LENGTH_OF_SHORT_RUG_STRING + 1;
                 String shortRugString = boardString.substring(beginIndex, beginIndex + LENGTH_OF_SHORT_RUG_STRING);
                 if (!shortRugString.equals("n00")) {
+                    // Sets the represented rug as the top rug, and adds it to the list of all visible rugs
                     Rug rug = new Rug(shortRugString, this.tiles[row][col]);
                     this.tiles[row][col].setTopRug(rug);
-                    // Get all visible rugs according to board string
                     visibleRugs.add(rug);
                 }
             }
@@ -294,9 +299,9 @@ public class Board {
     }
 
     /**
-     * Determines whether the coordinate of the tile on which a rug is placed is valid
+     * Determines whether the coordinates of the tile on which a rug is placed are valid
      * @param tile the tile to be validated
-     * @return true if the coordinate of tile is valid, or false otherwise
+     * @return true if the coordinates of tile are valid, or false otherwise
      * @author u7582846 Yaolin Li
      */
     public static boolean isTileValid(Tile tile) {

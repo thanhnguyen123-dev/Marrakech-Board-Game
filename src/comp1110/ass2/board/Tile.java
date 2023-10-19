@@ -3,7 +3,8 @@ package comp1110.ass2.board;
 import comp1110.ass2.player.Rug;
 
 /**
- * Tile class defines the state of a particular position on the board
+ * Tile class contains properties of each tile
+ * @author u7594144 Le Thanh Nguyen, u7582846 Yaolin Li, u7620014 Haobo Zou
  */
 public class Tile {
     // Position of each tile on the board
