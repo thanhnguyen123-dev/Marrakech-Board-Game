@@ -31,7 +31,6 @@ import java.util.ArrayList;
 public class Viewer extends Application {
     /**
      * Display the game state on the screen
-     *
      * @author Le Thanh Nguyen u7594144
      */
     private static final int VIEWER_WIDTH = 1200;
@@ -133,7 +132,6 @@ public class Viewer extends Application {
 
     /**
      * Draw the board at the current game state
-     *
      * @param state
      */
     public void drawBoard(String state) {
@@ -243,7 +241,6 @@ public class Viewer extends Application {
 
     /**
      * Draw a placement in the window, removing any previously drawn placements
-     *
      * @param state an array of two strings, representing the current game state
      */
     void displayState(String state) {
