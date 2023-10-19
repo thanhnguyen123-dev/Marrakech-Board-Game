@@ -37,6 +37,10 @@ assets:
     url: https://www.pexels.com/photo/brown-wood-planks-168442/
     licence: All photos and videos on Pexels can be downloaded and used for free.
 
+  - comment: Window icon
+    url: https://www.flaticon.com/free-icon/board-game_3292072?term=board+game&page=1&position=1&origin=search&related_id=3292072
+    licence: Free for personal and commercial use with attribution.
+
   - comment: Back icon
     url: https://www.iconfont.cn/search/index?searchType=icon&q=back&lang=en-us&page=1&fromCollection=1&fills=&tag=
     licence: This material is only for the majority of users to exchange learning and use, without the written authorization of iconfont or its affiliates, shall not be used for any commercial purpose.
@@ -54,10 +58,10 @@ assets:
     licence: This material is only for the majority of users to exchange learning and use, without the written authorization of iconfont or its affiliates, shall not be used for any commercial purpose.
 
   - comment: Game over icon
-    url: https://www.flaticon.com/free-icons/game-over
+    url: https://www.flaticon.com/free-icon/game-over_6793738?term=game+over&page=1&position=68&origin=tag&related_id=6793738
     licence: Free for personal and commercial use with attribution.
 
-  - comment: Game over icon
+  - comment: Restart icon
     url: https://www.iconfont.cn/search/index?searchType=icon&q=restart&page=1&fills=&fromCollection=1&tag=
     licence: This material is only for the majority of users to exchange learning and use, without the written authorization of iconfont or its affiliates, shall not be used for any commercial purpose.
 

@@ -306,6 +306,9 @@ public class Game extends Application {
             primaryStage.setScene(titleScene);
         });
 
+        // Modify window icon
+        primaryStage.getIcons().add(new Image("resources/board-game.png"));
+        
         primaryStage.setResizable(false);
         primaryStage.setTitle("Marrakech");
         primaryStage.setScene(titleScene);
