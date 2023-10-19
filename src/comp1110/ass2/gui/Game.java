@@ -87,7 +87,7 @@ public class Game extends Application {
     private int numOfPlayers;
 
     private Phase currentPhase;
-    private Text phaseText = new Text();
+    private final Text phaseText = new Text();
     private Region assam;
     private int dieResult;
     GameInvisibleRug highlighted;
@@ -167,7 +167,7 @@ public class Game extends Application {
 
         //Back and Confirm buttons
         Button btnNumberBack = CircularImageButton.createCircularImageButton("resources/back.png");
-        btnNumberBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
+        btnNumberBack.relocate(BUTTON_HEIGHT / 3.0, BUTTON_HEIGHT / 2.0);
         this.btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
         this.btnNumberConfirm.requestFocus();
 
@@ -185,7 +185,7 @@ public class Game extends Application {
 
         //Back, Reset and Confirm buttons
         Button btnColourBack = CircularImageButton.createCircularImageButton("resources/back.png");
-        btnColourBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
+        btnColourBack.relocate(BUTTON_HEIGHT / 3.0, BUTTON_HEIGHT / 2.0);
         GameButton btnColourReset = new GameButton("Reset", BUTTON_WIDTH, BUTTON_HEIGHT);
         btnColourReset.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH * 1.5, 420);
         this.btnColourConfirm.relocate(WINDOW_WIDTH / 2.0 + BUTTON_WIDTH * 0.5, 420);
@@ -290,13 +290,13 @@ public class Game extends Application {
         this.gameArea = new GamePane(WINDOW_WIDTH, WINDOW_HEIGHT);
         Border gamePaneBorder = new Border(new BorderStroke(GAME_PANE_BORDER_COLOR, GAME_PANE_BORDER_STROKE_STYLE, GAME_PANE_BORDER_RADII, GAME_PANE_BORDER_WIDTH));
         // back button
-        btnMainBack.relocate(BUTTON_HEIGHT / 2.0, BUTTON_HEIGHT / 2.0);
+        btnMainBack.relocate(BUTTON_HEIGHT / 3.0, BUTTON_HEIGHT / 2.0);
         // hint information
-        hintButton.relocate(BUTTON_HEIGHT / 2.0, WINDOW_HEIGHT - BUTTON_HEIGHT * 2);
+        hintButton.relocate(BUTTON_HEIGHT / 3.0, WINDOW_HEIGHT - BUTTON_HEIGHT * 2);
         // Board area to display information bout the board and assam
         final GamePane boardArea = new GamePane(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         boardArea.setBorder(gamePaneBorder);
-        // backgroung image
+        // background image
         ImageView imageView = drawGameBoardBackground(BOARD_AREA_SIDE, BOARD_AREA_SIDE);
         imageView.relocate(MARGIN_LEFT, MARGIN_TOP);
         gameArea.getChildren().add(imageView);
@@ -843,10 +843,9 @@ public class Game extends Application {
         Image backgroundImage = new Image("resources/background.jpg");
         // set image size, make the picture adaptive
         BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true);
-        BackgroundImage background = new BackgroundImage(backgroundImage,
+        return new BackgroundImage(backgroundImage,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER, backgroundSize);
-        return background;
     }
 
     private ImageView drawGameBoardBackground(double width, double height) {
