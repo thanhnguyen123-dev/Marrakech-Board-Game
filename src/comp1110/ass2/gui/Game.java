@@ -175,19 +175,19 @@ public class Game extends Application {
         radioNumberArea.setSpacing(30);
         radioNumberArea.setAlignment(Pos.CENTER);
 
-        RadioButton choose2 = new RadioButton("2");
-        RadioButton choose3 = new RadioButton("3");
-        RadioButton choose4 = new RadioButton("4");
+        RadioButton rbChoose2 = new RadioButton("2");
+        RadioButton rbChoose3 = new RadioButton("3");
+        RadioButton rbChoose4 = new RadioButton("4");
         // Default number of players is 2
-        choose2.setSelected(true);
-        choose2.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        choose3.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        choose4.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        rbChoose2.setSelected(true);
+        rbChoose2.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        rbChoose3.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        rbChoose4.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         ToggleGroup group = new ToggleGroup();
-        choose2.setToggleGroup(group);
-        choose3.setToggleGroup(group);
-        choose4.setToggleGroup(group);
-        radioNumberArea.getChildren().addAll(choose2, choose3, choose4);
+        rbChoose2.setToggleGroup(group);
+        rbChoose3.setToggleGroup(group);
+        rbChoose4.setToggleGroup(group);
+        radioNumberArea.getChildren().addAll(rbChoose2, rbChoose3, rbChoose4);
 
         // Back button
         Button btnNumberBack = CircularImageButton.createCircularImageButton("resources/back.png");
@@ -236,7 +236,7 @@ public class Game extends Application {
         btnNumberBack.setOnMouseClicked(event -> {
             // Initialize human players and computer players
             this.numOfPlayers = 0;
-            choose2.setSelected(true);
+            rbChoose2.setSelected(true);
             primaryStage.setScene(titleScene);
         });
 
@@ -254,7 +254,7 @@ public class Game extends Application {
         btnColourBack.setOnMouseClicked(event -> {
             // Initialize human players and computer players
             this.tmp.clear();
-            choose2.setSelected(true);
+            rbChoose2.setSelected(true);
             this.btnColourConfirm.setDisable(true);
             colourPane.getChildren().removeAll(this.playerSelectors);
             this.playerSelectors = makeNewPlayerSelectors();
@@ -1030,8 +1030,8 @@ public class Game extends Application {
         this.playerStatsVBox.getChildren().clear();
         for (Player player : this.gameState.getPlayers()) {
             String colourString = "PLAYER " + player.getColour();
-            Text colourText = new Text();
-            colourText.setFont(PLAYER_COLOUR_TEXT_FONT_REGULAR);
+            Text playerText = new Text();
+            playerText.setFont(PLAYER_COLOUR_TEXT_FONT_REGULAR);
 
             String scoreString = "     Current Score: " + this.gameState.getScores().get(player);
             Text scoreText = new Text();
@@ -1088,24 +1088,24 @@ public class Game extends Application {
                         this.controlArea.getChildren().add(controlAreaAfterGameOver);
                     }
                 }
-                colourText.setFill(Colour.getFrontEndColor(player.getColour()));
-                colourText.setStroke(Colour.getFrontEndColor(player.getColour()).darker());
+                playerText.setFill(Colour.getFrontEndColor(player.getColour()));
+                playerText.setStroke(Colour.getFrontEndColor(player.getColour()).darker());
             } else {
                 // The player is out when game is not over
                 colourString += " - OUT";
-                colourText.setFill(Color.GRAY);
-                colourText.setOpacity(1 - HIGHLIGHTED_OPACITY);
+                playerText.setFill(Color.GRAY);
+                playerText.setOpacity(1 - HIGHLIGHTED_OPACITY);
                 scoreText.setFill(Color.GRAY);
                 statsText.setFill(Color.GRAY);
             }
-            colourText.setText(colourString);
+            playerText.setText(colourString);
 
             if (player.isComputer()) {
                 scoreText.setText("COMPUTER - " + player.getStrategy() + scoreString);
             } else {
                 scoreText.setText("HUMAN" + scoreString);
             }
-            playerStatsVBox.getChildren().addAll(colourText, scoreText, statsText);
+            playerStatsVBox.getChildren().addAll(playerText, scoreText, statsText);
         }
     }
 
