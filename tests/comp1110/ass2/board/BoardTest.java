@@ -1,6 +1,8 @@
 package comp1110.ass2.board;
 
+import comp1110.ass2.GameState;
 import comp1110.ass2.player.Colour;
+import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,16 +33,38 @@ class BoardTest {
 
     @Test
     void generateAssamString() {
+        Player playerRed = new Player(Colour.RED);
+        Player playerPurple = new Player(Colour.PURPLE);
+        Player[] players = {playerRed, playerPurple};
+        GameState gameState = new GameState(players);
+        Board board = gameState.getBoard();
         // Test initial situation
-        Board board = new Board();
-        assertEquals(board.generateAssamString(), "A33N");
+        assertEquals("A33N", board.generateAssamString());
+        // Test after Assam move
+        gameState.rotateAssam(90);
+        gameState.moveAssam(3);
+        assertEquals("A63E", board.generateAssamString());
+        // Test Assam move out of bound
+        gameState.moveAssam(2);
+        assertEquals("A54W", board.generateAssamString());
     }
 
     @Test
     void generateBoardString() {
+        Player playerRed = new Player(Colour.RED);
+        Player playerPurple = new Player(Colour.PURPLE);
+        Player[] players = {playerRed, playerPurple};
+        GameState gameState = new GameState(players);
         // Test initial situation
-        Board board = new Board();
-        assertEquals(board.generateBoardString(), "Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00");
+        Board board = gameState.getBoard();
+        assertEquals("Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00", board.generateBoardString());
+        // Test after place rug
+        Rug rug = new Rug(Colour.RED, 01, new Tile[]{board.getTiles()[1][2], board.getTiles()[1][3]});
+        board.placeRug(rug);
+        assertEquals("Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00r01n00n00n00n00n00n00r01n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00", board.generateBoardString());
+        Rug rug1 = new Rug(Colour.PURPLE, 01, new Tile[]{board.getTiles()[3][3], board.getTiles()[3][4]});
+        board.placeRug(rug1);
+        assertEquals("Bn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00r01n00n00n00n00n00n00r01n00p01n00n00n00n00n00n00p01n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00", board.generateBoardString());
     }
 
     @Test
