@@ -1,0 +1,30 @@
+# IMPORTANT: It is very important that you correctly complete this originality
+# statement.
+#
+# This is your statement of your submitted work being your own.
+# Incorrectly filling out this statement could lead to charges
+# of academic misconduct.
+# 
+# For information on how to fill this out correctly, see
+# https://cs.anu.edu.au/courses/comp1110/help/faq/09-originality/
+#
+
+declaration: >-
+  I submit the work below for assessment as my best work. I declare that this
+  is entirely my own work, with the following documented exceptions:
+
+
+# I wish to submit the following classes as entirely my own (remove this if
+# you want to just submit methods):
+class:
+  - https://gitlab.cecs.anu.edu.au/u7594144/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/CircularImageButton.java
+
+# I wish to submit the following methods as entirely my own (remove this if
+# you want to just submit classes):
+method:
+  - https://gitlab.cecs.anu.edu.au/u7594144/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Game.java#L446-483
+  - https://gitlab.cecs.anu.edu.au/u7594144/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Game.java#L1109-1144
+
+  # sign *your* name and uid here
+name: Yaolin Li
+uid: u7582846
