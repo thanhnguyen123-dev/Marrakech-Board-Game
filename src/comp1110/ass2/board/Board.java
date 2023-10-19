@@ -105,7 +105,6 @@ public class Board {
      */
     public void moveAssam(int steps) {
         this.assamPath.clear();
-        this.assamPath.add(this.assamTile);
         moveAssamInBounds(steps);
     }
 

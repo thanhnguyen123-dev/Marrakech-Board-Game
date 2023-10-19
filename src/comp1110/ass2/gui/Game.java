@@ -693,21 +693,17 @@ public class Game extends Application {
             this.controlArea.getChildren().remove(this.btnConfirmRotation);
             this.btnRotations.forEach(b -> b.setDisable(false));
             this.btnConfirmRotation.setDisable(false);
+            int rotation;
 
             if (this.gameState.getCurrentPlayer().getStrategy() == Strategy.RANDOM) {
-                int rotation = new Random().nextInt(3) * 90 - 90;
-                this.gameState.rotateAssam(rotation);
-                updateAssam();
-                nextPhase();
+                rotation = new Random().nextInt(3) * 90 - 90;
             } else {
-                int rotation;
-
-                // Calculates Assam's full paths with all three possible rotations
+                // Calculates Assam's paths with all three possible rotations and four steps each
                 List<Tile> assamPathLeft = this.gameState.getBoard().getAssamFullPath(-90);
                 List<Tile> assamPathMiddle = this.gameState.getBoard().getAssamFullPath(0);
                 List<Tile> assamPathRight = this.gameState.getBoard().getAssamFullPath(90);
 
-                // Calculates expectations of payments on these three different lanes
+                // Calculates expected payments on the three different lanes
                 double expLeft = getExpPayment(assamPathLeft);
                 double expMiddle = getExpPayment(assamPathMiddle);
                 double expRight = getExpPayment(assamPathRight);
@@ -720,12 +716,11 @@ public class Game extends Application {
                 } else {
                     rotation = 90;
                 }
-
-                // Proceeds with the selected rotation
-                this.gameState.rotateAssam(rotation);
-                updateAssam();
-                nextPhase();
             }
+            // Proceeds with the selected rotation
+            this.gameState.rotateAssam(rotation);
+            updateAssam();
+            nextPhase();
 
             this.controlArea.getChildren().add(this.btnRollDie);
             this.btnRollDie.setDisable(true);
@@ -734,8 +729,8 @@ public class Game extends Application {
     }
 
     /**
-     * Calculates expected payment from a given path of 4 tiles
-     * @param assamPath the path Assam takes on the board, has 4 tiles
+     * Calculates expected payment from a given Assam path of four steps
+     * @param assamPath the path Assam takes on the board, which consists of four tiles
      * @return the expected payment
      */
     private double getExpPayment(List<Tile> assamPath) {
