@@ -1,7 +1,6 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.GameState;
-import comp1110.ass2.board.Board;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.board.Die;
@@ -12,7 +11,6 @@ import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -83,7 +81,7 @@ public class Game extends Application {
     final ArrayList<GameInvisibleRug> vGameInvisibleRugs = new ArrayList<>();
     // Horizontal invisible rugs
     final ArrayList<GameInvisibleRug> hGameInvisibleRugs = new ArrayList<>();
-    private Group mosaic = new Group();
+
     private GamePane gameArea;
     // Control area on game scene, with player operated button and information
     private GamePane controlArea;
@@ -171,29 +169,48 @@ public class Game extends Application {
         double numberTextWidth = numberText.getLayoutBounds().getWidth();
         numberText.relocate((WINDOW_WIDTH - numberTextWidth) / 2, 260);
 
-        ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
-        choiceBox.setMinWidth(BUTTON_WIDTH);
-        choiceBox.setMaxWidth(BUTTON_WIDTH);
-        choiceBox.getItems().addAll(2, 3, 4);
-        // The default number for human players is 2
-        choiceBox.setValue(2);
-        choiceBox.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 320);
+        // RadioButton to choose number of players
+        HBox radioNumberArea = new HBox();
+        radioNumberArea.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        radioNumberArea.setSpacing(30);
+        radioNumberArea.setAlignment(Pos.CENTER);
 
-        //Back and Confirm buttons
+        RadioButton choose2 = new RadioButton("2");
+        RadioButton choose3 = new RadioButton("3");
+        RadioButton choose4 = new RadioButton("4");
+        // Default number of players is 2
+        choose2.setSelected(true);
+        choose2.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        choose3.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        choose4.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        ToggleGroup group = new ToggleGroup();
+        choose2.setToggleGroup(group);
+        choose3.setToggleGroup(group);
+        choose4.setToggleGroup(group);
+        radioNumberArea.getChildren().addAll(choose2, choose3, choose4);
+
+        // Back button
         Button btnNumberBack = CircularImageButton.createCircularImageButton("resources/back.png");
         btnNumberBack.relocate(BUTTON_HEIGHT / 3.0, BUTTON_HEIGHT / 2.0);
-        this.btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 360);
+        // Confirm Button
+        this.btnNumberConfirm.relocate(WINDOW_WIDTH / 2.0 - BUTTON_WIDTH / 2.0, 400);
         this.btnNumberConfirm.requestFocus();
 
         // Add all children of numberPane
         numberRootPane.getChildren().add(numberPane);
-        numberPane.getChildren().addAll(choiceBox, numberText, btnNumberBack, this.btnNumberConfirm);
+        numberPane.getChildren().addAll(radioNumberArea, numberText, btnNumberBack, this.btnNumberConfirm);
 
         // Players choose their colours
         Pane colourPane = new Pane();
         StackPane colourRootPane = new StackPane();
         colourRootPane.setBackground(new Background(background));
         Scene colourScene = new Scene(colourRootPane, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        Text colourText = new Text("Please choose the colour of players");
+        colourText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 28));
+        colourText.setStyle("-fx-fill:" + TEXT_FILL);
+        double colourTextWidth = colourText.getLayoutBounds().getWidth();
+        colourText.relocate((WINDOW_WIDTH - colourTextWidth) / 2, 130);
 
         this.playerSelectors = makeNewPlayerSelectors();
 
@@ -206,7 +223,7 @@ public class Game extends Application {
         this.btnColourConfirm.setDisable(true);
 
         colourPane.getChildren().addAll(this.playerSelectors);
-        colourPane.getChildren().addAll(btnColourBack, btnColourReset, this.btnColourConfirm);
+        colourPane.getChildren().addAll(colourText, btnColourBack, btnColourReset, this.btnColourConfirm);
         colourRootPane.getChildren().add(colourPane);
 
         // Start button on the homepage
@@ -219,13 +236,16 @@ public class Game extends Application {
         btnNumberBack.setOnMouseClicked(event -> {
             // Initialize human players and computer players
             this.numOfPlayers = 0;
-            choiceBox.setValue(2);
+            choose2.setSelected(true);
             primaryStage.setScene(titleScene);
         });
 
         // Confirm button on choose player number scene
         this.btnNumberConfirm.setOnMouseClicked(event -> {
-            this.numOfPlayers = choiceBox.getValue();
+            RadioButton selectedNumber = (RadioButton) group.getSelectedToggle();
+            if (selectedNumber != null) {
+                this.numOfPlayers = Integer.parseInt(selectedNumber.getText());
+            }
             primaryStage.setScene(colourScene);
             btnColourReset.requestFocus();
         });
@@ -234,6 +254,7 @@ public class Game extends Application {
         btnColourBack.setOnMouseClicked(event -> {
             // Initialize human players and computer players
             this.tmp.clear();
+            choose2.setSelected(true);
             this.btnColourConfirm.setDisable(true);
             colourPane.getChildren().removeAll(this.playerSelectors);
             this.playerSelectors = makeNewPlayerSelectors();
@@ -881,47 +902,6 @@ public class Game extends Application {
                 this.gameTiles[i][j] = new GameTile(i * TILE_SIDE, j * TILE_SIDE, i, j);
                 this.allTiles.getChildren().add(this.gameTiles[i][j]);
             }
-        }
-        this.drawMosaicTrack();
-        this.allTiles.getChildren().addAll(mosaic);
-        mosaic.toBack();
-    }
-
-    /**
-     * Draw the Mosaic Track of the game
-     * @author Le Thanh Nguyen
-     */
-    public void drawMosaicTrack() {
-        double xTop = TILE_SIDE;
-        double yTop = 0;
-        for (int i = 0; i < 4; i++) {
-            GameMosaicTrack circle = new GameMosaicTrack(xTop, yTop);
-            mosaic.getChildren().add(circle);
-            xTop += TILE_SIDE * 2;
-        }
-
-        double xBot = 0;
-        double yBot = yTop + 7 * TILE_SIDE;
-        for (int i = 0; i < 4; i++) {
-            GameMosaicTrack circle = new GameMosaicTrack(xBot, yBot);
-            mosaic.getChildren().add(circle);
-            xBot += TILE_SIDE * 2;
-        }
-
-        double xLeft = 0;
-        double yLeft = TILE_SIDE;
-        for (int i = 0; i < 3; i++) {
-            GameMosaicTrack circle = new GameMosaicTrack(xLeft, yLeft);
-            mosaic.getChildren().add(circle);
-            yLeft += TILE_SIDE * 2;
-        }
-
-        double xRight = 7 * TILE_SIDE;
-        double yRight = 0;
-        for (int i = 0; i < 4; i++) {
-            GameMosaicTrack circle = new GameMosaicTrack(xRight, yRight);
-            mosaic.getChildren().add(circle);
-            yRight += TILE_SIDE * 2;
         }
     }
 
