@@ -873,6 +873,7 @@ public class Game extends Application {
     }
 
     private class PlayerSelector extends Pane {
+        private final Colour colour;
         private Player player;
         private final CheckBox chbIsComputer;
         private final GameColourButton gameColourButton;
@@ -884,6 +885,7 @@ public class Game extends Application {
             super();
             this.setMinSize(width, height);
             this.setMaxSize(width, height);
+            this.colour = colour;
 
             this.gameColourButton = new GameColourButton(colour);
             this.getChildren().add(this.gameColourButton);
@@ -921,8 +923,14 @@ public class Game extends Application {
                 this.player = new Player(colour);
                 tmp.add(this.player);
                 if (tmp.size() == numOfPlayers) {
-                    // When the appropriate number of players has been selected, disable the other colors.
-                    playerSelectors.forEach(p -> p.gameColourButton.setDisable(true));
+                    // When the appropriate number of players has been selected, disable the other colors,
+                    // and make them transparent
+                    playerSelectors.forEach(playerSelector -> {
+                        playerSelector.gameColourButton.setDisable(true);
+                        if (!tmp.stream().map(Player::getColour).toList().contains(playerSelector.colour)) {
+                            playerSelector.gameColourButton.setOpacity(HIGHLIGHTED_OPACITY);
+                        }
+                    });
                     // Once players have finished selecting, then they can click Confirm
                     btnColourConfirm.setDisable(false);
                     btnColourConfirm.requestFocus();
