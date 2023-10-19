@@ -71,7 +71,7 @@ public class Game extends Application {
     private static final Font PLAYER_COLOUR_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18);
     private static final String TEXT_FILL = "#3F301D";
 
-    private final Pane allTiles = new Pane();
+    private final Pane allGameTiles = new Pane();
     private Pane placedRugs = new Pane();
     private final Pane invisibleRugs = new Pane();
     private final GameTile[][] gameTiles = new GameTile[NUM_OF_ROWS][NUM_OF_COLS];
@@ -79,7 +79,7 @@ public class Game extends Application {
     final ArrayList<GameInvisibleRug> vGameInvisibleRugs = new ArrayList<>();
     // Horizontal invisible rugs
     final ArrayList<GameInvisibleRug> hGameInvisibleRugs = new ArrayList<>();
-    private Group mosaic = new Group();
+    private final Group mosaic = new Group();
     private GamePane gameArea;
     // Control area on game scene, with player operated button and information
     private GamePane controlArea;
@@ -297,6 +297,7 @@ public class Game extends Application {
             this.placedRugs = new Pane();
             this.players = null;
             this.gameState = null;
+            this.numOfPlayers = 2;
             colourPane.getChildren().removeAll(this.playerSelectors);
             this.playerSelectors = makeNewPlayerSelectors();
             colourPane.getChildren().addAll(this.playerSelectors);
@@ -369,7 +370,7 @@ public class Game extends Application {
         initTiles();
         initInvisibleRugs();
         initAssam();
-        tileArea.getChildren().addAll(this.allTiles, this.placedRugs, this.invisibleRugs, this.assam);
+        tileArea.getChildren().addAll(this.allGameTiles, this.placedRugs, this.invisibleRugs, this.assam);
         boardArea.getChildren().add(tileArea);
 
         // Display area to display stats and controls for the players, contains stats area and control area
@@ -697,7 +698,7 @@ public class Game extends Application {
                 updateAssam();
                 nextPhase();
             } else {
-                int rotation = 0;
+                int rotation;
 
                 // Calculates Assam's full paths with all three possible rotations
                 List<Tile> assamPathLeft = this.gameState.getBoard().getAssamFullPath(-90);
@@ -737,7 +738,7 @@ public class Game extends Application {
      */
     private double getExpPayment(List<Tile> assamPath) {
         double exp = 0;
-        double probability[] = new double[]{1 / 6.0, 2 / 6.0, 2 / 6.0, 1 / 6.0};
+        double[] probability = new double[]{1 / 6.0, 2 / 6.0, 2 / 6.0, 1 / 6.0};
         for (int i = 0; i < 4; i++) {
             Tile tile = assamPath.get(i);
             int row = tile.getRow();
@@ -845,20 +846,37 @@ public class Game extends Application {
             this.btnConfirmPlacement.setDisable(false);
 
             ArrayList<GameInvisibleRug> validRugs = findAllValidPlacements();
+            GameInvisibleRug placement = null;
 
             if (this.gameState.getCurrentPlayer().getStrategy() == Strategy.RANDOM) {
                 int index = new Random().nextInt(validRugs.size());
-                GameInvisibleRug randomValidRug = validRugs.get(index);
-                Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID++, getTilesFromInvisibleRug(randomValidRug));
-                this.gameState.makePlacement(rug);
-
-                updateStatsArea();
-                GameRug gameRug = new GameRug(randomValidRug.getLayoutX(), randomValidRug.getLayoutY(), randomValidRug.getOrientation(), this.gameState.getCurrentPlayer().getColour());
-                this.placedRugs.getChildren().add(gameRug);
+                placement = validRugs.get(index);
             } else {
-                //FIXME
+                // Finds the best possible placement with the highest score
+                int max = Integer.MIN_VALUE;
+                for (GameInvisibleRug validRug : validRugs) {
+                    int score = 0;
+                    Tile[] tiles = getTilesFromInvisibleRug(validRug);
+                    for (Tile tile : tiles) {
+                        if (tile.getTopRug() == null) {
+                            score += 2 * (numOfPlayers - 1);
+                        }
+                        if (tile.getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
+                            score += 2;
+                        }
+                    }
+                    if (score > max) {
+                        max = score;
+                        placement = validRug;
+                    }
+                }
             }
+            Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID++, getTilesFromInvisibleRug(placement));
+            this.gameState.makePlacement(rug);
 
+            updateStatsArea();
+            GameRug gameRug = new GameRug(placement.getLayoutX(), placement.getLayoutY(), placement.getOrientation(), this.gameState.getCurrentPlayer().getColour());
+            this.placedRugs.getChildren().add(gameRug);
             if (!this.gameState.isGameOver()) {
                 nextTurn();
             } else {
@@ -947,12 +965,12 @@ public class Game extends Application {
         for (int i = 0; i < NUM_OF_ROWS; i++) {
             for (int j = 0; j < NUM_OF_COLS; j++) {
                 this.gameTiles[i][j] = new GameTile(i * TILE_SIDE, j * TILE_SIDE, i, j);
-                this.allTiles.getChildren().add(this.gameTiles[i][j]);
+                this.allGameTiles.getChildren().add(this.gameTiles[i][j]);
             }
         }
         drawMosaicTrack();
-        this.allTiles.getChildren().addAll(mosaic);
-        mosaic.toBack();
+        this.allGameTiles.getChildren().addAll(this.mosaic);
+        this.mosaic.toBack();
     }
 
     /**
@@ -1333,9 +1351,9 @@ public class Game extends Application {
     }
 
     /**
-     * Converts GameInvisibleRug to corresponding Tile[][]
-     * @param gameInvisibleRug The invisible rug whose GameInvisibleRug need to be converted.
-     * @return An array of converted Tile[][].
+     * Converts GameInvisibleRug to its corresponding two tiles on the board in game state
+     * @param gameInvisibleRug the invisible rug to be converted
+     * @return an array of two tiles
      * @author u7620014 Haobo Zou
      */
     Tile[] getTilesFromInvisibleRug(GameInvisibleRug gameInvisibleRug) {
@@ -1343,9 +1361,9 @@ public class Game extends Application {
     }
 
     /**
-     * Converts GameTile to corresponding Tile[][]
-     * @param gameTile The rug whose GameTile need to be converted.
-     * @return An array of converted Tile[][].
+     * Converts GameTile to its corresponding tile on the board in game state
+     * @param gameTile the game tile to be converted
+     * @return a tile
      * @author u7620014 Haobo Zou
      */
     Tile getTileFromGameTile(GameTile gameTile) {
