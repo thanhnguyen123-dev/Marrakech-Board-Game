@@ -70,6 +70,8 @@ public class Game extends Application {
     private static final Font GENERAL_TEXT_FONT_ITALIC = Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 14);
     private static final Font PLAYER_COLOUR_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18);
     private static final String TEXT_FILL = "#3F301D";
+    // the delay duration in milliseconds
+    private final long MILLIS = 500;
 
     private final Pane allGameTiles = new Pane();
     private Pane placedRugs = new Pane();
@@ -743,8 +745,9 @@ public class Game extends Application {
             Tile tile = assamPath.get(i);
             int row = tile.getRow();
             int col = tile.getCol();
+            Tile localTile = this.gameState.getBoard().getTiles()[row][col];
             Set<Tile> visited = new HashSet<>();
-            if (this.gameState.getBoard().getTiles()[row][col].getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
+            if (localTile.getTopRug() != null && localTile.getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
                 exp += probability[i] * this.gameState.getPaymentAmount(this.gameState.getBoard().getTiles()[row][col], visited);
             }
         }
@@ -856,12 +859,14 @@ public class Game extends Application {
                 int max = Integer.MIN_VALUE;
                 for (GameInvisibleRug validRug : validRugs) {
                     int score = 0;
-                    Tile[] tiles = getTilesFromInvisibleRug(validRug);
-                    for (Tile tile : tiles) {
-                        if (tile.getTopRug() == null) {
-                            score += 2 * (numOfPlayers - 1);
-                        }
-                        if (tile.getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
+                    Tile[] rugTiles = getTilesFromInvisibleRug(validRug);
+                    for (Tile rugTile : rugTiles) {
+                        if (rugTile.getTopRug() == null) {
+                            // Gives 2 * (number of players - 1) points if the tile does not cover any existing rug
+                            score += 2 * (this.numOfPlayers - 1);
+                        } else if (this.gameState.isPlayerAvailable(this.gameState.findPlayer(rugTile.getTopRug().getColour()))
+                                && rugTile.getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
+                            // Gives 2 points if the tile covers another available player's rug
                             score += 2;
                         }
                     }
@@ -921,9 +926,7 @@ public class Game extends Application {
         Task<Void> sleeper = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                // Sleep for millis milliseconds
-                final long millis = 500;
-                Thread.sleep(millis);
+                Thread.sleep(MILLIS);
                 return null;
             }
         };
@@ -1093,7 +1096,7 @@ public class Game extends Application {
             Text playerText = new Text();
             playerText.setFont(PLAYER_COLOUR_TEXT_FONT_REGULAR);
 
-            String scoreString = "     Current Score: " + this.gameState.getScores().get(player);
+            String scoreString = " Current Score: " + this.gameState.getScores().get(player);
             Text scoreText = new Text();
             scoreText.setFont(GENERAL_TEXT_FONT_ITALIC);
 
@@ -1251,7 +1254,6 @@ public class Game extends Application {
             this.rbIntelligent.setStyle("-fx-text-fill:" + TEXT_FILL);
             this.rbIntelligent.relocate(0, COLOUR_BUTTON_RADIUS * 3.4);
             this.rbIntelligent.setToggleGroup(toggleGroup);
-            this.rbIntelligent.setDisable(true);
 
             this.gameColourButton.setOnMouseClicked(event -> {
                 this.gameColourButton.setDisable(true);
