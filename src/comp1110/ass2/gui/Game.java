@@ -1,6 +1,7 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.GameState;
+import comp1110.ass2.board.Board;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
 import comp1110.ass2.board.Die;
@@ -11,6 +12,7 @@ import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -81,7 +83,7 @@ public class Game extends Application {
     final ArrayList<GameInvisibleRug> vGameInvisibleRugs = new ArrayList<>();
     // Horizontal invisible rugs
     final ArrayList<GameInvisibleRug> hGameInvisibleRugs = new ArrayList<>();
-
+    private Group mosaic = new Group();
     private GamePane gameArea;
     // Control area on game scene, with player operated button and information
     private GamePane controlArea;
@@ -866,6 +868,47 @@ public class Game extends Application {
                 this.gameTiles[i][j] = new GameTile(i * TILE_SIDE, j * TILE_SIDE, i, j);
                 this.allTiles.getChildren().add(this.gameTiles[i][j]);
             }
+        }
+        this.drawMosaicTrack();
+        this.allTiles.getChildren().addAll(mosaic);
+        mosaic.toBack();
+    }
+
+    /**
+     * Draw the Mosaic Track of the game
+     * @author Le Thanh Nguyen
+     */
+    public void drawMosaicTrack() {
+        double xTop = TILE_SIDE;
+        double yTop = 0;
+        for (int i = 0; i < 4; i++) {
+            GameMosaicTrack circle = new GameMosaicTrack(xTop, yTop);
+            mosaic.getChildren().add(circle);
+            xTop += TILE_SIDE * 2;
+        }
+
+        double xBot = 0;
+        double yBot = yTop + 7 * TILE_SIDE;
+        for (int i = 0; i < 4; i++) {
+            GameMosaicTrack circle = new GameMosaicTrack(xBot, yBot);
+            mosaic.getChildren().add(circle);
+            xBot += TILE_SIDE * 2;
+        }
+
+        double xLeft = 0;
+        double yLeft = TILE_SIDE;
+        for (int i = 0; i < 3; i++) {
+            GameMosaicTrack circle = new GameMosaicTrack(xLeft, yLeft);
+            mosaic.getChildren().add(circle);
+            yLeft += TILE_SIDE * 2;
+        }
+
+        double xRight = 7 * TILE_SIDE;
+        double yRight = 0;
+        for (int i = 0; i < 4; i++) {
+            GameMosaicTrack circle = new GameMosaicTrack(xRight, yRight);
+            mosaic.getChildren().add(circle);
+            yRight += TILE_SIDE * 2;
         }
     }
 
