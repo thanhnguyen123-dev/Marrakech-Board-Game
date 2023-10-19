@@ -1,9 +1,9 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.GameState;
+import comp1110.ass2.board.Die;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
-import comp1110.ass2.board.Die;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Player.Strategy;
 import comp1110.ass2.player.Rug;
@@ -65,7 +65,6 @@ public class Game extends Application {
     private static final double ASSAM_SIDE = (Math.sqrt(5) - 1) / 2 * TILE_SIDE;
     private static final double ASSAM_RELOCATION = (TILE_SIDE - ASSAM_SIDE) / 2;
     private static final Color ASSAM_COLOR = Color.SPRINGGREEN.darker();
-    //https://fonts.google.com/icons?selected=Material%20Symbols%20Rounded%3Anavigation%3AFILL%401%3Bwght%40400%3BGRAD%400%3Bopsz%4024
     private static final String ASSAM_SVG = "M480-240 222-130q-13 5-24.5 2.5T178-138q-8-8-10.5-20t2.5-25l273-615q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l273 615q5 13 2.5 25T782-138q-8 8-19.5 10.5T738-130L480-240Z";
     private static final Font GENERAL_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 14);
     private static final Font GENERAL_TEXT_FONT_ITALIC = Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 14);

@@ -14,15 +14,6 @@ declaration: >-
   everything we have submitted for for all stages of this assignment was
   entirely our own work, with the following exceptions:
 
-# Use this to list names of people who you collaborated with, and a
-# comment about what you collaborated on.
-#
-# Add as many "name+comment" entries as necessary
-# (or remove it altogether if you haven't collaborated with anyone)
-collaboration:
-  - name:
-    comment: >-
-
 # Use this to list any code that you used that you did not write,
 # aside from code provided by the lecturer.  Provide a comment
 # explaining your use and the URL to that code and the licence for
@@ -31,9 +22,9 @@ collaboration:
 # Add as many "url+licence+comment" entries as necessary
 # (or remove it altogether if you haven't used any external code)
 code:
-  - comment:
-    url:
-    licence:
+  - comment: used to delay JavaFX animations
+    url: https://stackoverflow.com/a/26454506
+    licence: CC BY-SA 4.0
 
 # Use this to list any assets (artwork, sound, etc) that you used.
 # Provide a comment explaining your use of that asset and the URL
@@ -58,6 +49,11 @@ assets:
     url: https://www.iconfont.cn/search/index?searchType=icon&q=question&page=1&fills=&lang=en-us&fromCollection=1&tag=
     licence: All photos and videos on Pexels can be downloaded and used for free.
 
+  - comment: Assam icon
+    url: https://fonts.google.com/icons?selected=Material%20Symbols%20Rounded%3Anavigation%3AFILL%401%3Bwght%40400%3BGRAD%400%3Bopsz%4024
+    licence: All Google Fonts are open source and are without cost.
+
+
 # Sign *your* name and uids here. (Remove entries if you have fewer
 # than three members.)
 signatures:
@@ -65,5 +61,5 @@ signatures:
     uid:
   - name:
     uid:
-  - name:
-    uid:
+  - name: Haobo Zou
+    uid: u7620014
