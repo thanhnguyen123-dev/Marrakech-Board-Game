@@ -45,9 +45,21 @@ assets:
     url: https://www.pexels.com/photo/white-and-black-abstract-painting-4705933/
     licence: All photos and videos on Pexels can be downloaded and used for free.
 
-  - comment: Hint icon
+  - comment: Hint icon 1
     url: https://www.iconfont.cn/search/index?searchType=icon&q=question&page=1&fills=&lang=en-us&fromCollection=1&tag=
-    licence: All photos and videos on Pexels can be downloaded and used for free.
+    licence: This material is only for the majority of users to exchange learning and use, without the written authorization of iconfont or its affiliates, shall not be used for any commercial purpose.
+
+  - comment: Hint icon 2
+    url: https://www.iconfont.cn/search/index?searchType=icon&q=hint&page=1&fills=&fromCollection=1&tag=
+    licence: This material is only for the majority of users to exchange learning and use, without the written authorization of iconfont or its affiliates, shall not be used for any commercial purpose.
+
+  - comment: Game over icon
+    url: "https://www.flaticon.com/free-icons/game-over" title="game over icons">Game over icons created by Freepik - Flaticon
+    licence: Free for personal and commercial use with attribution.
+
+  - comment: Game over icon
+    url: https://www.iconfont.cn/search/index?searchType=icon&q=restart&page=1&fills=&fromCollection=1&tag=
+    licence: This material is only for the majority of users to exchange learning and use, without the written authorization of iconfont or its affiliates, shall not be used for any commercial purpose.
 
   - comment: Assam icon
     url: https://fonts.google.com/icons?selected=Material%20Symbols%20Rounded%3Anavigation%3AFILL%401%3Bwght%40400%3BGRAD%400%3Bopsz%4024
