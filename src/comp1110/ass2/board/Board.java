@@ -82,6 +82,23 @@ public class Board {
     }
 
     /**
+     * Calculates Assam's path if he moves 4 steps from his current position after a given rotation
+     * @param rotation a given rotation
+     * @return a List of tiles representing the path taken by Assam after a given rotation and movement by 4 steps
+     * @author u7620014 Haobo Zou
+     */
+    public List<Tile> getAssamFullPath(int rotation) {
+        Board board = new Board();
+        board.assamTile.setHasAssam(false);
+        board.assamTile = board.tiles[this.assamTile.getRow()][this.assamTile.getCol()];
+        board.assamTile.setHasAssam(true);
+        board.assamDirection = this.assamDirection;
+        board.rotateAssam(rotation);
+        board.moveAssam(4);
+        return board.assamPath;
+    }
+
+    /**
      * Moves Assam with given steps
      * @param steps number of steps
      * @author u7620014 Haobo Zou

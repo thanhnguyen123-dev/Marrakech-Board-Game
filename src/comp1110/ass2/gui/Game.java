@@ -28,9 +28,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.application.Platform;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Game extends Application {
     private static final int WINDOW_WIDTH = 1200;
@@ -308,7 +306,7 @@ public class Game extends Application {
 
         // Modify window icon
         primaryStage.getIcons().add(new Image("resources/board-game.png"));
-        
+
         primaryStage.setResizable(false);
         primaryStage.setTitle("Marrakech");
         primaryStage.setScene(titleScene);
@@ -699,13 +697,57 @@ public class Game extends Application {
                 updateAssam();
                 nextPhase();
             } else {
-                //FIXME
+                int rotation = 0;
+
+                // Calculates Assam's full paths with all three possible rotations
+                List<Tile> assamPathLeft = this.gameState.getBoard().getAssamFullPath(-90);
+                List<Tile> assamPathMiddle = this.gameState.getBoard().getAssamFullPath(0);
+                List<Tile> assamPathRight = this.gameState.getBoard().getAssamFullPath(90);
+
+                // Calculates expectations of payments on these three different lanes
+                double expLeft = getExpPayment(assamPathLeft);
+                double expMiddle = getExpPayment(assamPathMiddle);
+                double expRight = getExpPayment(assamPathRight);
+
+                // Finds the rotation with the minimum expected payment
+                if (expLeft <= expMiddle && expLeft <= expRight) {
+                    rotation = -90;
+                } else if (expMiddle <= expLeft && expMiddle <= expRight) {
+                    rotation = 0;
+                } else {
+                    rotation = 90;
+                }
+
+                // Proceeds with the selected rotation
+                this.gameState.rotateAssam(rotation);
+                updateAssam();
+                nextPhase();
             }
 
             this.controlArea.getChildren().add(this.btnRollDie);
             this.btnRollDie.setDisable(true);
             simulateRollDie();
         });
+    }
+
+    /**
+     * Calculates expected payment from a given path of 4 tiles
+     * @param assamPath the path Assam takes on the board, has 4 tiles
+     * @return the expected payment
+     */
+    private double getExpPayment(List<Tile> assamPath) {
+        double exp = 0;
+        double probability[] = new double[]{1 / 6.0, 2 / 6.0, 2 / 6.0, 1 / 6.0};
+        for (int i = 0; i < 4; i++) {
+            Tile tile = assamPath.get(i);
+            int row = tile.getRow();
+            int col = tile.getCol();
+            Set<Tile> visited = new HashSet<>();
+            if (this.gameState.getBoard().getTiles()[row][col].getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
+                exp += probability[i] * this.gameState.getPaymentAmount(this.gameState.getBoard().getTiles()[row][col], visited);
+            }
+        }
+        return exp;
     }
 
     /**
@@ -1125,7 +1167,7 @@ public class Game extends Application {
 
     /**
      * Creates and returns an ImageView representing the specific game board's background.
-     * @param width  the specific game board's width
+     * @param width the specific game board's width
      * @param height the specific game board's height
      * @return An ImageView representing the specific game board's background with rounded corners.
      * @author u7582846 Yaolin Li
