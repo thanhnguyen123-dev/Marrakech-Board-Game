@@ -146,7 +146,7 @@ class GameStateTest {
         GameState gameState = new GameState(players);
         Board board = gameState.getBoard();
         Random random = new Random();
-        int n = random.nextInt(7);
+        int n = random.nextInt(6) + 1;
         Rug rug = new Rug(Colour.PURPLE, 1, new Tile[]{board.getTiles()[n][n - 1], board.getTiles()[n][n]});
         gameState.makePlacement(rug);
         Tile tile = board.getTiles()[n][n - 1];
