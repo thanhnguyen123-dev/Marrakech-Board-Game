@@ -67,8 +67,8 @@ public class Game extends Application {
     private static final Color ASSAM_COLOR = Color.SPRINGGREEN.darker();
     //https://fonts.google.com/icons?selected=Material%20Symbols%20Rounded%3Anavigation%3AFILL%401%3Bwght%40400%3BGRAD%400%3Bopsz%4024
     private static final String ASSAM_SVG = "M480-240 222-130q-13 5-24.5 2.5T178-138q-8-8-10.5-20t2.5-25l273-615q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l273 615q5 13 2.5 25T782-138q-8 8-19.5 10.5T738-130L480-240Z";
-    private static final Font GENERAL_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14);
-    private static final Font GENERAL_TEXT_FONT_ITALIC = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 14);
+    private static final Font GENERAL_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 14);
+    private static final Font GENERAL_TEXT_FONT_ITALIC = Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 14);
     private static final Font PLAYER_COLOUR_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18);
     private static final String TEXT_FILL = "#3F301D";
 
@@ -327,7 +327,7 @@ public class Game extends Application {
         // add styles for elements inside stats area
         this.phaseText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
         this.phaseText.setStyle("-fx-fill:" + TEXT_FILL);
-        this.phaseText.relocate(15, 20);
+        this.phaseText.relocate(20, 20);
         this.playerStatsVBox.setSpacing(4);
         this.playerStatsVBox.relocate(20, 80);
 
@@ -439,7 +439,7 @@ public class Game extends Application {
             } else if (this.gameState.isPaymentAffordable()) {
                 paymentText.setText("You will need to pay Player " + this.gameState.findAssamRugOwner().getColour().toString() + " " + this.gameState.getPaymentAmount() + " dirhams.");
             } else {
-                paymentText.setText("You cannot afford to pay. You will have to give all your dirhams to Player " + this.gameState.findAssamRugOwner().getColour().toString() + ". After that, You will be removed from the game");
+                paymentText.setText("You cannot afford to pay. You will have to give all your dirhams to Player " + this.gameState.findAssamRugOwner().getColour().toString() + ". After that, You will be removed from the game.");
             }
             this.controlArea.getChildren().addAll(paymentText, this.btnConfirmPayment);
         });
@@ -454,7 +454,12 @@ public class Game extends Application {
 
                     // update players stats
                     updateStatsArea();
+                    if (this.highlighted != null) {
+                        this.highlighted.setOpacity(0);
+                        this.highlighted = null;
+                    }
                     this.gameDraggableRug = new GameDraggableRug(this, MARGIN_LEFT + BOARD_AREA_SIDE + MARGIN_TOP + BUTTON_WIDTH * 0.5, 500, this.gameState.getCurrentPlayer().getColour());
+
                     this.gameArea.getChildren().add(this.gameDraggableRug);
                     this.controlArea.getChildren().addAll(this.btnRotateRug, this.btnConfirmPlacement);
                 } else {
@@ -526,8 +531,10 @@ public class Game extends Application {
             updateStatsArea();
             GameRug gameRug = new GameRug(this.highlighted.getLayoutX(), this.highlighted.getLayoutY(), this.gameDraggableRug.getOrientation(), this.gameDraggableRug.getColour());
             this.placedRugs.getChildren().add(gameRug);
-            this.highlighted.setOpacity(0);
-            this.highlighted = null;
+            if (this.highlighted != null) {
+                this.highlighted.setOpacity(0);
+                this.highlighted = null;
+            }
             this.gameDraggableRug = null;
 
             if (!this.gameState.isGameOver()) {
@@ -785,16 +792,26 @@ public class Game extends Application {
             String colourString = "PLAYER " + player.getColour();
             Text colourText = new Text();
             colourText.setFont(PLAYER_COLOUR_TEXT_FONT_REGULAR);
+
+            String scoreString = "     Current Score: " + this.gameState.getScores().get(player);
+            Text scoreText = new Text();
+            scoreText.setFont(GENERAL_TEXT_FONT_ITALIC);
+
+            Text statsText = new Text(player.getDirham() + " dirhams     " + player.getNumOfUnplacedRugs() + " rugs remaining");
+            statsText.setFont(GENERAL_TEXT_FONT_ITALIC);
+
             if (this.gameState.isPlayerAvailable(player)) {
                 if (!this.gameState.isGameOver() && player.equals(this.gameState.getCurrentPlayer())) {
                     colourString += " - CURRENT";
+                    scoreText.setStyle("-fx-fill:" + TEXT_FILL);
+                    statsText.setStyle("-fx-fill:" + TEXT_FILL);
                 }
                 if (this.gameState.isGameOver()) {
                     ArrayList<Player> winners = this.gameState.getWinners();
                     if (winners.contains(player)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Game over");
-                        alert.setHeaderText("Congratulations to " + colourString);
+                        alert.setTitle("Game Over");
+                        alert.setHeaderText("Congratulations to " + colourString + "!");
                         alert.setContentText("");
                         alert.show();
                         colourString += " - WINNER!";
@@ -806,22 +823,17 @@ public class Game extends Application {
                 colourString += " - OUT";
                 colourText.setFill(Color.GRAY);
                 colourText.setOpacity(1 - HIGHLIGHTED_OPACITY);
+                scoreText.setFill(Color.GRAY);
+                statsText.setFill(Color.GRAY);
             }
             colourText.setText(colourString);
 
-            String scoreString = "     Current Score: " + this.gameState.getScores().get(player);
-            Text scoreText = new Text();
-            scoreText.setFont(GENERAL_TEXT_FONT_ITALIC);
-            scoreText.setStyle("-fx-fill:" + TEXT_FILL);
             if (player.isComputer()) {
                 scoreText.setText("COMPUTER - " + player.getStrategy() + scoreString);
             } else {
                 scoreText.setText("HUMAN" + scoreString);
             }
 
-            Text statsText = new Text(player.getDirham() + " dirhams     " + player.getNumOfUnplacedRugs() + " rugs remaining");
-            statsText.setFont(GENERAL_TEXT_FONT_ITALIC);
-            statsText.setStyle("-fx-fill:" + TEXT_FILL);
 
             playerStatsVBox.getChildren().addAll(colourText, scoreText, statsText);
         }
