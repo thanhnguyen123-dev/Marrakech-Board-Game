@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 /**
  * Colour enum represents the colour of each player's rug
- * @author Le Thanh Nguyen u7594144
+ * @author u7594144 Le Thanh Nguyen, u7582846 Yaolin Li, u7620014 Haobo Zou
  */
 public enum Colour {
     YELLOW('y'),
@@ -15,7 +15,7 @@ public enum Colour {
     public final char colourChar;
 
     /**
-     * Constructor: creates an instance of the Colour enum
+     * Constructor: creates a Colour enum
      * @param colourChar character for the colour
      * @author Le Thanh Nguyen u7594144
      */
@@ -65,8 +65,8 @@ public enum Colour {
     }
 
     /**
-     * @param colour
-     * @return
+     * @param colour a colour enum
+     * @return the corresponding Color enum from JavaFX used in Game and Viewer
      * @author Le Thanh Nguyen u7594144
      */
     public static Color getFrontEndColor(Colour colour) {
@@ -84,6 +84,6 @@ public enum Colour {
      * @author Le Thanh Nguyen u7594144
      */
     public char getColourChar() {
-        return colourChar;
+        return this.colourChar;
     }
 }

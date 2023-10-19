@@ -2,7 +2,7 @@ package comp1110.ass2.board;
 
 /**
  * Possible rotation direction for Assam
- * @author Le Thanh Nguyen u7594144
+ * @author u7594144 Le Thanh Nguyen, u7620014 Haobo Zou
  */
 public enum Direction {
     NORTH(0, 'N'),
@@ -10,12 +10,11 @@ public enum Direction {
     SOUTH(180, 'S'),
     WEST(270, 'W');
 
-
     private final int angle;
     private final char directionChar;
 
     /**
-     * Constructor: creates a new instance for the Direction enum
+     * Constructor: creates a Direction enum
      * @param angle angle of the direction in degrees
      * @param directionChar character for the direction
      * @author Le Thanh Nguyen u7594144
@@ -83,7 +82,11 @@ public enum Direction {
         return angle;
     }
 
-
+    /**
+     * Converts a Direction enum to a string of its full name
+     * @return full name of the direction
+     * @author u7620014 Haobo Zou
+     */
     @Override
     public String toString() {
         return switch (this) {

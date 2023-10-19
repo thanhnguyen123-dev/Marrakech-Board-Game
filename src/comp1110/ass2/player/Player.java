@@ -55,7 +55,7 @@ public class Player {
     /**
      * getter method for isComputer
      * @return true if the player is a computer player, false if the player is a human player
-     * @author u7620014 Haobo Zou
+     * @author u7582846 Yaolin Li
      */
     public boolean isComputer() {
         return this.isComputer;
@@ -64,7 +64,7 @@ public class Player {
     /**
      * setter method for isComputer
      * @param isComputer if the player is a computer player or not
-     * @author u7620014 Haobo Zou
+     * @author u7582846 Yaolin Li
      */
     public void setIsComputer(boolean isComputer) {
         this.isComputer = isComputer;
