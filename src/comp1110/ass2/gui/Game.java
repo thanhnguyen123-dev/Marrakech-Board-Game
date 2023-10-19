@@ -1,10 +1,9 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.GameState;
-import comp1110.ass2.board.Board;
+import comp1110.ass2.board.Die;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.player.Colour;
-import comp1110.ass2.board.Die;
 import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Player.Strategy;
 import comp1110.ass2.player.Rug;
@@ -68,7 +67,6 @@ public class Game extends Application {
     private static final double ASSAM_SIDE = (Math.sqrt(5) - 1) / 2 * TILE_SIDE;
     private static final double ASSAM_RELOCATION = (TILE_SIDE - ASSAM_SIDE) / 2;
     private static final Color ASSAM_COLOR = Color.SPRINGGREEN.darker();
-    //https://fonts.google.com/icons?selected=Material%20Symbols%20Rounded%3Anavigation%3AFILL%401%3Bwght%40400%3BGRAD%400%3Bopsz%4024
     private static final String ASSAM_SVG = "M480-240 222-130q-13 5-24.5 2.5T178-138q-8-8-10.5-20t2.5-25l273-615q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l273 615q5 13 2.5 25T782-138q-8 8-19.5 10.5T738-130L480-240Z";
     private static final Font GENERAL_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 14);
     private static final Font GENERAL_TEXT_FONT_ITALIC = Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 14);
@@ -134,8 +132,8 @@ public class Game extends Application {
     }
 
     /**
-     * Initializes and displays the primary stage for the Marrakech game.
-     * @param primaryStage The primary stage on which the game scenes are displayed.
+     * Sets up the primary stage for the Marrakech game
+     * @param primaryStage The primary stage on which the game scenes are displayed
      * @author u7620014 Haobo Zou, u7582846 Yaolin Li
      */
     @Override
@@ -292,9 +290,9 @@ public class Game extends Application {
     }
 
     /**
-     * Creates a list of PlayerSelector objects, each representing a distinct player color.
+     * Creates a list of PlayerSelector objects, each representing a distinct player color
      * Players can choose their own colour
-     * @return ArrayList of PlayerSelector objects with specific colours
+     * @return an ArrayList of PlayerSelector objects with specific colours
      * @author u7620014 Haobo Zou, u7582846 Yaolin Li
      */
     private ArrayList<PlayerSelector> makeNewPlayerSelectors() {
@@ -313,8 +311,8 @@ public class Game extends Application {
 
     /**
      * Constructs and initializes the main game scene,
-     * including game board, players' stats and control area
-     * @return Scene representing the main game area with all its nodes and controls.
+     * including board area, stats area and control area
+     * @return Scene representing the main game area with all its nodes and controls
      * @author u7620014 Haobo Zou, u7582846 Yaolin Li
      */
     private Scene makeMainScene() {
@@ -587,7 +585,7 @@ public class Game extends Application {
     }
 
     /**
-     * Rotates the current rug
+     * Rotates the draggable rug by 90 degrees
      * @author u7620014 Haobo Zou
      */
     private void rotateRug() {
@@ -606,7 +604,7 @@ public class Game extends Application {
     }
 
     /**
-     * Place the current rug on the game board
+     * Places the draggable rug as a game rug on the board, and updates the game state accordingly
      * @author u7620014 Haobo Zou
      */
     private void makePlacement() {
@@ -636,8 +634,8 @@ public class Game extends Application {
     }
 
     /**
-     * Simulates the initial rotation of Assam and roll die for computer players
-     * Set a delay so that players can see more clearly
+     * Simulates the initial "rotate Assam" for computer players
+     * Sets a delay so that players can see more clearly
      * @author u7620014 Haobo Zou
      */
     private void simulateInitialRotation() {
@@ -658,8 +656,8 @@ public class Game extends Application {
     }
 
     /**
-     * Simulates the following rotation of Assam for computer players
-     * Set a delay so that players can see more clearly
+     * Simulates the following Assam rotations for computer players
+     * Sets a delay so that players can see more clearly
      * @author u7620014 Haobo Zou
      */
     private void simulateRotation() {
@@ -685,8 +683,8 @@ public class Game extends Application {
     }
 
     /**
-     * Simulate roll die to make Assam move for computer players
-     * Set a delay so that players can see more clearly
+     * Simulates "roll die" for computer players
+     * Sets a delay so that players can see more clearly
      * @author u7620014 Haobo Zou
      */
     private void simulateRollDie() {
@@ -704,8 +702,8 @@ public class Game extends Application {
     }
 
     /**
-     * Simulate move Assam for computer players
-     * Set a delay so that players can see more clearly
+     * Simulates "move Assam" for computer players
+     * Sets a delay so that players can see more clearly
      * @author u7620014 Haobo Zou
      */
     private void simulateMovement() {
@@ -730,8 +728,8 @@ public class Game extends Application {
     }
 
     /**
-     * Simulate make payment for computer players
-     * Set a delay so that players can see more clearly
+     * Simulates "make payment" for computer players
+     * Sets a delay so that players can see more clearly
      * @author u7620014 Haobo Zou
      */
     private void simulatePayment() {
@@ -768,8 +766,8 @@ public class Game extends Application {
     }
 
     /**
-     * Simulate place the rug on the game board for computer players
-     * Set a delay so that players can see more clearly
+     * Simulates "rug placement" for computer players
+     * Sets a delay so that players can see more clearly
      * @author u7620014 Haobo Zou
      */
     private void simulatePlacement() {
@@ -803,7 +801,9 @@ public class Game extends Application {
     }
 
     /**
-     * @return A list of all valid placement positions for the current player's rug.
+     * Finds all the valid rug placements for the current player's rug
+     * @return An ArrayList of all the valid placements for the current player's rug,
+     * represented with invisible rugs
      * @author u7620014 Haobo Zou
      */
     private ArrayList<GameInvisibleRug> findAllValidPlacements() {
@@ -826,8 +826,8 @@ public class Game extends Application {
     }
 
     /**
-     * Add delay so that the player can see the computer player's actions more clearly
-     * @param func Delay the execution of the code
+     * Adds a delay so that the player can see the computer player's actions more clearly
+     * @param func the function to be delayed
      * @author u7620014 Haobo Zou
      */
     private void delay(Runnable func) {
@@ -846,7 +846,7 @@ public class Game extends Application {
     }
 
     /**
-     * Advances the game to the next player's turn and updates the UI accordingly.
+     * Advances the game to the next player's turn and updates the UI accordingly
      * @author u7620014 Haobo Zou
      */
     private void nextTurn() {
@@ -872,7 +872,7 @@ public class Game extends Application {
     }
 
     /**
-     * Initializes the game tiles and adds them to the game board.
+     * Initializes all the game tiles for the game board
      * @author u7620014 Haobo Zou
      */
     private void initTiles() {
@@ -882,26 +882,26 @@ public class Game extends Application {
                 this.allTiles.getChildren().add(this.gameTiles[i][j]);
             }
         }
-        this.drawMosaicTrack();
+        drawMosaicTrack();
         this.allTiles.getChildren().addAll(mosaic);
         mosaic.toBack();
     }
 
     /**
-     * Draw the Mosaic Track of the game
+     * Draws the Mosaic Track of the game
      * @author Le Thanh Nguyen
      */
     public void drawMosaicTrack() {
         double xTop = TILE_SIDE;
         double yTop = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             GameMosaicTrack circle = new GameMosaicTrack(xTop, yTop);
             mosaic.getChildren().add(circle);
             xTop += TILE_SIDE * 2;
         }
 
         double xBot = 0;
-        double yBot = yTop + 7 * TILE_SIDE;
+        double yBot = NUM_OF_ROWS * TILE_SIDE;
         for (int i = 0; i < 4; i++) {
             GameMosaicTrack circle = new GameMosaicTrack(xBot, yBot);
             mosaic.getChildren().add(circle);
@@ -916,7 +916,7 @@ public class Game extends Application {
             yLeft += TILE_SIDE * 2;
         }
 
-        double xRight = 7 * TILE_SIDE;
+        double xRight = NUM_OF_COLS * TILE_SIDE;
         double yRight = 0;
         for (int i = 0; i < 4; i++) {
             GameMosaicTrack circle = new GameMosaicTrack(xRight, yRight);
@@ -926,7 +926,7 @@ public class Game extends Application {
     }
 
     /**
-     * Initializes the invisible rugs for the game board.
+     * Initializes all the invisible rugs for the game board
      * @author u7620014 Haobo Zou
      */
     private void initInvisibleRugs() {
@@ -954,7 +954,7 @@ public class Game extends Application {
     }
 
     /**
-     * Initialize Assam's position on (3, 3), direction is north
+     * Initializes Assam's position on (3, 3) and direction to the north
      * @author u7620014 Haobo Zou
      */
     private void initAssam() {
@@ -970,7 +970,7 @@ public class Game extends Application {
     }
 
     /**
-     * Update Assam's position and direction after moving Assam
+     * Updates Assam's position and direction
      * @author u7620014 Haobo Zou
      */
     private void updateAssam() {
@@ -982,8 +982,8 @@ public class Game extends Application {
     }
 
     /**
-     * Get Assam rotation angle
-     * @return Assam rotation angle
+     * Gets Assam's direction in degrees
+     * @return Assam's direction in degrees
      * @author u7620014 Haobo Zou
      */
     private int getAssamAngle() {
@@ -991,7 +991,7 @@ public class Game extends Application {
     }
 
     /**
-     * Update player stats after each operation
+     * Updates player stats in the stats area
      * @author u7620014 Haobo Zou, u7582846 Yaolin Li
      */
     private void updateStatsArea() {
