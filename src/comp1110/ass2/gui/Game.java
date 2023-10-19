@@ -569,10 +569,14 @@ public class Game extends Application {
             this.btnRotations.forEach(b -> b.setDisable(false));
             this.btnConfirmRotation.setDisable(false);
 
-            int rotation = new Random().nextInt(3) * 90 - 90;
-            this.gameState.rotateAssam(rotation);
-            updateAssam();
-            nextPhase();
+            if (this.gameState.getCurrentPlayer().getStrategy() == Strategy.RANDOM) {
+                int rotation = new Random().nextInt(3) * 90 - 90;
+                this.gameState.rotateAssam(rotation);
+                updateAssam();
+                nextPhase();
+            } else {
+                //FIXME
+            }
 
             this.controlArea.getChildren().add(this.btnRollDie);
             this.btnRollDie.setDisable(true);
@@ -654,15 +658,19 @@ public class Game extends Application {
             this.btnConfirmPlacement.setDisable(false);
 
             ArrayList<GameInvisibleRug> validRugs = findAllValidPlacements();
-            int index = new Random().nextInt(validRugs.size());
-            GameInvisibleRug randomValidRug = validRugs.get(index);
 
-            Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID++, getTilesFromInvisibleRug(randomValidRug));
-            this.gameState.makePlacement(rug);
+            if (this.gameState.getCurrentPlayer().getStrategy() == Strategy.RANDOM) {
+                int index = new Random().nextInt(validRugs.size());
+                GameInvisibleRug randomValidRug = validRugs.get(index);
+                Rug rug = new Rug(this.gameState.getCurrentPlayer().getColour(), this.rugID++, getTilesFromInvisibleRug(randomValidRug));
+                this.gameState.makePlacement(rug);
 
-            updateStatsArea();
-            GameRug gameRug = new GameRug(randomValidRug.getLayoutX(), randomValidRug.getLayoutY(), randomValidRug.getOrientation(), this.gameState.getCurrentPlayer().getColour());
-            this.placedRugs.getChildren().add(gameRug);
+                updateStatsArea();
+                GameRug gameRug = new GameRug(randomValidRug.getLayoutX(), randomValidRug.getLayoutY(), randomValidRug.getOrientation(), this.gameState.getCurrentPlayer().getColour());
+                this.placedRugs.getChildren().add(gameRug);
+            } else {
+                //FIXME
+            }
 
             if (!this.gameState.isGameOver()) {
                 nextTurn();
