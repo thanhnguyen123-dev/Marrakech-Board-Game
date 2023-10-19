@@ -83,9 +83,11 @@ public class Game extends Application {
     final ArrayList<GameInvisibleRug> hGameInvisibleRugs = new ArrayList<>();
 
     private GamePane gameArea;
+    // Control area on game scene, with player operated button and information
     private GamePane controlArea;
     Button btnMainBack = CircularImageButton.createCircularImageButton("resources/back.png");
     Button hintButton = CircularImageButton.createCircularImageButton("resources/problem.png");
+    Button restart = CircularImageButton.createCircularImageButton("resources/restart.png");
     // Number of human and computer players
     private int numOfPlayers;
 
@@ -265,6 +267,18 @@ public class Game extends Application {
             primaryStage.setScene(colourScene);
         });
 
+        // After game is over, click restart to back to homepage
+        restart.setOnMouseClicked(event -> {
+            this.placedRugs = new Pane();
+            this.players = null;
+            this.gameState = null;
+            colourPane.getChildren().removeAll(this.playerSelectors);
+            this.playerSelectors = makeNewPlayerSelectors();
+            colourPane.getChildren().addAll(this.playerSelectors);
+            this.btnColourConfirm.setDisable(true);
+            primaryStage.setScene(titleScene);
+        });
+
         primaryStage.setResizable(false);
         primaryStage.setTitle("Marrakech");
         primaryStage.setScene(titleScene);
@@ -342,18 +356,18 @@ public class Game extends Application {
         statsArea.setBorder(gamePaneBorder);
         playerArea.getChildren().add(statsArea);
 
-        // add styles for elements inside stats area
+        // Add styles for elements inside stats area
         this.phaseText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
         this.phaseText.setStyle("-fx-fill:" + TEXT_FILL);
         this.phaseText.relocate(20, 20);
         this.playerStatsVBox.setSpacing(4);
         this.playerStatsVBox.relocate(20, 80);
 
-        // update stats area
+        // Update stats area
         updateStatsArea();
         statsArea.getChildren().addAll(phaseText, this.playerStatsVBox);
 
-        // control area
+        // Control area on game scene, with player operated button and information
         this.controlArea = new GamePane(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
         ImageView controlView = drawGameBoardBackground(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
         controlView.relocate(0, STATS_AREA_HEIGHT + MARGIN_TOP);
@@ -361,7 +375,7 @@ public class Game extends Application {
         this.controlArea.relocate(0, STATS_AREA_HEIGHT + MARGIN_TOP);
         playerArea.getChildren().addAll(controlView, controlArea);
 
-        //buttons inside control area
+        // Buttons inside control area
         this.btnInitialRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT / 2.0);
         this.btnConfirmInitialRotation.relocate(BUTTON_WIDTH, BUTTON_HEIGHT * 2);
 
@@ -437,6 +451,7 @@ public class Game extends Application {
             });
             alert.showAndWait();
         });
+
         this.btnInitialRotation.setOnMouseClicked(event -> this.assam.setRotate(this.assam.getRotate() + 90));
 
         this.btnConfirmInitialRotation.setOnMouseClicked(event -> {
@@ -806,7 +821,7 @@ public class Game extends Application {
             @Override
             protected Void call() throws Exception {
                 // Sleep for millis milliseconds
-                final long millis = 500;
+                final long millis = 100;
                 Thread.sleep(millis);
                 return null;
             }
@@ -952,12 +967,42 @@ public class Game extends Application {
                 if (this.gameState.isGameOver()) {
                     ArrayList<Player> winners = this.gameState.getWinners();
                     if (winners.contains(player)) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Game Over");
-                        alert.setHeaderText("Congratulations to " + colourString + "!");
-                        alert.setContentText("");
-                        alert.show();
+                        // Show winners
                         colourString += " - WINNER!";
+                        // Show alert dialog
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        // Modify the default icon
+                        ImageView newIcon = new ImageView(new Image("resources/game-over.png"));
+                        newIcon.setFitWidth(40);
+                        newIcon.setFitHeight(40);
+                        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                        stage.getIcons().add(new Image("resources/game-over.png"));
+                        DialogPane dialogPane = alert.getDialogPane();
+                        dialogPane.setGraphic(newIcon);
+                        // Set background colour of dialog
+                        dialogPane.setStyle("-fx-background-color: #eecdab; -fx-padding: 15px;");
+                        dialogPane.setPrefSize(400, 200);
+                        // Different hints in different phases
+                        alert.setTitle("Game Over");
+                        alert.setHeaderText("Game Over!");
+                        alert.setContentText("Congratulations to " + colourString + " with highest score: " + this.gameState.getScores().get(player));
+                        // Set style of Alert dialogPane
+                        Platform.runLater(() -> {
+                            dialogPane.lookup(".label").setStyle("-fx-font-size: 18px; -fx-font-weight: bold;" + "-fx-text-fill:" + TEXT_FILL);
+                            dialogPane.lookup(".button").setStyle("-fx-text-fill: white;-fx-background-color: #672F09;");
+                            dialogPane.lookup(".header-panel").setStyle("-fx-background-color: #eecdab");
+                            dialogPane.lookup(".content").setStyle("-fx-font-size: 16px;" + "-fx-text-fill:" + TEXT_FILL);
+                        });
+                        alert.show();
+                        this.controlArea.getChildren().clear();
+                        StackPane controlAreaAfterGameOver = new StackPane();
+                        controlAreaAfterGameOver.setPrefSize(CONTROL_AREA_WIDTH, CONTROL_AREA_HEIGHT);
+                        Text playAgain = new Text("Play Again!");
+                        playAgain.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+                        playAgain.setStyle("-fx-fill:" + TEXT_FILL);
+                        playAgain.setWrappingWidth(300);
+                        controlAreaAfterGameOver.getChildren().addAll(playAgain, restart);
+                        this.controlArea.getChildren().add(controlAreaAfterGameOver);
                     }
                 }
                 colourText.setFill(Colour.getFrontEndColor(player.getColour()));
