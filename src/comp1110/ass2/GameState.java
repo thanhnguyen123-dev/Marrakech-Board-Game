@@ -323,6 +323,11 @@ public class GameState {
         return true;
     }
 
+    /**
+     * Get all the winners
+     * @return an ArrayList of all the winners
+     * @author Le Thanh Nguyen u7594144
+     */
     public ArrayList<Player> getWinners() {
         HashMap<Player, Integer> scores = getScores();
         int maxScore = Collections.max(scores.values());
@@ -341,24 +346,6 @@ public class GameState {
             return winners;
         }
         return maxScorePlayers;
-    }
-
-    /**
-     * Get the winner if the game is over (e.g. if Red wins then return 'r')
-     * If more than one player score the highest score, return 't'
-     * If the game is not over, return 'n'
-     * @return char representation of a winner if someone actually wins
-     * @author Le Thanh Nguyen u7594144
-     */
-    public char getWinner() {
-        if (!isGameOver()) {
-            return 'n';
-        }
-        ArrayList<Player> winners = getWinners();
-        if (winners.size() > 1) {
-            return 't';
-        }
-        return winners.get(0).getColour().getColourChar();
     }
 
     /**

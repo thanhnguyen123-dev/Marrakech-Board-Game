@@ -3,8 +3,10 @@ package comp1110.ass2;
 import comp1110.ass2.board.Board;
 import comp1110.ass2.board.Tile;
 import comp1110.ass2.board.Die;
+import comp1110.ass2.player.Player;
 import comp1110.ass2.player.Rug;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -133,7 +135,15 @@ public class Marrakech {
      * @return A char representing the winner of the game as described above.
      */
     public static char getWinner(String gameState) {
-        return new GameState(gameState).getWinner();
+        GameState state = new GameState(gameState);
+        if (!state.isGameOver()) {
+            return 'n';
+        }
+        ArrayList<Player> winners = state.getWinners();
+        if (winners.size() > 1) {
+            return 't';
+        }
+        return winners.get(0).getColour().getColourChar();
     }
 
     /**
@@ -173,7 +183,6 @@ public class Marrakech {
         }
         return currentGame;
     }
-
 
 
 }
