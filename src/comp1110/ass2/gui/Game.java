@@ -1207,9 +1207,9 @@ public class Game extends Application {
     }
 
     /**
-     * Converts the tiles of an invisible rug into visible game tiles.
-     * @param gameInvisibleRug The invisible rug whose tiles need to be converted.
-     * @return An array of converted game tiles.
+     * Converts GameInvisibleRug to corresponding Tile[][]
+     * @param gameInvisibleRug The invisible rug whose GameInvisibleRug need to be converted.
+     * @return An array of converted Tile[][].
      * @author u7620014 Haobo Zou
      */
     Tile[] getTilesFromInvisibleRug(GameInvisibleRug gameInvisibleRug) {
@@ -1217,9 +1217,9 @@ public class Game extends Application {
     }
 
     /**
-     * Get tiles
-     * @param gameTile
-     * @return
+     * Converts GameTile to corresponding Tile[][]
+     * @param gameTile The rug whose GameTile need to be converted.
+     * @return An array of converted Tile[][].
      * @author u7620014 Haobo Zou
      */
     Tile getTileFromGameTile(GameTile gameTile) {
