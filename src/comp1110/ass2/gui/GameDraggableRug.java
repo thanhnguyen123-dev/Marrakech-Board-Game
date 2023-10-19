@@ -6,12 +6,24 @@ import comp1110.ass2.gui.Game.Orientation;
 
 import java.util.Comparator;
 
+/**
+ * a custom game rug class used for rug placement inside Game class
+ * @author u7620014 Haobo Zou
+ */
 class GameDraggableRug extends GameRug {
     private final Game game;
     private Orientation orientation = Orientation.VERTICAL;
     private final Colour colour;
     private double mouseX, mouseY;
 
+    /**
+     * Constructor: creates an instance of the GameDraggableRug class
+     * @param game an instance of the Game class
+     * @param x the x-axis relocation
+     * @param y the y-axis relocation
+     * @param colour the colour of the draggable rug
+     * @author u7620014 Haobo Zou
+     */
     public GameDraggableRug(Game game, double x, double y, Colour colour) {
         super(x, y, Orientation.VERTICAL, colour);
         this.game = game;
@@ -42,48 +54,80 @@ class GameDraggableRug extends GameRug {
         });
     }
 
+    /**
+     * getter method for orientation
+     * @return the orientation of the draggable rug
+     * @author u7620014 Haobo Zou
+     */
     public Orientation getOrientation() {
         return this.orientation;
     }
 
+    /**
+     * setter method for orientation
+     * @param orientation the new orientation of the draggable rug
+     * @author u7620014 Haobo Zou
+     */
     public void setOrientation(Orientation orientation) {
         this.orientation = orientation;
     }
 
+    /**
+     * getter method for colour
+     * @return the colour of the draggable rug
+     * @author u7620014 Haobo Zou
+     */
     public Colour getColour() {
         return this.colour;
     }
 
+    /**
+     * Finds the nearest valid rug placement represented with an invisible rug,
+     * which has the same orientation as the draggable rug (if there is none, returns null)
+     * @return the nearest valid rug placement represented with an invisible rug, null if it does not exist
+     * @author u7620014 Haobo Zou
+     */
     private GameInvisibleRug findNearestInvisibleRug() {
-        if (this.orientation == Orientation.VERTICAL) {
-            game.vGameInvisibleRugs.sort(compareByDistance());
-            for (GameInvisibleRug vGameInvisibleRug : game.vGameInvisibleRugs) {
-                Rug rug = new Rug(game.gameDraggableRug.getColour(), game.rugID, game.getTilesFromInvisibleRug(vGameInvisibleRug));
-                if (game.gameState.getBoard().isPlacementValid(rug)) {
+        if (this.getOrientation() == Orientation.VERTICAL) {
+            this.game.vGameInvisibleRugs.sort(compareByDistance());
+            for (GameInvisibleRug vGameInvisibleRug : this.game.vGameInvisibleRugs) {
+                Rug rug = new Rug(this.game.gameDraggableRug.getColour(), this.game.rugID, this.game.getTilesFromInvisibleRug(vGameInvisibleRug));
+                if (this.game.gameState.getBoard().isPlacementValid(rug)) {
                     return vGameInvisibleRug;
                 }
             }
         }
-        game.hGameInvisibleRugs.sort(compareByDistance());
-        for (GameInvisibleRug hGameInvisibleRug : game.hGameInvisibleRugs) {
-            Rug rug = new Rug(game.gameDraggableRug.getColour(), game.rugID, game.getTilesFromInvisibleRug(hGameInvisibleRug));
-            if (game.gameState.getBoard().isPlacementValid(rug)) {
+        this.game.hGameInvisibleRugs.sort(compareByDistance());
+        for (GameInvisibleRug hGameInvisibleRug : this.game.hGameInvisibleRugs) {
+            Rug rug = new Rug(this.game.gameDraggableRug.getColour(), this.game.rugID, this.game.getTilesFromInvisibleRug(hGameInvisibleRug));
+            if (this.game.gameState.getBoard().isPlacementValid(rug)) {
                 return hGameInvisibleRug;
             }
         }
         return null;
     }
 
+    /**
+     * Highlights the nearest valid rug placement represented with an invisible rug,
+     * by setting the opacity of the previously highlighted invisible rug (if any) to zero,
+     * and setting the opacity of the new one (if any) to a non-zero value
+     * @author u7620014 Haobo Zou
+     */
     private void highlightNearestInvisibleRug() {
-        if (game.highlighted != null) {
-            game.highlighted.setOpacity(0);
+        if (this.game.highlighted != null) {
+            this.game.highlighted.setOpacity(0);
         }
-        game.highlighted = findNearestInvisibleRug();
-        if (game.highlighted != null) {
-            game.highlighted.setOpacity(Game.HIGHLIGHTED_OPACITY);
+        this.game.highlighted = findNearestInvisibleRug();
+        if (this.game.highlighted != null) {
+            this.game.highlighted.setOpacity(Game.HIGHLIGHTED_OPACITY);
         }
     }
 
+    /**
+     * a comparator used for sorting invisible rugs by their distances to the draggable rug
+     * @return a comparison function
+     * @author u7620014 Haobo Zou
+     */
     public Comparator<GameInvisibleRug> compareByDistance() {
         return new Comparator<>() {
             @Override
