@@ -5,6 +5,7 @@ import comp1110.ass2.utils.StringToTile;
 
 /**
  * Rug class contains properties of each rug
+ * @author u7594144 Le Thanh Nguyen, u7582846 Yaolin Li, u7620014 Haobo Zou
  */
 public class Rug {
     // Rug's colour
@@ -15,7 +16,7 @@ public class Rug {
     private final Tile[] rugTiles;
 
     /**
-     * Constructor: creates a new instance of the Rug class
+     * Constructor: creates an instance of the Rug class
      * @param colour the colour of the rug
      * @param id the id of the rug
      * @param rugTiles the tiles occupied by the rug
