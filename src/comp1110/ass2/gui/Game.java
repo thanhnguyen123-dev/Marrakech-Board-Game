@@ -861,8 +861,8 @@ public class Game extends Application {
                             score += 2 * (this.numOfPlayers - 1);
                         } else if (this.gameState.isPlayerAvailable(this.gameState.findPlayer(rugTile.getTopRug().getColour()))
                                 && rugTile.getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
-                            // Gives 2 points if the tile covers another available player's rug
-                            score += 2;
+                            // Gives 2  * (this.numOfPlayers - 1) + 1 points if the tile covers another available player's rug
+                            score += 2 * (this.numOfPlayers - 1) + 1;
                         }
                     }
                     if (score > max) {
