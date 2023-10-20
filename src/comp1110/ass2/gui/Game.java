@@ -509,8 +509,8 @@ public class Game extends Application {
                 case PLACEMENT -> {
                     dialogPane.setPrefSize(400, 240);
                     hintText.setText("""
-                            Drag the rug onto the board, and click "Confirm" or press \"Enter\" to confirm your placement.
-                            You can also click \"Rotate\" or press \"Q\" or \"E\" to rotate the rug and change its orientation.
+                            Drag the rug onto the board, and click "Confirm" or press "Enter" to confirm your placement.
+                            You can also click "Rotate" or press "Q" or "E" to rotate the rug and change its orientation.
                             Try to occupy as much space as possible!""");
                 }
             }
