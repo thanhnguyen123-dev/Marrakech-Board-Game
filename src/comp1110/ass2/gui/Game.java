@@ -883,11 +883,10 @@ public class Game extends Application {
                     int score = 0;
                     Tile[] rugTiles = getTilesFromInvisibleRug(validRug);
                     for (Tile rugTile : rugTiles) {
-                        if (rugTile.getTopRug() == null) {
+                        if (rugTile.getTopRug() == null || !this.gameState.isPlayerAvailable(this.gameState.findPlayer(rugTile.getTopRug().getColour()))) {
                             // Gives 2 * (number of players - 1) points if the tile does not cover any existing rug
                             score += 2 * (this.numOfPlayers - 1);
-                        } else if (this.gameState.isPlayerAvailable(this.gameState.findPlayer(rugTile.getTopRug().getColour()))
-                                && rugTile.getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
+                        } else if (rugTile.getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
                             // Gives 2  * (this.numOfPlayers - 1) + 1 points if the tile covers another available player's rug
                             score += 2 * (this.numOfPlayers - 1) + 1;
                         }
