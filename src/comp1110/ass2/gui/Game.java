@@ -897,11 +897,11 @@ public class Game extends Application {
                     Tile[] rugTiles = getTilesFromInvisibleRug(validRug);
                     for (Tile rugTile : rugTiles) {
                         if (rugTile.getTopRug() == null || !this.gameState.isPlayerAvailable(this.gameState.findPlayer(rugTile.getTopRug().getColour()))) {
-                            // Gives 2 * (number of players - 1) points if the tile is not covered by any existing rug or the rug owner is out of game
-                            score += 2 * (this.numOfPlayers - 1);
+                            // Gains points if the tile is not covered by any existing rug or the rug owner is out of game
+                            score += this.gameState.getAvailablePlayers().size() - 1;
                         } else if (rugTile.getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
-                            // Gives 2  * (this.numOfPlayers - 1) + 1 points if the tile is covered by a rug that belongs to another player who is still in the game
-                            score += 2 * (this.numOfPlayers - 1) + 1;
+                            // Gains points if the tile is covered by a rug that belongs to another player who is still in the game
+                            score += this.gameState.getAvailablePlayers().size();
                         }
                     }
                     if (score > max) {
