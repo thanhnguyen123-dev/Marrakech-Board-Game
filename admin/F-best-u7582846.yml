@@ -22,8 +22,8 @@ class:
 # I wish to submit the following methods as entirely my own (remove this if
 # you want to just submit classes):
 method:
-  - https://gitlab.cecs.anu.edu.au/u7594144/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Game.java#L446-483
-  - https://gitlab.cecs.anu.edu.au/u7594144/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Game.java#L1109-1144
+  - https://gitlab.cecs.anu.edu.au/u7594144/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Game.java#L464-526
+  - https://gitlab.cecs.anu.edu.au/u7594144/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Game.java#L1217-1252
 
   # sign *your* name and uid here
 name: Yaolin Li
