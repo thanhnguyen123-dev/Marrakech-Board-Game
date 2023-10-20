@@ -1115,18 +1115,18 @@ public class Game extends Application {
         this.playerStatsVBox.getChildren().clear();
         for (Player player : this.gameState.getPlayers()) {
             String colourString = "PLAYER " + player.getColour();
-            Text playerText = new Text();
-            playerText.setFont(PLAYER_COLOUR_TEXT_FONT_REGULAR);
+            Text colourText = new Text();
+            colourText.setFont(PLAYER_COLOUR_TEXT_FONT_REGULAR);
 
-            String scoreString = " Current Score: " + this.gameState.getScores().get(player);
-            Text scoreText = new Text();
-            scoreText.setFont(GENERAL_TEXT_FONT_ITALIC);
+            Text playerText = new Text(player.isComputer() ? "COMPUTER - " + player.getStrategy() : "HUMAN");
+            playerText.setFont(GENERAL_TEXT_FONT_ITALIC);
 
-            Text statsText = new Text(player.getDirham() + " dirhams     " + player.getNumOfUnplacedRugs() + " rugs remaining");
+            Text statsText = new Text(player.getDirham() + " dirhams   " + player.getNumOfUnplacedRugs() + " rugs remaining   "
+                    + "score: " + this.gameState.getScores().get(player));
             statsText.setFont(GENERAL_TEXT_FONT_ITALIC);
 
             if (this.gameState.isPlayerAvailable(player)) {
-                scoreText.setStyle("-fx-fill:" + TEXT_FILL);
+                playerText.setStyle("-fx-fill:" + TEXT_FILL);
                 statsText.setStyle("-fx-fill:" + TEXT_FILL);
                 if (!this.gameState.isGameOver() && player.equals(this.gameState.getCurrentPlayer())) {
                     colourString += " - CURRENT";
@@ -1183,24 +1183,21 @@ public class Game extends Application {
                         this.controlArea.getChildren().add(controlAreaAfterGameOver);
                     }
                 }
-                playerText.setFill(Colour.getFrontEndColor(player.getColour()));
-                playerText.setStroke(Colour.getFrontEndColor(player.getColour()).darker());
+                colourText.setFill(Colour.getFrontEndColor(player.getColour()));
+                colourText.setStroke(Colour.getFrontEndColor(player.getColour()).darker());
             } else {
                 // The player is out when game is not over
                 colourString += " - OUT";
+                colourText.setFill(Color.GRAY);
+                colourText.setOpacity(1 - HIGHLIGHTED_OPACITY);
                 playerText.setFill(Color.GRAY);
                 playerText.setOpacity(1 - HIGHLIGHTED_OPACITY);
-                scoreText.setFill(Color.GRAY);
                 statsText.setFill(Color.GRAY);
+                statsText.setOpacity(1 - HIGHLIGHTED_OPACITY);
             }
-            playerText.setText(colourString);
+            colourText.setText(colourString);
 
-            if (player.isComputer()) {
-                scoreText.setText("COMPUTER - " + player.getStrategy() + scoreString);
-            } else {
-                scoreText.setText("HUMAN" + scoreString);
-            }
-            this.playerStatsVBox.getChildren().addAll(playerText, scoreText, statsText);
+            this.playerStatsVBox.getChildren().addAll(colourText, playerText, statsText);
         }
     }
 
