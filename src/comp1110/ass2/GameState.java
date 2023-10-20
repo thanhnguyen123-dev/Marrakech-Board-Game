@@ -412,7 +412,6 @@ public class GameState {
      * @return the amount of payment
      * @author u7594144 Le Thanh Nguyen
      */
-
     public int getPaymentAmount(Tile currentTile, Set<Tile> visitedTiles) {
         if (visitedTiles.contains(currentTile)) return 0;
         visitedTiles.add(currentTile);
