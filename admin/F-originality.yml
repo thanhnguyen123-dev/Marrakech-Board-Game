@@ -73,8 +73,8 @@ assets:
 # Sign *your* name and uids here. (Remove entries if you have fewer
 # than three members.)
 signatures:
-  - name:
-    uid:
+  - name: Le Thanh Nguyen
+    uid: u7594144
   - name: Yaolin Li
     uid: u7582846
   - name: Haobo Zou
