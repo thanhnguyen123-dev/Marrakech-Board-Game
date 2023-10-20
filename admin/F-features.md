@@ -3,10 +3,10 @@ of our project implements the following features:
 
 *(Remove those that are unimplemented)*
 
- - A simple placement viewer (Task 5)
- - A basic playable game (Task 7)
- - A fully working game (Task 15)
- - Option to play against a computer opponent (Task 16)
- - Option to play against an intelligent computer opponent (Task 17)
-
-additional features...
+- A simple placement viewer (Task 5)
+- A basic playable game (Task 7)
+- A fully working game (Task 15)
+- Option to play against a computer opponent (Task 16)
+- Option to play against an intelligent computer opponent (Task 17)
+- Option to restart the game after it is over or go back to previous scenes when computer player is not in control
+- Hints for players to get familiar with the rules
