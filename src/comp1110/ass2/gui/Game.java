@@ -255,7 +255,19 @@ public class Game extends Application {
         btnColourBack.setOnMouseClicked(event -> {
             // Initialises human players and computer players
             this.tmp.clear();
-            rbChoose2.setSelected(true);
+            switch (this.numOfPlayers) {
+                case 2:
+                    rbChoose2.setSelected(true);
+                    break;
+                case 3:
+                    rbChoose3.setSelected(true);
+                    break;
+                case 4:
+                    rbChoose4.setSelected(true);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + this.numOfPlayers);
+            }
             this.btnColourConfirm.setDisable(true);
             colourPane.getChildren().removeAll(this.playerSelectors);
             this.playerSelectors = makeNewPlayerSelectors();
@@ -300,7 +312,8 @@ public class Game extends Application {
             this.placedRugs = new Pane();
             this.players = null;
             this.gameState = null;
-            this.numOfPlayers = 2;
+            this.numOfPlayers = 0;
+            rbChoose2.setSelected(true);
             colourPane.getChildren().removeAll(this.playerSelectors);
             this.playerSelectors = makeNewPlayerSelectors();
             colourPane.getChildren().addAll(this.playerSelectors);
