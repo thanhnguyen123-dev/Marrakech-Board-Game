@@ -69,6 +69,7 @@ public class Game extends Application {
     private static final Font GENERAL_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 14);
     private static final Font GENERAL_TEXT_FONT_ITALIC = Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 14);
     private static final Font PLAYER_COLOUR_TEXT_FONT_REGULAR = Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18);
+    private static final Font HINT_TEXT_FONT_ITALIC = Font.font("Verdana", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 14);
     private static final String TEXT_FILL = "#3F301D";
     // the delay duration in milliseconds
     private final long MILLIS = 500;
@@ -452,30 +453,55 @@ public class Game extends Application {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Hint");
             // Modify the default icon
-            ImageView newIcon = new ImageView(new Image("resources/hint.png"));
-            newIcon.setFitWidth(40);
-            newIcon.setFitHeight(40);
+            ImageView iconHint = new ImageView(new Image("resources/hint.png"));
+            iconHint.setFitWidth(40);
+            iconHint.setFitHeight(40);
+            iconHint.relocate(300, 0);
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
             stage.getIcons().add(new Image("resources/hint.png"));
-            DialogPane dialogPane = alert.getDialogPane();
-            dialogPane.setGraphic(newIcon);
+
             // Set background colour of dialog
+            DialogPane dialogPane = alert.getDialogPane();
             dialogPane.setStyle("-fx-background-color: #eecdab; -fx-padding: 15px;");
-            dialogPane.setPrefSize(400, 250);
+
+            // Different hint headers in different phases
+            Text headerText = new Text(this.currentPhase + " Phase");
+            headerText.setFont(GENERAL_TEXT_FONT_REGULAR);
+            headerText.relocate(0, 10);
+            Pane headerPane = new Pane(headerText, iconHint);
+            alert.getDialogPane().setHeader(headerPane);
+
             // Different hints in different phases
-            alert.setHeaderText("In " + this.currentPhase + " phase");
-            if (this.currentPhase == Phase.ROTATION) {
-                alert.setContentText("You can click 'Rotate Left' and 'Rotate Right' to rotate direction of Assam" +
-                        " or current rug (you also can press 'Q' or 'E' to rotate rug), " +
-                        "then click 'Confirm.");
-            } else if (this.currentPhase == Phase.MOVEMENT) {
-                alert.setContentText("You can 'Roll Die' to make Assam move, " +
-                        "if Assam lands on the rug of another player who is still in the game," +
-                        " you need to pay that player a certain amount of dirhams.");
-            } else if (this.currentPhase == Phase.PLACEMENT) {
-                alert.setContentText("You can rotate and drag the rug onto the board, " +
-                        "trying to make your rug occupy as much space as possible.");
+            Text hintText = new Text();
+            hintText.setWrappingWidth(300);
+            hintText.setFont(HINT_TEXT_FONT_ITALIC);
+            switch (this.currentPhase) {
+
+                case ROTATION -> {
+                    dialogPane.setPrefSize(400, 180);
+                    hintText.setText("""
+                            Click "Rotate Left" and "Rotate Right" to rotate Assam, then click "Confirm" to confirm the rotation.""");
+                }
+                case MOVEMENT -> {
+                    dialogPane.setPrefSize(400, 400);
+                    hintText.setText("""
+                            Click "Roll Die" to roll a special die, and generate the number of steps for Assam to take. This special die has
+                              One face which shows a one,
+                              Two faces which show a two,
+                              Two faces which show a three,
+                              One face which shows a four.
+                            If Assam lands on a rug of another player who is still in the game, you will need to pay that player a certain amount of dirhams.
+                            The amount is equal to the number of connected tiles that are covered by rugs of the same colour, starting from the square that Assam landed on.""");
+                }
+                case PLACEMENT -> {
+                    dialogPane.setPrefSize(400, 240);
+                    hintText.setText("""
+                            Drag the rug onto the board, and click "Confirm" to confirm your placement.
+                            You can also rotate the rug to change its orientation.
+                            Try to occupy as much space as possible!""");
+                }
             }
+            alert.getDialogPane().setContent(hintText);
             // Set style of Alert dialogPane
             Platform.runLater(() -> {
                 dialogPane.lookup(".label").setStyle("-fx-font-size: 18px; -fx-font-weight: bold;" + "-fx-text-fill:" + TEXT_FILL);
@@ -1114,22 +1140,30 @@ public class Game extends Application {
                         colourString += " - WINNER!";
                         // Show alert dialog
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Game Over");
                         // Modify the default icon
-                        ImageView newIcon = new ImageView(new Image("resources/game-over.png"));
-                        newIcon.setFitWidth(40);
-                        newIcon.setFitHeight(40);
+                        ImageView iconGameOver = new ImageView(new Image("resources/game-over.png"));
+                        iconGameOver.setFitWidth(40);
+                        iconGameOver.setFitHeight(40);
+                        iconGameOver.relocate(300, 0);
                         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
                         stage.getIcons().add(new Image("resources/game-over.png"));
                         DialogPane dialogPane = alert.getDialogPane();
-                        dialogPane.setGraphic(newIcon);
+                        alert.setGraphic(iconGameOver);
+
                         // Set background colour of dialog
                         dialogPane.setStyle("-fx-background-color: #eecdab; -fx-padding: 15px;");
-                        dialogPane.setPrefSize(400, 200);
-                        // Different hints in different phases
-                        alert.setTitle("Game Over");
-                        alert.setHeaderText("Game Over!");
+                        dialogPane.setPrefSize(400, 250);
+
+                        Text headerText = new Text("Game Over!");
+                        headerText.setFont(GENERAL_TEXT_FONT_REGULAR);
+                        headerText.relocate(0, 10);
+                        Pane headerPane = new Pane(headerText, iconGameOver);
+                        alert.getDialogPane().setHeader(headerPane);
+
                         Text messageText = new Text("Congratulations to PLAYER " + player.getColour() + " with highest score: " + this.gameState.getScores().get(player) + "!");
                         messageText.setWrappingWidth(300);
+                        messageText.setFont(HINT_TEXT_FONT_ITALIC);
                         alert.getDialogPane().setContent(messageText);
                         // Set style of Alert dialogPane
                         Platform.runLater(() -> {
