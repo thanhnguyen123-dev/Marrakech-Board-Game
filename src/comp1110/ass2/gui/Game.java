@@ -1124,8 +1124,8 @@ public class Game extends Application {
         } else {
             this.phaseText.setText("Game Over");
         }
-
         this.playerStatsVBox.getChildren().clear();
+        Map<Player, Integer> scores = this.gameState.getScores();
         for (Player player : this.gameState.getPlayers()) {
             String colourString = "PLAYER " + player.getColour();
             Text colourText = new Text();
@@ -1135,7 +1135,7 @@ public class Game extends Application {
             playerText.setFont(GENERAL_TEXT_FONT_ITALIC);
 
             Text statsText = new Text(player.getDirham() + " dirhams   " + player.getNumOfUnplacedRugs() + " rugs remaining   "
-                    + "score: " + this.gameState.getScores().get(player));
+                    + "score: " + scores.get(player));
             statsText.setFont(GENERAL_TEXT_FONT_ITALIC);
 
             if (this.gameState.isPlayerAvailable(player)) {
