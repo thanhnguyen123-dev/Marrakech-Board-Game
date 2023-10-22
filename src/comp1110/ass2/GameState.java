@@ -151,7 +151,6 @@ public class GameState {
         }
         return findPlayer(assamRug.getColour());
     }
-
     /**
      * Checks if a payment to another player is required after moving Assam
      * @return true if required, false if not
@@ -412,7 +411,6 @@ public class GameState {
      * @return the amount of payment
      * @author u7594144 Le Thanh Nguyen
      */
-
     public int getPaymentAmount(Tile currentTile, Set<Tile> visitedTiles) {
         if (visitedTiles.contains(currentTile)) return 0;
         visitedTiles.add(currentTile);
@@ -425,5 +423,14 @@ public class GameState {
             }
         }
         return payment;
+    }
+
+    /**
+     * getter method for availablePlayers
+     * @return a List of the players that are currently in the game
+     * @author u7620014 Haobo Zou
+     */
+    public List<Player> getAvailablePlayers() {
+        return this.availablePlayers;
     }
 }

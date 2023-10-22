@@ -509,8 +509,8 @@ public class Game extends Application {
                 case PLACEMENT -> {
                     dialogPane.setPrefSize(400, 240);
                     hintText.setText("""
-                            Drag the rug onto the board, and click "Confirm" to confirm your placement.
-                            You can also rotate the rug to change its orientation.
+                            Drag the rug onto the board, and click "Confirm" or press "Enter" to confirm your placement.
+                            You can also click "Rotate" or press "Q" or "E" to rotate the rug and change its orientation.
                             Try to occupy as much space as possible!""");
                 }
             }
@@ -897,11 +897,11 @@ public class Game extends Application {
                     Tile[] rugTiles = getTilesFromInvisibleRug(validRug);
                     for (Tile rugTile : rugTiles) {
                         if (rugTile.getTopRug() == null || !this.gameState.isPlayerAvailable(this.gameState.findPlayer(rugTile.getTopRug().getColour()))) {
-                            // Gives 2 * (number of players - 1) points if the tile does not cover any existing rug
-                            score += 2 * (this.numOfPlayers - 1);
+                            // Gains points if the tile is not covered by any existing rug or the rug owner is out of game
+                            score += this.gameState.getAvailablePlayers().size() - 1;
                         } else if (rugTile.getTopRug().getColour() != this.gameState.getCurrentPlayer().getColour()) {
-                            // Gives 2  * (this.numOfPlayers - 1) + 1 points if the tile covers another available player's rug
-                            score += 2 * (this.numOfPlayers - 1) + 1;
+                            // Gains points if the tile is covered by a rug that belongs to another player who is still in the game
+                            score += this.gameState.getAvailablePlayers().size();
                         }
                     }
                     if (score > max) {
@@ -1124,8 +1124,8 @@ public class Game extends Application {
         } else {
             this.phaseText.setText("Game Over");
         }
-
         this.playerStatsVBox.getChildren().clear();
+        Map<Player, Integer> scores = this.gameState.getScores();
         for (Player player : this.gameState.getPlayers()) {
             String colourString = "PLAYER " + player.getColour();
             Text colourText = new Text();
@@ -1135,7 +1135,7 @@ public class Game extends Application {
             playerText.setFont(GENERAL_TEXT_FONT_ITALIC);
 
             Text statsText = new Text(player.getDirham() + " dirhams   " + player.getNumOfUnplacedRugs() + " rugs remaining   "
-                    + "score: " + this.gameState.getScores().get(player));
+                    + "score: " + scores.get(player));
             statsText.setFont(GENERAL_TEXT_FONT_ITALIC);
 
             if (this.gameState.isPlayerAvailable(player)) {
